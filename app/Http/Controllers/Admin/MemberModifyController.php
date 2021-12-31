@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AddMemberRequest;
+use App\Models\Member;
 use Illuminate\Http\Request;
-use App\Http\Requests\Admin\AddManagerRequest;
-use App\Models\Manager;
 use Illuminate\Support\Facades\Hash;
 
-
-class ManagerModifyController extends Controller
+class MemberModifyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,6 @@ class ManagerModifyController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -28,7 +26,7 @@ class ManagerModifyController extends Controller
      */
     public function create()
     {
-        return view('admin.add-manager');
+        return view('admin.add-member');
     }
 
     /**
@@ -37,18 +35,17 @@ class ManagerModifyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AddManagerRequest $request)
+    public function store(AddMemberRequest $request)
     {
-        $manager = new Manager();
+        $member = new Member();
         
-        $manager->create([
+        $member->create([
             'name' => request()->name,
             'username' => request()->username,
             'password' => Hash::make(request()->password),
         ]);
 
         return redirect()->route('admin.dashboard');
-
     }
 
     /**

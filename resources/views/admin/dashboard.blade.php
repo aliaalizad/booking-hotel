@@ -8,5 +8,7 @@
 </head>
 <body>
     <a href="{{ route('admin.manager.create') }}">Add Manager</a>
+    <br>
+    <a href="{{ route('admin.member.create') }}">Add Member</a>
 </body>
 </html>

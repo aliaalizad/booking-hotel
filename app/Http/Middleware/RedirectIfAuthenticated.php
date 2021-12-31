@@ -28,6 +28,10 @@ class RedirectIfAuthenticated
                     return redirect()->route('manager.dashboard');
                 }
 
+                if ($guard === 'member') {
+                    return redirect()->route('member.dashboard');
+                }
+
                 return redirect()->route('user.profile');
                 // return redirect(RouteServiceProvider::HOME);
             }

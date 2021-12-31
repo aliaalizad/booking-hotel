@@ -20,6 +20,10 @@ class Authenticate extends Middleware
                 return route('manager.login');
             }
 
+            if ($request->routeIs('member.*')) {
+                return route('member.login');
+            }
+
             return route('user.login');
         }
     }

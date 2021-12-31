@@ -2,9 +2,10 @@
 
 
 use App\Http\Controllers\Manager\ManagerAuthController;
-use App\Http\Controllers\Member\MemberLoginController;
+use App\Http\Controllers\Member\MemberAuthController;
 use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\Admin\ManagerModifyController;
+use App\Http\Controllers\Admin\MemberModifyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +23,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/* // Admin
+// Admin
 Route::prefix('/admin')->name('admin.')->group(function(){
 
     Route::get('/', function(){ return redirect()->route('admin.dashboard') ;});
     Route::get('/dashboard', function(){ return view('admin.dashboard') ;})->name('dashboard');
 
-    Route::resource('manager', ManagerModifyController::class)->except(['show']);
-}); */
+    Route::resource('/manager', ManagerModifyController::class)->except(['show']);
+    Route::resource('/member', MemberModifyController::class)->except(['show']);
+});
 
 // User
 Route::name('user.')->group(function(){
@@ -62,11 +64,18 @@ Route::prefix('/manager')->name('manager.')->group(function(){
 
 });
 
-/* // Member
+// member
 Route::prefix('/member')->name('member.')->group(function(){
-    Route::get('/', function(){ return redirect()->route('member.dashboard'); })->name('login');
 
-    Route::get('/login', [MemberLoginController::class, 'show'])->name('login');
-    Route::post('/login', [MemberLoginController::class, 'create'])->name('login');
-    Route::get('/dashboard', function(){ return view('member.dashboard'); })->name('dashboard');
-}); */
+    Route::get('/', function(){ return redirect()->route('member.dashboard'); });
+
+    Route::middleware(['guest:member'])->group(function(){
+        Route::get('/login', [MemberAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [MemberAuthController::class, 'login'])->name('login');
+    });
+    Route::get('/logout', function(){ abort(404); });
+    Route::post('/logout', [MemberAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware(['auth:member'])->get('/dashboard', [MemberAuthController::class, 'index'])->name('dashboard');
+
+});

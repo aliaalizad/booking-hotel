@@ -23,6 +23,11 @@ return [
         'model' => App\Models\Manager::class,
     ],
 
+    'member' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Member::class,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -49,6 +54,11 @@ return [
         'manager' => [
             'driver' => 'session',
             'provider' => 'managers',
+        ],
+        
+        'member' => [
+            'driver' => 'session',
+            'provider' => 'members',
         ],
     ],
 
@@ -84,6 +94,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Manager::class,
         ],
+
+        'members' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Member::class,
+        ],
     ],
 
     /*
@@ -112,7 +127,12 @@ return [
         'managers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Manager::class,
-        ]
+        ],
+
+        'members' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Member::class,
+        ],
     ],
 
     /*
