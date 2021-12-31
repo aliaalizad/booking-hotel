@@ -24,7 +24,7 @@ class ManagerLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => ['required'],
+            'username'  => ['required'],
             'password'  => ['required'],
         ];
     }
@@ -32,7 +32,7 @@ class ManagerLoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'     => 'ایمیل را وارد کنید',
+            'username.required'     => 'نام کاربری را وارد کنید',
             'password.required'  => 'رمزعبور را وارد کنید',
         ];
     }

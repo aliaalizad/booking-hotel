@@ -18,6 +18,11 @@ return [
         'passwords' => 'users',
     ],
 
+    'manager' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Manager::class,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -39,6 +44,11 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'manager' => [
+            'driver' => 'session',
+            'provider' => 'managers',
         ],
     ],
 
@@ -69,6 +79,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'managers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Manager::class,
+        ],
     ],
 
     /*
@@ -93,6 +108,11 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        'managers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Manager::class,
+        ]
     ],
 
     /*

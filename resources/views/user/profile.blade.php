@@ -7,6 +7,11 @@
     <title>User Profile</title>
 </head>
 <body>
-    
+    <div>Name: {{ Auth::guard('web')->user()->name }}</div>
+    <div>Email: {{ Auth::guard('web')->user()->email }}</div>
+    <form action="{{ route('user.logout') }}" method="post">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>

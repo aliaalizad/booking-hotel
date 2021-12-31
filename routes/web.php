@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\User\UserRegisterController;
-use App\Http\Controllers\User\UserLoginController;
-use App\Http\Controllers\Manager\ManagerLoginController;
+
+use App\Http\Controllers\Manager\ManagerAuthController;
 use App\Http\Controllers\Member\MemberLoginController;
+use App\Http\Controllers\User\UserAuthController;
+use App\Http\Controllers\Admin\ManagerModifyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,41 +22,51 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Admin
+/* // Admin
 Route::prefix('/admin')->name('admin.')->group(function(){
 
-});
+    Route::get('/', function(){ return redirect()->route('admin.dashboard') ;});
+    Route::get('/dashboard', function(){ return view('admin.dashboard') ;})->name('dashboard');
+
+    Route::resource('manager', ManagerModifyController::class)->except(['show']);
+}); */
 
 // User
 Route::name('user.')->group(function(){
-
-    Route::get('/register', [UserRegisterController::class, 'show'])->name('register');
-    Route::post('/register', [UserRegisterController::class, 'create'])->name('register');
-    Route::get('/login', [UserLoginController::class, 'show'])->name('login');
-    Route::post('/login', [UserLoginController::class, 'create'])->name('login');
-    Route::get('/profile', function(){ return view('user.profile'); })->name('profile');
-    
-    Route::prefix('profile')->name('profile.')->group(function(){
-
+    Route::middleware(['guest:web'])->group(function(){
+        Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
+        Route::post('/register', [UserAuthController::class, 'register'])->name('register');
+        Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [UserAuthController::class, 'login'])->name('login');
     });
+    Route::get('/profile/logout', function(){ abort(404); });
+    Route::post('/profile/logout', [UserAuthController::class, 'logout'])->name('logout');
 
+    Route::middleware(['auth:web'])->get('/profile', [UserAuthController::class, 'index'])->name('profile');
 });
-
 
 // Manager
 Route::prefix('/manager')->name('manager.')->group(function(){
-    Route::get('/', function(){ return redirect()->route('manager.dashboard'); })->name('login');
 
-    Route::get('/login', [ManagerLoginController::class, 'show'])->name('login');
-    Route::post('/login', [ManagerLoginController::class, 'create'])->name('login');
-    Route::get('/dashboard', function(){ return view('manager.dashboard'); })->name('dashboard');
+    Route::get('/', function(){ return redirect()->route('manager.dashboard'); });
+
+    Route::middleware(['guest:manager'])->group(function(){
+        Route::get('/login', [ManagerAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [ManagerAuthController::class, 'login'])->name('login');
+    });
+    Route::get('/logout', function(){ abort(404); });
+    Route::post('/logout', [ManagerAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware(['auth:manager'])->get('/dashboard', [ManagerAuthController::class, 'index'])->name('dashboard');
+
+
 });
 
-// Member
+/* // Member
 Route::prefix('/member')->name('member.')->group(function(){
     Route::get('/', function(){ return redirect()->route('member.dashboard'); })->name('login');
 
     Route::get('/login', [MemberLoginController::class, 'show'])->name('login');
     Route::post('/login', [MemberLoginController::class, 'create'])->name('login');
     Route::get('/dashboard', function(){ return view('member.dashboard'); })->name('dashboard');
-});
+}); */

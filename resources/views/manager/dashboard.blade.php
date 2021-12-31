@@ -7,6 +7,11 @@
     <title>Manager Dashboard</title>
 </head>
 <body>
-    
+    <div>Name: {{ Auth::guard('manager')->user()->name }}</div>
+    <div>Email: {{ Auth::guard('manager')->user()->username }}</div>
+    <form action="{{ route('manager.logout') }}" method="post">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>

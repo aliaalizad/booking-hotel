@@ -14,6 +14,12 @@
         <form action="{{ route('user.login') }}" method="post" autocomplete="off">
             @csrf
 
+            @if ($errors->has('loginError'))
+                    @error('loginError')
+                        <div style="color: red;">{{ $message }}</div>
+                    @enderror
+            @endif
+
             <div class="form-icon">
                 <span><i class="icon icon-user"></i></span>
             </div>
