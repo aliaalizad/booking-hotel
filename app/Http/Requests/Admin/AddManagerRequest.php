@@ -25,7 +25,7 @@ class AddManagerRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'username' => ['required'],
+            'username' => ['required','unique:managers,username'],
             'password' => ['required'],
             'cpassword' => ['required', 'same:password'],
         ];
@@ -36,6 +36,7 @@ class AddManagerRequest extends FormRequest
         return [
             'name.required' => 'نام را وارد کنید',
             'username.required' => 'نام کاربری را وارد کنید',
+            'username.unique' => 'نام کاربری وارد شده قبلا در سیستم ثبت شده است',
             'password.required' => 'رمز عبور را وارد کنید',
             'cpassword.required' => 'تکرار رمز عبور را وارد کنید',
             'cpassword.same' => 'رمز عبور و تکرار همخوانی ندارند'

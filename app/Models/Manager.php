@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Token;
+
 
 class Manager extends Authenticatable 
 {
@@ -20,4 +22,7 @@ class Manager extends Authenticatable
 
     protected $table = 'managers';
 
+    public function tokens(){
+        return $this->hasMany(Token::class);
+    }
 }

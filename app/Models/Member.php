@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Token;
+
 
 class Member extends Authenticatable
 {
@@ -18,4 +20,9 @@ class Member extends Authenticatable
         'password',
     ];
 
-    protected $table = 'members';}
+    protected $table = 'members';
+
+    public function tokens(){
+        return $this->hasMany(Token::class);
+    }
+}

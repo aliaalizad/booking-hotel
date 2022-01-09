@@ -20,12 +20,10 @@ class UserAuthController extends Controller
         return view('user.profile');
     }
 
-    
     public function showLoginForm()
     {
         return view('user.login');
     }
-
 
     public function login(UserLoginRequest $request)
     {
@@ -40,12 +38,10 @@ class UserAuthController extends Controller
         ]);
     }
 
-
     public function showRegisterForm()
     {
         return view('user.register');
     }
-
 
     public function register(UserRegisterRequest $request)
     {
@@ -72,4 +68,3 @@ class UserAuthController extends Controller
     }
 
 }
-

@@ -1,27 +1,26 @@
 <?php
 
-
+use App\Classes\Token\MemberToken;
 use App\Http\Controllers\Manager\ManagerAuthController;
 use App\Http\Controllers\Member\MemberAuthController;
 use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\Admin\ManagerModifyController;
 use App\Http\Controllers\Admin\MemberModifyController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
+| routes are loaded by the RouteServiceProvider withi   n a group which
 | contains the "web" middleware group. Now create something great!
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function(){
+    
+}); 
 
 // Admin
 Route::prefix('/admin')->name('admin.')->group(function(){
@@ -40,6 +39,9 @@ Route::name('user.')->group(function(){
         Route::post('/register', [UserAuthController::class, 'register'])->name('register');
         Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [UserAuthController::class, 'login'])->name('login');
+
+        Route::get('/verify', [UserAuthController::class, 'showVerifyCodeForm']);
+        Route::post('/verify', [UserAuthController::class, 'verifyCode'])->name('verify');
     });
     Route::get('/profile/logout', function(){ abort(404); });
     Route::post('/profile/logout', [UserAuthController::class, 'logout'])->name('logout');
