@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>Name: {{ Auth::guard('web')->user()->name }}</div>
-    <div>Email: {{ Auth::guard('web')->user()->email }}</div>
+    <div>Phone: {{ Auth::guard('web')->user()->phone }}</div>
     <form action="{{ route('user.logout') }}" method="post">
         @csrf
         <button type="submit">Logout</button>

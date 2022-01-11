@@ -24,7 +24,7 @@ class UserLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => ['required'],
+            'phone'     => ['required'],
             'password'  => ['required'],
         ];
     }
@@ -32,7 +32,7 @@ class UserLoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'     => 'ایمیل را وارد کنید',
+            'phone.required'     => 'شماره موبایل را وارد کنید',
             'password.required'  => 'رمزعبور را وارد کنید',
         ];
     }

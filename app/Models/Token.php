@@ -18,7 +18,7 @@ class Token extends Model
         'user_id',
         'manager_id',
         'member_id',
-        'target',
+        'type',
         'expired_at',
         'created_at',
     ];
@@ -29,6 +29,9 @@ class Token extends Model
 
     protected $table = 'tokens';
 
+    public function ScopeClear(){
+        Token::where('expired_at','<', now())->delete();
+    }
 
 
     public function user()

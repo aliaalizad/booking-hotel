@@ -27,9 +27,9 @@
                 @endif
             </div>
             <div class="form-group">
-                <input type="text" class="form-control item" name="email" id="email" placeholder="Email" value="{{ old('email') }}">
-                @if ($errors->has('email'))
-                    @error('email')
+                <input type="text" class="form-control item" name="phone" id="phone" placeholder="Phone" value="{{ old('phone') }}">
+                @if ($errors->has('phone'))
+                    @error('phone')
                         <div style="color: red;">{{ $message }}</div>
                     @enderror
                 @endif

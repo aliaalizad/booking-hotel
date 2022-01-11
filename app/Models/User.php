@@ -20,8 +20,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'phone',
         'password',
+        'is_active',
     ];
 
     /**
@@ -44,6 +45,11 @@ class User extends Authenticatable
     ];
 
     protected $table = 'users';
+
+
+    public function ScopeClear(){
+        User::where('is_active', 0)->delete();
+    }
 
     public function tokens(){
         return $this->hasMany(Token::class);

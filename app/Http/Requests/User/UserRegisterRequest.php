@@ -25,7 +25,7 @@ class UserRegisterRequest extends FormRequest
     {
         return [
             'name'      => ['required'],
-            'email'     => ['required', 'unique:users,email'],
+            'phone'     => ['required', 'unique:users,phone'],
             'password'  => ['required'],
             'cpassword' => ['required', 'same:password'],
         ];
@@ -35,8 +35,8 @@ class UserRegisterRequest extends FormRequest
     {
         return [
             'name.required'      => 'نام را وارد کنید',
-            'email.required'     => 'ایمیل را وارد کنید',
-            'email.unique'     => 'ایمیل وارد شده قبلا در سیستم ثبت شده است',
+            'phone.required'     => 'شماره موبایل را وارد کنید',
+            'phone.unique'     => 'شماره موبایل وارد شده قبلا در سیستم ثبت شده است',
             'password.required'  => 'رمزعبور را وارد کنید',
             'cpassword.required' => 'تکرار رمز عبور را وارد کنید',
             'cpassword.same'     => 'تاییدیه رمز عبور و رمز عبور همخوانی ندارند',

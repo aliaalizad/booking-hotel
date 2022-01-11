@@ -1,11 +1,13 @@
 <?php
 
-use App\Classes\Token\MemberToken;
+use App\Classes\Token\UserToken;
 use App\Http\Controllers\Manager\ManagerAuthController;
 use App\Http\Controllers\Member\MemberAuthController;
 use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\Admin\ManagerModifyController;
 use App\Http\Controllers\Admin\MemberModifyController;
+use App\Models\Token;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function(){
-    
+    // UserToken::make(5,1,'register', 5);
+    dd(request()->session()->all());
+
 }); 
 
 // Admin
@@ -36,12 +40,12 @@ Route::prefix('/admin')->name('admin.')->group(function(){
 Route::name('user.')->group(function(){
     Route::middleware(['guest:web'])->group(function(){
         Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
-        Route::post('/register', [UserAuthController::class, 'register'])->name('register');
+        Route::post('/register', [UserAuthController::class, 'register']);
         Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [UserAuthController::class, 'login'])->name('login');
+        Route::post('/login', [UserAuthController::class, 'login']);
 
-        Route::get('/verify', [UserAuthController::class, 'showVerifyCodeForm']);
-        Route::post('/verify', [UserAuthController::class, 'verifyCode'])->name('verify');
+        Route::get('/register/confirm', [UserAuthController::class, 'showConfirmForm'])->name('confirm');
+        Route::post('/register/confirm', [UserAuthController::class, 'confirm']);
     });
     Route::get('/profile/logout', function(){ abort(404); });
     Route::post('/profile/logout', [UserAuthController::class, 'logout'])->name('logout');
