@@ -5,9 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Classes\Sms\Sms;
 use App\Classes\Token\UserToken;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\UserLoginRequest;
-use App\Http\Requests\User\UserRegisterRequest;
-use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +36,7 @@ class UserAuthController extends Controller
             'cpassword' => ['required', 'same:password'],
         ]);
         $validator->sometimes('phone', 'unique:users,phone', function($input) {
-            return User::where([['phone', $input->phone],['is_active', 1]])->first();
+            return User::where([['phone', $input->phone],['is_activated', 1]])->first();
         })->validated();
 
 
@@ -56,7 +53,7 @@ class UserAuthController extends Controller
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'password' => Hash::make($request->password),
-                'is_active' => 0,
+                'is_activated' => 0,
             ]);
         }
 
@@ -88,11 +85,19 @@ class UserAuthController extends Controller
     }
 
 
-    public function login(UserLoginRequest $request)
+    public function login(Request $request)
     {
-        if (Auth::guard('web')->attempt($request->validated())) {
+        $validator = Validator::make($request->all(),[
+            'phone'     => ['required'],
+            'password'  => ['required'],
+        ])->validated();
 
-            if (Auth::guard('web')->user()->is_active == 0) {
+        if (Auth::guard('web')->attempt($validator)) {
+
+            Auth::guard('manager')->logout();
+            Auth::guard('member')->logout();
+            
+            if (Auth::guard('web')->user()->is_activated == 0) {
 
                 if ( UserToken::exists(Auth::guard('web')->user()->id, 'register') ){
 
@@ -162,7 +167,7 @@ class UserAuthController extends Controller
             if (UserToken::isValid($id, $credentials['code'], 'register')) {
                 // confirm registeration
                 $user = User::find($id);
-                $user->is_active = 1;
+                $user->is_activated = 1;
                 $user->save();
                 
                 // delete session

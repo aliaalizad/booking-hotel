@@ -15,9 +15,13 @@ class CreateManagersTable extends Migration
     {
         Schema::create('managers', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->text('username');
-            $table->text('password');
+            $table->string('name');
+            $table->string('username')->unique();
+            $table->string('password');
+            $table->boolean('is_blocked')->default(0);
+            $table->string('phone')->unique();
+            $table->string('email')->unique();
+            $table->string('province');
             $table->timestamps();
         });
     }

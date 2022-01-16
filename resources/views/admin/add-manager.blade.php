@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="registration-form">
-        <form action="{{ route('admin.manager.store') }}" method="post" autocomplete="off">
+        <form action="{{ route('admin.managers.store') }}" method="post" autocomplete="off">
             @csrf
 
             <div class="form-icon">
@@ -34,6 +34,34 @@
                     @enderror
                 @endif
             </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control item" name="phone" id="phone" placeholder="Phone" value="{{ old('phone') }}">
+                @if ($errors->has('phone'))
+                    @error('phone')
+                        <div style="color: red;">{{ $message }}</div>
+                    @enderror
+                @endif
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control item" name="email" id="email" placeholder="Email" value="{{ old('email') }}">
+                @if ($errors->has('email'))
+                    @error('email')
+                        <div style="color: red;">{{ $message }}</div>
+                    @enderror
+                @endif
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control item" name="province" id="province" placeholder="Province" value="{{ old('province') }}">
+                @if ($errors->has('province'))
+                    @error('province')
+                        <div style="color: red;">{{ $message }}</div>
+                    @enderror
+                @endif
+            </div>
+
             <div class="form-group">
                 <input type="password" class="form-control item" name="password" id="password" placeholder="Password" ">
                 @if ($errors->has('password'))

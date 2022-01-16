@@ -16,13 +16,28 @@ class Member extends Authenticatable
 
     protected $fillable = [
         'name',
-        'username',
+        'personnel_code',
+        'manager_id',
         'password',
+        'is_blocked',
+
     ];
 
+    protected $hidden = [
+        'password'
+    ];
+    
     protected $table = 'members';
 
-    public function tokens(){
+    // relationships
+    public function tokens()
+    {
         return $this->hasMany(Token::class);
     }
+
+    public function manager()
+    {
+        return $this->belongsTo(Manager::class);
+    }
+
 }

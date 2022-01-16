@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="registration-form">
-        <form action="{{ route('admin.members.store') }}" method="post" autocomplete="off">
+        <form action="{{ route('manager.members.store') }}" method="post" autocomplete="off">
             @csrf
 
             <div class="form-icon">
@@ -30,14 +30,6 @@
                 <input type="text" class="form-control item" name="personnel_code" id="personnel_code" placeholder="Personnel Code" value="{{ old('personnel_code') }}">
                 @if ($errors->has('personnel_code'))
                     @error('personnel_code')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-                @endif
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control item" name="manager_id" id="manager_id" placeholder="Manager ID" value="{{ old('manager_id') }}">
-                @if ($errors->has('manager_id'))
-                    @error('manager_id')
                         <div style="color: red;">{{ $message }}</div>
                     @enderror
                 @endif

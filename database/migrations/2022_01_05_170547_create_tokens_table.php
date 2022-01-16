@@ -19,9 +19,11 @@ class CreateTokensTable extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->string('token');
+            
             $table->foreignIdFor(User::class)->default(0);
             $table->foreignIdFor(Manager::class)->default(0);
             $table->foreignIdFor(Member::class)->default(0);
+
             $table->string('type');
             $table->timestamp('expired_at')->nullable();
             $table->timestamp('created_at')->nullable();

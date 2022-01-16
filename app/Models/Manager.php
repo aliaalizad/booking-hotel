@@ -18,11 +18,24 @@ class Manager extends Authenticatable
         'name',
         'username',
         'password',
+        'is_blocked',
+        'phone',
+        'email',
+        'province'
+    ];
+
+    protected $hidden = [
+        'password'
     ];
 
     protected $table = 'managers';
 
+
+    // relationships
     public function tokens(){
         return $this->hasMany(Token::class);
+    }
+    public function members(){
+        return $this->hasMany(Member::class);
     }
 }

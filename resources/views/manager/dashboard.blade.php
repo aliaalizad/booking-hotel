@@ -8,10 +8,12 @@
 </head>
 <body>
     <div>Name: {{ Auth::guard('manager')->user()->name }}</div>
-    <div>Email: {{ Auth::guard('manager')->user()->username }}</div>
+    <div>Email: {{ Auth::guard('manager')->user()->email }}</div>
     <form action="{{ route('manager.logout') }}" method="post">
         @csrf
         <button type="submit">Logout</button>
     </form>
+
+    <a href="{{ route('manager.members.index') }}">Members</a>
 </body>
 </html>

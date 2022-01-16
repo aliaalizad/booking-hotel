@@ -18,8 +18,14 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('phone')->unique();
             $table->string('password');
-            $table->boolean('is_active')->default(0);
+            $table->boolean('is_activated')->default(0);
+            $table->boolean('is_blocked')->default(0);
             $table->rememberToken();
+            $table->string('national_code', 10)->nullable();
+            $table->boolean('is_teacher')->default(0);
+            $table->string('personnel_code', 10)->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
             $table->timestamps();
         });
     }

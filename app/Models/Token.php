@@ -23,16 +23,20 @@ class Token extends Model
         'created_at',
     ];
 
-
     public $timestamps = false;
 
-
     protected $table = 'tokens';
+
+    protected $hidden = [
+        'token'
+    ];
 
     public function ScopeClear(){
         Token::where('expired_at','<', now())->delete();
     }
 
+
+    // relationships
 
     public function user()
     {

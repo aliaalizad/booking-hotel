@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Admin\AddManagerRequest;
 use App\Models\Manager;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Validator;
 
 class ManagerModifyController extends Controller
 {
@@ -37,14 +36,25 @@ class ManagerModifyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AddManagerRequest $request)
+    public function store(Request $request)
     {
-        $manager = new Manager();
-        
-        $manager->create([
-            'name' => request()->name,
-            'username' => request()->username,
-            'password' => Hash::make(request()->password),
+        Validator::make($request->all(), [
+            'name' => ['required'],
+            'username' => ['required','unique:managers,username'],
+            'phone' => ['required','unique:managers,phone'],
+            'email' => ['required','unique:managers,email'],
+            'province' => ['required'],
+            'password' => ['required'],
+            'cpassword' => ['required', 'same:password'],
+        ])->validated();
+
+        Manager::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'province' => $request->province,
         ]);
 
         return redirect()->route('admin.dashboard');

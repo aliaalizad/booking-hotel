@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Manager;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +16,11 @@ class CreateMembersTable extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->text('username');
-            $table->text('password');
+            $table->string('name');
+            $table->string('personnel_code', 10)->unique();
+            $table->string('password');
+            $table->boolean('is_blocked')->default(0);
+            $table->foreignIdFor(Manager::class);
             $table->timestamps();
         });
     }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Manager\ManagerLoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ManagerAuthController extends Controller
 {
@@ -19,9 +19,20 @@ class ManagerAuthController extends Controller
         return view('manager.login');
     }
 
-    public function login(ManagerLoginRequest $request)
+    public function login(Request $request)
     {
-        if (Auth::guard('manager')->attempt($request->validated())) {
+
+        $Validator = Validator::make($request->all(), [
+            'username'  => ['required'],
+            'password'  => ['required'],
+        ])->Validated();
+
+
+        if (Auth::guard('manager')->attempt($Validator)) {
+            
+            Auth::guard('web')->logout();
+            Auth::guard('member')->logout();
+
             $request->session()->regenerate();
 
             return redirect()->route('manager.dashboard');
@@ -40,6 +51,6 @@ class ManagerAuthController extends Controller
     
         $request->session()->regenerateToken();
     
-        return redirect('/');
+        return redirect()->route('manager.login');
     }
 }

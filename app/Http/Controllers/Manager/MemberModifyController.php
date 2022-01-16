@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manager;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,6 +19,13 @@ class MemberModifyController extends Controller
      */
     public function index()
     {
+        $user = Auth::guard('manager')->user();
+
+        if ( Manager::find($user->id) ) {
+            $members = Manager::find($user->id)->members;
+        }
+
+        return view('manager.members', ['members' => $members]);
     }
 
     /**
@@ -26,7 +35,7 @@ class MemberModifyController extends Controller
      */
     public function create()
     {
-        return view('admin.add-member');
+        return view('manager.add-member');
     }
 
     /**
@@ -37,10 +46,9 @@ class MemberModifyController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => ['required'],
             'personnel_code' => ['required','unique:members,personnel_code'],
-            'manager_id' => ['required'],
             'password' => ['required'],
             'cpassword' => ['required', 'same:password'],
         ])->validated();
@@ -48,11 +56,11 @@ class MemberModifyController extends Controller
         Member::create([
             'name' => $request->name,
             'personnel_code' => $request->personnel_code,
-            'manager_id' => $request->manager_id,
+            'manager_id' => Auth::user()->id,
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('manager.dashboard');
     }
 
     /**

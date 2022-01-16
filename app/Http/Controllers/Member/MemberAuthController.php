@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Http\Requests\Member\MemberLoginRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MemberAuthController extends Controller
 {
@@ -19,9 +19,27 @@ class MemberAuthController extends Controller
         return view('member.login');
     }
 
-    public function login(MemberLoginRequest $request)
+    public function login(Request $request)
     {
-        if (Auth::guard('member')->attempt($request->validated())) {
+
+        $Validator = Validator::make($request->all(), [
+            'username'  => ['required'],
+            'password'  => ['required'],
+        ])->Validated();
+
+        
+        if (Auth::guard('member')->attempt($Validator)) {
+
+            Auth::guard('web')->logout();
+            Auth::guard('manager')->logout();
+            
+            if (Auth::guard('member')->user()->is_blocked == 1) {
+                Auth::guard('member')->logout();
+                return back()->withErrors([
+                    'loginError' => 'حساب کاربری شما مسدود شده است',
+                ]);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->route('member.dashboard');
@@ -40,6 +58,6 @@ class MemberAuthController extends Controller
     
         $request->session()->regenerateToken();
     
-        return redirect('/');
+        return redirect()->route('member.login');
     }
 }
