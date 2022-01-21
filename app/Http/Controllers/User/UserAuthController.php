@@ -30,15 +30,15 @@ class UserAuthController extends Controller
     {
         // validate inputs
         $validator = Validator::make($request->all(),[
-            'name'      => 'required',
+            'name'      => ['required'],
             'phone'     => ['required'],
             'password'  => ['required'],
             'cpassword' => ['required', 'same:password'],
         ]);
+
         $validator->sometimes('phone', 'unique:users,phone', function($input) {
             return User::where([['phone', $input->phone],['is_activated', 1]])->first();
         })->validated();
-
 
         if (User::where('phone', $request->phone)->first()) {
             // update user information

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,5 +36,8 @@ class Manager extends Authenticatable
     }
     public function members(){
         return $this->hasMany(Member::class);
+    }
+    public function hotels(){
+        return $this->hasMany(Hotel::class);
     }
 }

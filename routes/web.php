@@ -7,9 +7,8 @@ use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\Admin\ManagerModifyController;
 use App\Http\Controllers\Admin\MemberModifyController as Admin_MemberModifyController;
 use App\Http\Controllers\Manager\MemberModifyController as Manager_MemberModifyController;
-use App\Models\Manager;
-use App\Models\Member;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Manager\HotelModifyController as Manager_HotelModifyController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,8 +35,8 @@ Route::prefix('/admin')->name('admin.')->group(function(){
     Route::get('/', function(){ return redirect()->route('admin.dashboard') ;});
     Route::get('/dashboard', function(){ return view('admin.dashboard') ;})->name('dashboard');
 
-    Route::resource('/managers', ManagerModifyController::class);
-    Route::resource('/members', Admin_MemberModifyController::class);
+    Route::resource('/managers', ManagerModifyController::class)->except('show');
+    Route::resource('/members', Admin_MemberModifyController::class)->except('show');
 });
 
 // User
@@ -76,7 +75,8 @@ Route::prefix('/manager')->name('manager.')->group(function(){
     Route::middleware(['auth:manager', 'access_check'])->group(function(){
         Route::get('/', [ManagerAuthController::class, 'index'])->name('dashboard');
 
-        Route::resource('/members', Manager_MemberModifyController::class);
+        Route::resource('/members', Manager_MemberModifyController::class)->except('show');
+        Route::resource('/hotels', Manager_HotelModifyController::class)->except('show');
     });
 });
 

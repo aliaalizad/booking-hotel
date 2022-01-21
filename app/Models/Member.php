@@ -20,7 +20,6 @@ class Member extends Authenticatable
         'manager_id',
         'password',
         'is_blocked',
-
     ];
 
     protected $hidden = [
@@ -38,6 +37,11 @@ class Member extends Authenticatable
     public function manager()
     {
         return $this->belongsTo(Manager::class);
+    }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
     }
 
 }

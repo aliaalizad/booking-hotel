@@ -15,5 +15,6 @@
     </form>
 
     <a href="{{ route('manager.members.index') }}">Members</a>
+    <a href="{{ route('manager.hotels.index') }}">Hotels</a>
 </body>
 </html>

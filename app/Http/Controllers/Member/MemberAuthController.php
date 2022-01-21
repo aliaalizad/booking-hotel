@@ -23,7 +23,7 @@ class MemberAuthController extends Controller
     {
 
         $Validator = Validator::make($request->all(), [
-            'username'  => ['required'],
+            'personnel_code'  => ['required'],
             'password'  => ['required'],
         ])->Validated();
 

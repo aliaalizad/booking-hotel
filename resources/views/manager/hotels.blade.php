@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Members</title>
+    <title>Hotels</title>
 </head>
 
 <style>
@@ -27,30 +27,26 @@ tr:nth-child(even) {
 
 <body>
 
-    <a href="{{ route('manager.members.create') }}">Add New Member</a>
+    <a href="{{ route('manager.hotels.create') }}">Add New Hotel</a>
 
     <table>
         <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Personnel Code</th>
-            <th>Status</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>Address</th>
             <th></th>
         </tr>
 
-        @foreach ( $members as $member )
+        @foreach ( $hotels as $hotel )
         <tr>
             <th>{{ $loop->iteration }}</th>
-            <td>{{ $member->name }}</td>
-            <td>{{ $member->personnel_code }}</td>
-            <td>
-                @if ( ! $member->is_blocked )
-                      <h4 style="color: green;">Active</h4>
-                @else
-                      <h4 style="color: red;">Deactive</h4>
-                @endif
-            </td>
-            <td><a href="{{ route('manager.members.edit', $member->id) }}">edit</a></td>
+            <td>{{ $hotel->name }}</td>
+            <td>{{ $hotel->phone }}</td>
+            <td>{{ $hotel->city }}</td>
+            <td>{{ $hotel->address }}</td>
+            <td><a href="{{ route('manager.hotels.edit', $hotel->id) }}">edit</a></td>
         </tr>
         @endforeach
         

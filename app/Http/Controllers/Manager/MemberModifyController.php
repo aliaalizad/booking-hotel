@@ -19,12 +19,11 @@ class MemberModifyController extends Controller
      */
     public function index()
     {
-        $user = Auth::guard('manager')->user();
+        $manager = Auth::guard('manager')->user();
 
-        if ( Manager::find($user->id) ) {
-            $members = Manager::find($user->id)->members;
+        if ( Manager::find($manager->id) ) {
+            $members = Manager::find($manager->id)->members;
         }
-
         return view('manager.members', ['members' => $members]);
     }
 
@@ -46,7 +45,7 @@ class MemberModifyController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'name' => ['required'],
             'personnel_code' => ['required','unique:members,personnel_code'],
             'password' => ['required'],
@@ -71,7 +70,7 @@ class MemberModifyController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -82,7 +81,14 @@ class MemberModifyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $manager = Auth::guard('manager')->user();
+        $member = Member::findOrFail($id);
+
+        if ( $member->manager_id != $manager->id ) {
+            abort(404);
+        }
+
+        return view('manager.member', ['member' => $member]);
     }
 
     /**
@@ -94,7 +100,32 @@ class MemberModifyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'personnel_code' => ['required'],
+            'cpassword' => ['required_unless:password,null', 'same:password'],
+            'status' => ['boolean'],
+        ]);
+
+        $validator->sometimes('personnel_code', 'unique:members,personnel_code', function() {
+            $db_member = Member::find(request()->segment(3)) ;
+            $request_member = Member::where('personnel_code', request()->personnel_code)->first();
+            return ! ( $db_member == $request_member ); 
+        })->validated();
+
+        
+        $is_blocked = $request->status == null ? 1 : 0;
+
+        $member = Member::find($id);
+
+        $member->update([
+            'name' => $request->name,
+            'personnel_code' => $request->personnel_code,
+            'password' => Hash::make($request->password),
+            'is_blocked' => $is_blocked,
+        ]);
+
+        return redirect()->route('manager.members.index');
     }
 
     /**
@@ -105,6 +136,14 @@ class MemberModifyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $member = Member::find($id);
+
+        if ($member->hotel_id != null) {
+            return back()->withErrors(['deleteError' => 'this member has been assigned to ' . $member->hotel->name . ' first remove from hotel']);
+        }
+
+        $member->delete();
+
+        return redirect()->route('manager.members.index');
     }
 }

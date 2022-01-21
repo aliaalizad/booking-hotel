@@ -1,12 +1,10 @@
 <?php
 
-use App\Models\Hotel;
 use App\Models\Manager;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
-class CreateMembersTable extends Migration
+class CreateHotelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +13,13 @@ class CreateMembersTable extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('hotels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('personnel_code', 10)->unique();
-            $table->string('password');
-            $table->boolean('is_blocked')->default(0);
+            $table->string('phone');
+            $table->string('address');
+            $table->string('city');
             $table->foreignIdFor(Manager::class);
-            $table->foreignIdFor(Hotel::class)->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ class CreateMembersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('hotels');
     }
 }
