@@ -18,6 +18,11 @@ return [
         'passwords' => 'users',
     ],
 
+    'admin' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
+    ],
+
     'manager' => [
         'driver' => 'eloquent',
         'model' => App\Models\Manager::class,
@@ -27,6 +32,7 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Member::class,
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -49,6 +55,11 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
 
         'manager' => [
@@ -90,6 +101,11 @@ return [
         //     'table' => 'users',
         // ],
 
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
         'managers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Manager::class,
@@ -122,6 +138,11 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         'managers' => [

@@ -7,8 +7,16 @@
     <title>Admin Dashboard</title>
 </head>
 <body>
-    <a href="{{ route('admin.managers.create') }}">Add Manager</a>
-    <br>
-    <a href="{{ route('admin.members.create') }}">Add Member</a>
+
+    <div>Name: {{ Auth::guard('admin')->user()->name }}</div>
+    <div>Phone: {{ Auth::guard('admin')->user()->phone }}</div>
+    <form action="{{ route('admin.logout') }}" method="post">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
+    <a href="{{ route('admin.contracts.index') }}">Contracts</a>
+    <a href="{{ route('admin.managers.index') }}">Managers</a>
+    <a href="{{ route('admin.members.index') }}">Members</a>
+
 </body>
 </html>

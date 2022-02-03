@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         
         'access_check' => \App\Http\Middleware\AccessCheck::class,
+        'otp' => \App\Http\Middleware\OTP::class,
     ];
 }

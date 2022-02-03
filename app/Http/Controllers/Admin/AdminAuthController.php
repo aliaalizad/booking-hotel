@@ -1,49 +1,42 @@
 <?php
 
-namespace App\Http\Controllers\Member;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class MemberAuthController extends Controller
+class AdminAuthController extends Controller
 {
     public function index()
     {
-        return view('member.dashboard');
+        return view('admin.dashboard');
     }
 
     public function showLoginForm()
     {
-        return view('member.login');
+        return view('admin.login');
     }
 
     public function login(Request $request)
     {
 
         $Validator = Validator::make($request->all(), [
-            'personnel_code'  => ['required'],
+            'username'  => ['required'],
             'password'  => ['required'],
         ])->Validated();
 
-        
-        if (Auth::guard('member')->attempt($Validator)) {
 
-            Auth::guard('admin')->logout();
-            Auth::guard('manager')->logout();
-            Auth::guard('web')->logout();
+        if (Auth::guard('admin')->attempt($Validator)) {
             
-            if (Auth::guard('member')->user()->is_blocked == 1) {
-                Auth::guard('member')->logout();
-                return back()->withErrors([
-                    'loginError' => 'حساب کاربری شما مسدود شده است',
-                ]);
-            }
+            Auth::guard('manager')->logout();
+            Auth::guard('member')->logout();
+            Auth::guard('web')->logout();
 
             $request->session()->regenerate();
 
-            return redirect()->route('member.dashboard');
+            return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors([
@@ -53,12 +46,12 @@ class MemberAuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('member')->logout();
+        Auth::guard('admin')->logout();
     
         $request->session()->invalidate();
     
         $request->session()->regenerateToken();
     
-        return redirect()->route('member.login');
+        return redirect()->route('admin.login');
     }
 }

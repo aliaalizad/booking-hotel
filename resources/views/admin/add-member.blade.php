@@ -34,14 +34,24 @@
                     @enderror
                 @endif
             </div>
+
             <div class="form-group">
-                <input type="text" class="form-control item" name="manager_id" id="manager_id" placeholder="Manager ID" value="{{ old('manager_id') }}">
-                @if ($errors->has('manager_id'))
-                    @error('manager_id')
+                <Label for="manager">Manager</Label>
+                
+                <select style="width: 100%;" name="manager" id="manager">
+                    @foreach ( $managers as $manager )
+                        <option value="{{ $manager->id }}"> {{ $manager->name . " ( $manager->username )" }} </option>
+                    @endforeach
+                </select>
+
+                @if ($errors->has('manager'))
+                    @error('manager')
                         <div style="color: red;">{{ $message }}</div>
                     @enderror
                 @endif
             </div>
+
+
             <div class="form-group">
                 <input type="password" class="form-control item" name="password" id="password" placeholder="Password" ">
                 @if ($errors->has('password'))

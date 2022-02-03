@@ -30,8 +30,10 @@ class ManagerAuthController extends Controller
 
         if (Auth::guard('manager')->attempt($Validator)) {
             
-            Auth::guard('web')->logout();
+            Auth::guard('admin')->logout();
             Auth::guard('member')->logout();
+            Auth::guard('web')->logout();
+
 
             $request->session()->regenerate();
 

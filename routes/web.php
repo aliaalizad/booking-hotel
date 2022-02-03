@@ -1,14 +1,14 @@
 <?php
 
-use App\Classes\Token\UserToken;
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\ContractModifyController;
 use App\Http\Controllers\Manager\ManagerAuthController;
 use App\Http\Controllers\Member\MemberAuthController;
 use App\Http\Controllers\User\UserAuthController;
-use App\Http\Controllers\Admin\ManagerModifyController;
+use App\Http\Controllers\Admin\ManagerModifyController as Admin_ManagerModifyController;
 use App\Http\Controllers\Admin\MemberModifyController as Admin_MemberModifyController;
 use App\Http\Controllers\Manager\MemberModifyController as Manager_MemberModifyController;
 use App\Http\Controllers\Manager\HotelModifyController as Manager_HotelModifyController;
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,26 +17,34 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider withi   n a group which
+| routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
 */
 
 Route::get('/', function(){
 
-
-
-
 })->name('home'); 
+
 
 // Admin
 Route::prefix('/admin')->name('admin.')->group(function(){
 
-    Route::get('/', function(){ return redirect()->route('admin.dashboard') ;});
-    Route::get('/dashboard', function(){ return view('admin.dashboard') ;})->name('dashboard');
+    Route::middleware(['guest:admin'])->group(function(){
+        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AdminAuthController::class, 'login']);
+    });
 
-    Route::resource('/managers', ManagerModifyController::class)->except('show');
-    Route::resource('/members', Admin_MemberModifyController::class)->except('show');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware(['auth:admin'])->group(function(){
+        Route::get('/', function(){ return redirect()->route('admin.dashboard') ;});
+        Route::get('/dashboard', function(){ return view('admin.dashboard') ;})->name('dashboard');
+        Route::resource('/managers', Admin_ManagerModifyController::class)->except('show');
+        Route::resource('/members', Admin_MemberModifyController::class)->except('show');
+        Route::resource('/contracts', ContractModifyController::class)->except('show');
+    });
+
 });
 
 // User
@@ -51,9 +59,7 @@ Route::name('user.')->group(function(){
         Route::post('/register/confirm', [UserAuthController::class, 'confirm']);
     });
 
-    Route::get('/profile/logout', function(){ abort(404); });
     Route::post('/profile/logout', [UserAuthController::class, 'logout'])->name('logout');
-
     
     Route::middleware(['auth:web', 'access_check'])->prefix('/profile')->group(function(){
         Route::get('/', [UserAuthController::class, 'index'])->name('profile');
@@ -69,18 +75,16 @@ Route::prefix('/manager')->name('manager.')->group(function(){
         Route::get('/login', [ManagerAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [ManagerAuthController::class, 'login'])->name('login');
     });
-    Route::get('/logout', function(){ abort(404); });
     Route::post('/logout', [ManagerAuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['auth:manager', 'access_check'])->group(function(){
         Route::get('/', [ManagerAuthController::class, 'index'])->name('dashboard');
-
         Route::resource('/members', Manager_MemberModifyController::class)->except('show');
         Route::resource('/hotels', Manager_HotelModifyController::class)->except('show');
     });
 });
 
-// member
+// Member
 Route::prefix('/member')->name('member.')->group(function(){
 
     Route::middleware(['guest:member'])->group(function(){

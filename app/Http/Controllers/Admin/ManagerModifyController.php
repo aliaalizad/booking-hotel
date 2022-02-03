@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contract;
 use Illuminate\Http\Request;
 use App\Models\Manager;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 class ManagerModifyController extends Controller
 {
@@ -17,7 +21,8 @@ class ManagerModifyController extends Controller
      */
     public function index()
     {
-        //
+        $managers = Manager::all();
+        return view('admin.managers', ['managers' => $managers]);
     }
 
     /**
@@ -27,7 +32,9 @@ class ManagerModifyController extends Controller
      */
     public function create()
     {
-        return view('admin.add-manager');
+        $contracts = Contract::all();
+
+        return view('admin.add-manager', ['contracts' => $contracts]);
     }
 
     /**
@@ -44,9 +51,10 @@ class ManagerModifyController extends Controller
             'phone' => ['required','unique:managers,phone'],
             'email' => ['required','unique:managers,email'],
             'province' => ['required'],
-            'password' => ['required'],
+            'password' => ['required'],-
             'cpassword' => ['required', 'same:password'],
-        ])->validated();
+            'contract' => ['required', Rule::exists('contracts', 'id')],
+            ])->validated();
 
         Manager::create([
             'name' => $request->name,
@@ -55,9 +63,10 @@ class ManagerModifyController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'province' => $request->province,
+            'contract_id' => $request->contract,
         ]);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.managers.index');
 
     }
 
@@ -80,7 +89,10 @@ class ManagerModifyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $manager = Manager::findOrFail($id);
+        $contracts = Contract::all();
+
+        return view('admin.manager', ['manager' => $manager, 'contracts' => $contracts]);
     }
 
     /**
@@ -92,7 +104,32 @@ class ManagerModifyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'username' => ['required'],
+            'cpassword' => ['required_unless:password,null', 'same:password'],
+            'status' => ['boolean'],
+        ]);
+
+        $validator->sometimes('username', 'unique:managers,username', function() {
+            $db_member = Manager::find(request()->segment(3)) ;
+            $request_member = Manager::where('username', request()->username)->first();
+            return ! ( $db_member == $request_member ); 
+        })->validated();
+
+        
+        $is_blocked = $request->status == null ? 1 : 0;
+
+        $member = Manager::find($id);
+
+        $member->update([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'is_blocked' => $is_blocked,
+        ]);
+
+        return redirect()->route('admin.managers.index');
     }
 
     /**

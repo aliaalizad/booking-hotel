@@ -94,9 +94,10 @@ class UserAuthController extends Controller
 
         if (Auth::guard('web')->attempt($validator)) {
 
+            Auth::guard('admin')->logout();
             Auth::guard('manager')->logout();
             Auth::guard('member')->logout();
-            
+
             if (Auth::guard('web')->user()->is_activated == 0) {
 
                 if ( UserToken::exists(Auth::guard('web')->user()->id, 'register') ){

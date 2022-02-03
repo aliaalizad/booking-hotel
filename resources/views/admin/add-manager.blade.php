@@ -79,6 +79,22 @@
                 @endif
             </div>
 
+            <div class="form-group">
+                <Label for="contracts">Contract</Label>
+                
+                <select style="width: 100%;" name="contract" id="contracts">
+                    @foreach ( $contracts as $contract )
+                        <option value="{{ $contract->id }}"> {{ $contract->name . " ($contract->fee)" }} </option>
+                    @endforeach
+                </select>
+
+                @if ($errors->has('contract'))
+                    @error('contract')
+                        <div style="color: red;">{{ $message }}</div>
+                    @enderror
+                @endif
+            </div>
+
 
             <div class="form-group">
                 <button type="submit" class="btn btn-block create-account">Add</button>

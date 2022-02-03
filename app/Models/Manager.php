@@ -20,7 +20,8 @@ class Manager extends Authenticatable
         'is_blocked',
         'phone',
         'email',
-        'province'
+        'province',
+        'contract_id'
     ];
 
     protected $hidden = [
@@ -31,13 +32,21 @@ class Manager extends Authenticatable
 
 
     // relationships
-    public function tokens(){
+    public function tokens()
+    {
         return $this->hasMany(Token::class);
     }
-    public function members(){
+    public function members()
+    {
         return $this->hasMany(Member::class);
     }
-    public function hotels(){
+    public function hotels()
+    {
         return $this->hasMany(Hotel::class);
+    }
+
+    public function contract()
+    {
+        return $this->belongsToMany(Contract::class);
     }
 }

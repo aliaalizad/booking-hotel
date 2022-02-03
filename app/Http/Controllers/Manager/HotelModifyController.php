@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\OTP;
 use App\Models\Hotel;
 use App\Models\Manager;
 use App\Models\Member;
@@ -13,6 +14,12 @@ use Illuminate\Validation\Rule;
 
 class HotelModifyController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(OTP::class)->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
