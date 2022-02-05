@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Auth;
 
 use App\Classes\Sms\Sms;
 use App\Classes\Token\UserToken;

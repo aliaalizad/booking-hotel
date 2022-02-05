@@ -1,0 +1,10 @@
+NOW () :
+یکسان سازی کلاس های کنترلر مشترک و جلوگیری از هارد کد#
+
+
+
+AFTER () :
+# implement views with layouts and components
+# implement hotels section for admin
+# contract select in manager edit (/admin/managers/#/edit)
+# contract edit (/admin/contracts/#/edit)
