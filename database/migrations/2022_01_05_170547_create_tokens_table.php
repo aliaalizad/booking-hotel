@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\Manager;
-use App\Models\Member;
-use App\Models\User;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,10 +17,9 @@ class CreateTokensTable extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->string('token');
-            
-            $table->foreignIdFor(User::class)->default(0);
-            $table->foreignIdFor(Manager::class)->default(0);
-            $table->foreignIdFor(Member::class)->default(0);
+
+            $table->integer('tokenable_id');
+            $table->string('tokenable_type');
 
             $table->string('type');
             $table->timestamp('expired_at')->nullable();

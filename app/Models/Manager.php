@@ -34,7 +34,7 @@ class Manager extends Authenticatable
     // relationships
     public function tokens()
     {
-        return $this->hasMany(Token::class);
+        return $this->morphMany(Token::class, 'tokenable');
     }
     public function members()
     {

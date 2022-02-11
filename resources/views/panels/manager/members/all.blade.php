@@ -1,4 +1,4 @@
-@extends('panels.admin.master')
+@extends('panels.manager.master')
 
 @section('page_title', 'کارمندان')
 
@@ -44,7 +44,7 @@
             </div>
             <!--end::Compact form-->
             <!--begin::Advance form-->
-            <div class=@if( ! is_null(request('name')) or ! is_null(request('status')) or (request('manager')!=0) or (request('hotel')!=0)  ) {{ "" }} @else {{ 'collapse' }} @endif  id="kt_advanced_search_form">
+            <div class=@if( ! is_null(request('name')) or ! is_null(request('status')) or (request('hotel')!=0)  ) {{ "" }} @else {{ 'collapse' }} @endif  id="kt_advanced_search_form">
                 <!--begin::Separator-->
                 <div class="separator separator-dashed mt-9 mb-6"></div>
                 <!--end::Separator-->
@@ -91,17 +91,6 @@
                 <!--end::Row-->
                 <!--begin::Row-->
                 <div class="row g-8">
-                    <!--begin::Col-->
-                    <div class="col-xxl-4">
-                        <label class="fs-6 form-label fw-bolder text-dark ">مدیر</label>
-                        <select name="manager" class="form-select form-select-solid" data-control="select2">
-                        <option value="0" @selected(request('manager') == 0)>هیچ کدام</option>
-                            @foreach ($managers as $manager)
-                                <option value="{{ $manager->id }}" @selected(request('manager') == $manager->id)>{{ $manager->name }}</option>
-                            @endforeach
-                            
-                        </select>
-                    </div>
                     <!--end::Col-->
                     <!--begin::Col-->
                     <div class="col-xxl-4">
@@ -130,7 +119,7 @@
     <div class="card-header">
         <h3 class="card-title">کارمندان</h3>
         <div class="card-toolbar ">
-            <a href="{{ route('admin.members.create') }}" class="btn btn-primary btn-sm">افزودن کارمند جدید</a>
+            <a href="#" class="btn btn-primary btn-sm">افزودن کارمند جدید</a>
         </div>
     </div>
     <div class="card-body">
@@ -138,10 +127,9 @@
             <thead>
                 <tr>
                     <th>ردیف</th>
-                    <th>نام و نام  خانوادگی</th>
+                    <th>نام و نام خانوادگی</th>
                     <th>کد پرسنلی</th>
                     <th>وضعیت حساب کاربری</th>
-                    <th>مدیر</th>
                     <th>هتل</th>
                     <th>اقدامات</th>
                 </tr>
@@ -165,7 +153,6 @@
                                 <span class="badge badge-danger">غیرفعال</span>
                             @endif
                         </td>
-                        <td><a href="#">{{ $member->manager->name ?? '-'}}</a></td>
                         <td><a href="#">{{ $member->hotel->name ?? '-' }}</a></td>
                         <td><a href="#" class="btn btn-secondary btn-sm">ویرایش</a></td>
                     </tr>

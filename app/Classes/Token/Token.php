@@ -16,7 +16,8 @@ class Token
 
             TokenModel::create([
                 'token' => Hash::make($content),
-                static::$column_name => $id,
+                'tokenable_id' => $id,
+                'tokenable_type' => static::$class_name,
                 'type' => $type,
                 'expired_at' => now()->addMinutes($validitylength),
                 'created_at' => now(),

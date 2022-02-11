@@ -15,15 +15,19 @@ class MemberController {
 
     public function index()
     {
+        $members = null;
+        $managers = null;
+        $hotels = null;
+
         if ( $this->panel == 'admin' ) {
-            $members = $this->getMembers(6);
+            $members = $this->getMembers();
+            $managers = $this->getAllManagers();
+            $hotels = $this->getAllHotels();
         
         } elseif ( $this->panel == 'manager') {
-            $members = $this->getCurrentManager()->members;
+            $members = $this->getMembers(true);
+            $hotels = $this->getAllHotels(true);
         }
-
-        $managers = $this->getAllManagers();
-        $hotels = $this->getAllHotels();
 
         return view('panels.' . $this->panel . '.members.all', compact('members', 'managers', 'hotels') );
     }
