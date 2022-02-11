@@ -1,10 +1,6 @@
-NOW () :
-یکسان سازی کلاس های کنترلر مشترک و جلوگیری از هارد کد#
-
-
-
-AFTER () :
-# implement views with layouts and components
+# کنترل دیتای های بزرگ برای فیلد های select در فرم ها
+# طراحی فرم ها و صفحات برای ResourceController
 # implement hotels section for admin
 # contract select in manager edit (/admin/managers/#/edit)
-# contract edit (/admin/contracts/#/edit)
+# contract edit/update/destroy methods (/admin/contracts/#/edit)
+# فعال شدن بخش سایدبار زمانی که در صفحه مربوطه قرار داریم

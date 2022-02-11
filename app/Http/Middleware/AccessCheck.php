@@ -32,7 +32,7 @@ class AccessCheck
                 if ($is_blocked) {
                     Auth::guard('manager')->logout();
 
-                    return redirect()->route('manager.login')->withErrors([
+                    return to_route('manager.login')->withErrors([
                         'loginError' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }
@@ -46,7 +46,7 @@ class AccessCheck
                 if ($is_blocked) {
                     Auth::guard('member')->logout();
 
-                    return redirect()->route('member.login')->withErrors([
+                    return to_route('member.login')->withErrors([
                         'loginError' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }
@@ -60,7 +60,7 @@ class AccessCheck
                 if ($is_blocked) {
                     Auth::guard('web')->logout();
     
-                    return redirect()->route('user.login')->withErrors([
+                    return to_route('user.login')->withErrors([
                         'loginError' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }

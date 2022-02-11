@@ -1,21 +1,21 @@
 <?php
 
-use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\User\AuthController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware(['guest:web'])->group(function(){
-    Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [UserAuthController::class, 'register']);
-    Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [UserAuthController::class, 'login']);
+Route::middleware(['guest:web'])->controller(AuthController::class)->group(function(){
+    Route::get('/register', 'showRegisterForm')->name('register');
+    Route::post('/register', 'register');
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'login');
 
-    Route::get('/register/confirm', [UserAuthController::class, 'showConfirmForm'])->name('confirm');
-    Route::post('/register/confirm', [UserAuthController::class, 'confirm']);
+    Route::get('/register/confirm', 'showConfirmForm')->name('confirm');
+    Route::post('/register/confirm', 'confirm');
 });
 
-Route::post('/profile/logout', [UserAuthController::class, 'logout'])->name('logout');
+Route::post('/profile/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:web', 'access_check'])->prefix('/profile')->group(function(){
-    Route::get('/', [UserAuthController::class, 'index'])->name('profile');
+    Route::get('/', [AuthController::class, 'index'])->name('profile');
 });

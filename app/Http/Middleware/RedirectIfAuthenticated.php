@@ -14,29 +14,29 @@ class RedirectIfAuthenticated
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @param  string|null  ...$guards
+     * @param  string|null  ...$panels
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, ...$guards)
+    public function handle(Request $request, Closure $next, ...$panels)
     {
-        $guards = empty($guards) ? [null] : $guards;
+        $panels = empty($panels) ? [null] : $panels;
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
+        foreach ($panels as $panel) {
+            if (Auth::guard($panel)->check()) {
 
-                if ($guard === 'admin') {
-                    return redirect()->route('admin.dashboard');
+                if ($panel === 'admin') {
+                    return to_route('admin.dashboard');
                 }
 
-                if ($guard === 'manager') {
-                    return redirect()->route('manager.dashboard');
+                if ($panel === 'manager') {
+                    return to_route('manager.dashboard');
                 }
 
-                if ($guard === 'member') {
-                    return redirect()->route('member.dashboard');
+                if ($panel === 'member') {
+                    return to_route('member.dashboard');
                 }
 
-                return redirect()->route('user.profile');
+                return to_route('user.profile');
                 // return redirect(RouteServiceProvider::HOME);
             }
         }
