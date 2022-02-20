@@ -177,6 +177,10 @@ class AuthController extends Controller
                 // delete token
                 UserToken::delete($id, 'register');
 
+                // logout other guards
+                Auth::guard('admin')->logout();
+                Auth::guard('manager')->logout();
+                Auth::guard('member')->logout();
                 //login user
                 Auth::guard('web')->loginUsingId($id);
                 // redirect

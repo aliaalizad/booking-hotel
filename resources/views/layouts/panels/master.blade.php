@@ -15,8 +15,8 @@
     <!--end::Fonts-->
 
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
-    <link href="/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="/css/style.bundle.rtl.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/global/plugins.bundle.rtl.css" rel="stylesheet" type="text/css" />
+    <link href="/css/panels.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
 
     @stack('styles')

@@ -1,8 +1,10 @@
 <?php
 
-
+use App\Models\Admin;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function(){
 
+    return view('welcome');
 
 })->name('home'); 

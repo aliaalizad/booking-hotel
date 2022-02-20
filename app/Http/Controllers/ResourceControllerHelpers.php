@@ -43,8 +43,39 @@ trait ResourceControllerHelpers {
             $members->where('hotel_id', $data);
         }
 
-
         return $members->paginate(20);
+    }
+
+    public function getManagers()
+    {
+        $managers = Manager::query();
+
+        // filter
+        if ($data = request('username')) {
+            $managers->where('username', $data);
+        }
+        if ($data = request('name')) {
+            $managers->where('name', 'LIKE', "%$data%");
+        }
+        if ($data = request('phone')) {
+            $managers->where('phone', $data);
+        }
+        if ($data = request('province')) {
+            $managers->where('province', 'LIKE', "%$data%");
+        }
+        if ($data = request('status')) {
+            if ( $data =='active' ) {
+                $managers->where('is_blocked', 0);
+            }
+            if ( $data =='inactive' ) {
+                $managers->where('is_blocked', 1);
+            }
+        }
+        if ($data = request('contract')) {
+            $managers->where('contract_id', $data);
+        }
+
+        return $managers->paginate(20);
     }
 
     public function getContracts()
@@ -84,4 +115,5 @@ trait ResourceControllerHelpers {
     {
         return Auth::guard('manager')->user();
     }
+    
 }

@@ -36,17 +36,19 @@ class Manager extends Authenticatable
     {
         return $this->morphMany(Token::class, 'tokenable');
     }
-    public function members()
-    {
-        return $this->hasMany(Member::class);
-    }
+    
     public function hotels()
     {
         return $this->hasMany(Hotel::class);
     }
 
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
+
     public function contract()
     {
-        return $this->belongsToMany(Contract::class);
+        return $this->belongsTo(Contract::class);
     }
 }

@@ -11,6 +11,7 @@
 
 
 @section('aside-menu-items')
+
 	<x-panels.aside.menu-section name="امور مالی"/>
 	<x-panels.aside.menu-item name="منو" route="admin.dashboard" icon="bi bi-grid-1x2-fill"/>
 	<x-panels.aside.menu-section name="امور فنی"/>

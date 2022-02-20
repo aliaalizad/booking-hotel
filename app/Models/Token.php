@@ -37,16 +37,8 @@ class Token extends Model
 
     // relationships
 
-    public function user()
+    public function tokenable()
     {
-        return $this->belongsTo(User::class);
-    }
-    public function manager()
-    {
-        return $this->belongsTo(Manager::class);
-    }
-    public function member()
-    {
-        return $this->belongsTo(Member::class);
+        return $this->morphTo();
     }
 }

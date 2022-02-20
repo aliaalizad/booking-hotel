@@ -8,7 +8,7 @@ use App\Http\Controllers\ResourceControllerHelpers;
 use App\Models\Hotel;
 use App\Models\Member;
 
-class HotelController {
+class HotelController extends Controller{
 
     use ResourceControllerHelpers;
 

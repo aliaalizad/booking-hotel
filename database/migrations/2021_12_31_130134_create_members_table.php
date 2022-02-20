@@ -19,10 +19,11 @@ class CreateMembersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('personnel_code', 10)->unique();
+            $table->string('phone')->unique();
             $table->string('password');
             $table->boolean('is_blocked')->default(0);
-            $table->foreignIdFor(Manager::class);
             $table->foreignIdFor(Hotel::class)->nullable();
+            $table->foreignIdFor(Manager::class);
             $table->timestamps();
         });
     }

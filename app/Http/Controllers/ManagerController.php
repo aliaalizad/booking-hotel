@@ -10,41 +10,45 @@ use App\Models\Hotel;
 use App\Models\Manager;
 use App\Models\Member;
 
-class ManagerController {
+class ManagerController extends Controller {
 
     use ResourceControllerHelpers;
 
 
     public function index()
     {
-        $managers = $this->getAllManagers();
-        return view($this->panel . '.managers', compact('managers') );
+        $managers = $this->getManagers();
+        
+        return view('panels.' . $this->panel . '.managers.all', compact('managers') );
     }
 
     public function create()
     {
-        $contracts = $this->getAllContracts();
-
-        return view($this->panel . '.add-manager', compact('contracts') );
+        return view('panels.' . $this->panel . '.managers.add');
     }
 
 
     public function store(Request $request)
     {
+        // dd($request->input());
         $request->validate([
             'name' => ['required'],
             'username' => ['required','unique:managers,username'],
+            'status' => ['boolean'],
             'phone' => ['required','unique:managers,phone'],
             'email' => ['required','unique:managers,email'],
             'province' => ['required'],
-            'password' => ['required'],
-            'cpassword' => ['required', 'same:password'],
+            'password' => ['required', 'confirmed'],
             'contract' => ['required', Rule::exists('contracts', 'id')],
         ]);
+
+        // set is_blocked value
+        $is_blocked = is_null($request->status) ? 1 : 0;
 
         Manager::create([
             'name' => $request->name,
             'username' => $request->username,
+            'is_blocked' => $is_blocked,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'email' => $request->email,
@@ -58,9 +62,7 @@ class ManagerController {
 
     public function edit(Manager $manager)
     {
-        $contracts = $this->getAllContracts();
-
-        return view( $this->panel . '.manager', compact('manager', 'contracts'));
+        return view('panels.' . $this->panel . '.managers.edit', compact('manager'));
     }
 
 
@@ -69,25 +71,49 @@ class ManagerController {
         $request->validate([
             'name' => ['required'],
             'username' => ['required', Rule::unique('managers', 'username')->ignore($manager->id)],
+            'phone' => ['required', Rule::unique('managers', 'phone')->ignore($manager->id)],
+            'email' => ['required', Rule::unique('managers', 'email')->ignore($manager->id)],
+            'contract' => ['required', Rule::exists('contracts', 'id')],
+            'province' => ['required'],
             'status' => ['boolean'],
         ]);
 
-        $is_blocked = $request->status == null ? 1 : 0;
+        // set is_blocked value
+        $is_blocked = is_null($request->status) ? 1 : 0;
 
+        // update data
         $manager->update([
             'name' => $request->name,
             'username' => $request->username,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'contract_id' => $request->contract,
+            'province' => $request->province,
             'is_blocked' => $is_blocked,
         ]);
 
-        if ( ! is_null($request->password) ) {
+        // update password
+        if ( ! is_null($request->current_password) || ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
+            
             $request->validate([
+                'current_password' => ['required'],
                 'password' => ['required'],
-                'cpassword' => ['required', 'same:password'],
+                'password_confirmation' => ['required'],
             ]);
-            $manager->update([
-                'password' => Hash::make($request->password),
-            ]);
+
+            if ( Hash::check($request->current_password, $manager->password) ) {
+                $request->validate([
+                    'password' => ['confirmed'],
+                ]);
+                $manager->update([
+                    'password' => Hash::make($request->password),
+                ]); 
+
+            } else {
+                return back()->withInput()->withErrors([
+                    'invalidCurrentPasword' => 'current password is invalid'
+                ]);
+            }
         }
 
         return to_route($this->panel . '.managers.index');
