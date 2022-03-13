@@ -83,6 +83,7 @@ trait ResourceControllerHelpers {
         return Contract::paginate(20);
     }
 
+    
 
     // getAllX
     public function getAllHotels($manager=false)

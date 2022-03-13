@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\Admin;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,9 +14,10 @@ use Spatie\Permission\Models\Permission;
 |
 */
 
+// Route::get('test', function(){
+//     return view('list');
+// });
 
-Route::get('/', function(){
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    return view('welcome');
-
-})->name('home'); 
+Route::get('/search', [SearchController::class, 'index'])->name('rooms');

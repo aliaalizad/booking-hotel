@@ -18,7 +18,11 @@ class CreateHotelsTable extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
-            $table->string('city');
+            $table->text('description')->nullable();
+            $table->string('city'); 
+            // $table->json('images');
+            // $table->json('rules');
+            // $table->json('notifications');
             $table->foreignIdFor(Manager::class);
             $table->timestamps();
         });

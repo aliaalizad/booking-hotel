@@ -16,7 +16,8 @@
 
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="/plugins/global/plugins.bundle.rtl.css" rel="stylesheet" type="text/css" />
-    <link href="/css/panels.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/global/persian-datepicker.css" rel="stylesheet" type="text/css" />
+    <link href="/css/panels.css" rel="stylesheet" type="text/css"/>
     <!--end::Global Stylesheets Bundle-->
 
     @stack('styles')
@@ -54,6 +55,8 @@
             <script src="/js/scripts.bundle.js"></script>
             <script src="/plugins/global/plugins.bundle.js"></script>
             <script src="/plugins/global/persianumber.js"></script>
+            <script src="/plugins/global/persian-date.js"></script>
+            <script src="/plugins/global/persian-datepicker.js"></script>
         <!--end::Global Javascript Bundle-->
     
     <!--begin::Page Custom Javascript-->
@@ -64,6 +67,104 @@
     
     <!--begin::JQuery-->
         <script type="text/javascript">$(document).ready(function(){$('.persianNumber').persiaNumber();});</script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $(".persianDate").pDatepicker({
+                "inline": false,
+                "format": "YYYY/MM/DD",
+                "viewMode": "day",
+                "initialValue": true,
+                "minDate": 1645268489422,
+                "maxDate": 16446863889471,
+                "autoClose": true,
+                "position": "auto",
+                "altFormat": "YYYY-MM-DD",
+                "altField": "#altfieldExample",
+                "onlyTimePicker": false,
+                "onlySelectOnDate": false,
+                "calendarType": "persian",
+                "inputDelay": 800,
+                "observer": false,
+                "calendar": {
+                    "persian": {
+                    "locale": "fa",
+                    "showHint": true,
+                    "leapYearMode": "algorithmic"
+                    },
+                    "gregorian": {
+                    "locale": "en",
+                    "showHint": false
+                    }
+                },
+                "navigator": {
+                    "enabled": true,
+                    "scroll": {
+                    "enabled": true
+                    },
+                    "text": {
+                    "btnNextText": "<",
+                    "btnPrevText": ">"
+                    }
+                },
+                "toolbox": {
+                    "enabled": false,
+                    "calendarSwitch": {
+                    "enabled": false,
+                    "format": "MMMM"
+                    },
+                    "todayButton": {
+                    "enabled": false,
+                    "text": {
+                        "fa": "امروز",
+                        "en": "Today"
+                    }
+                    },
+                    "submitButton": {
+                    "enabled": false,
+                    "text": {
+                        "fa": "تایید",
+                        "en": "Submit"
+                    }
+                    },
+                    "text": {
+                    "btnToday": "امروز"
+                    }
+                },
+                "timePicker": {
+                    "enabled": false,
+                    "step": 1,
+                    "hour": {
+                    "enabled": true,
+                    "step": null
+                    },
+                    "minute": {
+                    "enabled": true,
+                    "step": null
+                    },
+                    "second": {
+                    "enabled": true,
+                    "step": null
+                    },
+                    "meridian": {
+                    "enabled": true
+                    }
+                },
+                "dayPicker": {
+                    "enabled": true,
+                    "titleFormat": "YYYY MMMM"
+                },
+                "monthPicker": {
+                    "enabled": true,
+                    "titleFormat": "YYYY"
+                },
+                "yearPicker": {
+                    "enabled": true,
+                    "titleFormat": "YYYY"
+                },
+                "responsive": true
+                });
+            });
+        </script>
     <!--end::JQuery-->
     
 </body>

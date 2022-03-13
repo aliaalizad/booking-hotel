@@ -13,20 +13,19 @@ class ContractController extends Controller
 
     public function index()
     {
-        $contracts = $this->getAllContracts();
-        return view($this->panel . '.contracts', compact('contracts'));
+        $contracts = $this->getContracts();
+        return view('panels.' . $this->panel . '.contracts.all', compact('contracts'));
     }
 
    
     public function create()
     {
-        return view($this->panel . '.add-contract');
+        return view('panels.' . $this->panel . '.contracts.add');
     }
 
     
     public function store(Request $request)
     {
-
         $request->validate([
             'name' => ['required'],
             'fee' => ['required'],
@@ -40,14 +39,24 @@ class ContractController extends Controller
         return to_route($this->panel . '.contracts.index');
     }
 
-    public function edit($id)
+    public function edit(Contract $contract)
     {
-        //
+        return view('panels.' . $this->panel . '.contracts.edit', compact('contract'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Contract $contract)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+            'fee' => ['required'],
+        ]);
+
+        $contract->update([
+            'name' => $request->name,
+            'fee' => $request->fee,
+        ]);
+
+        return to_route($this->panel . '.contracts.index');
     }
 
     public function destroy($id)
