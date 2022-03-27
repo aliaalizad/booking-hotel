@@ -17,7 +17,7 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="/plugins/global/plugins.bundle.rtl.css" rel="stylesheet" type="text/css" />
     <link href="/plugins/global/persian-datepicker.css" rel="stylesheet" type="text/css" />
-    <link href="/css/panels.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <!--end::Global Stylesheets Bundle-->
 
     @stack('styles')

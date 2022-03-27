@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Manager\HotelController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -20,4 +21,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/search', [SearchController::class, 'index'])->name('rooms');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/hotel/{hotel}', [SearchController::class, 'hotel'])->name('hotel');

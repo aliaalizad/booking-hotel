@@ -1,6 +1,6 @@
 @extends('layouts.app.master')
 
-@section('title', config('app.title') . ' | ' . 'لیست مراکز اقامتی' )
+@section('title', 'جستجوی مراکز')
 
 
 @push('styles')
@@ -143,25 +143,78 @@
                     <x-searchForm-collapse />
                 </div>
 
-                <div class="row justify-content-center">
+                <div class="row d-block d-lg-none">
+                    <!--begin::Filter Trigger button-->
+                    <button id="filter_button" class="btn btn-primary btn-sm">فیلتر</button>
+                    <!--end::Filter Trigger button-->
 
-                    <div class="col-lg-10 col-md-10 col-sm-10 p-0">
+                    <div id="filter" class="bg-white drawer drawer-start" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#filter_button" data-kt-drawer-close="#filter_button_close" data-kt-drawer-name="docs" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}" data-kt-drawer-direction="start" style="width: 500px !important;">
+                        <!--begin::Card-->
+                        <div class="card rounded-0 w-100">
+                            <!--begin::Card header-->
+                            <div class="card-header pe-5 justify-content-start">
+                                <!--begin::Card toolbar-->
+                                <div class="card-toolbar">
+                                    <!--begin::Close-->
+                                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="filter_button_close">
+                                        <!--begin::Svg Icon -->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </div>
+                                    <!--end::Close-->
+                                </div>
+                                <!--end::Card toolbar-->
+                                <!--begin::Title-->
+                                <div class="card-title">
+                                    <!--begin::User-->
+                                    <div class="d-flex justify-content-start flex-column me-3">
+                                        <a href="#" class="fs-4 text-gray-900 text-hover-primary me-1 lh-1">فیلترها</a>
+                                    </div>
+                                    <!--end::User-->
+                                </div>
+                                <!--end::Title-->
+                                
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body hover-scroll-overlay-y p-0">
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Card-->
+                    </div>
 
-                    @foreach($hotels as $hotel)
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3 d-none d-lg-block">
+                        <div class="card mb-0">
+                            <x-filter />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9 p-0">
+                    
+                    @foreach(range(1,10) as $item)
 
                         <div class="card mb-7 mx-3 shadow-sm">
                             <div class="row g-0">
                                 <!-- image -->
                                 <div class="col-md-3 d-none d-md-block ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
+                                    <a href="#"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
                                 </div>
                                 <!-- details -->
                                 <div class="col-md-6 ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="#">
                                         <div class="card-body pb-0">
-                                            <h3 class="card-title">{{ $hotel->name }}</h3>
-                                            <p class="card-text text-muted ">{{ $hotel->phone }}</p>
-                                            <p class="card-text text-muted ">{{ $hotel->address }}</p>
+                                            <h3 class="card-title">مركز تكريم فرهنگيان</h3>
+                                            <p class="card-text text-muted  "> تبریز ، چهارراه منصور ، خیابان شهید بهشتی ، جنب پل منصور</p>
+                                            <p class="card-text text-muted  ">041-35237013</p>
+                                            <!-- <p class="card-text text-muted">041-35237013</p> -->
                                         </div>
                                     </a>
                                 </div>
@@ -171,12 +224,12 @@
                                     <div class="card-body row align-items-center text-center border border-secondary border-top-0 border-bottom-0 border-right-0 d-none d-md-block">
                                         <div class="mb-4">
                                             <span>
-                                                <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}</strong>
+                                                <strong class="h1 text-primary">1,500,000</strong>
                                                 <small class="text-muted">ريال</small>
                                             </span>
                                         </div>
 
-                                        <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
+                                        <a href="#" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
 
                                         <div class="mt-4">
                                             <span>
@@ -187,14 +240,14 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="#">
                                         <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
                                             <div class="mb-4">
                                                 <div class="separator my-3 "></div>
                                                 <span>
                                                     <small class="text-muted">1</small>
                                                     <small class="text-muted me-2">شب</small>
-                                                    <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}   </strong>
+                                                    <strong class="h1 text-primary">1,500,000</strong>
                                                     <small class="text-muted">ريال</small>
                                                 </span>
                                             </div>
@@ -234,4 +287,30 @@
         });
     </script>
 
+    <!-- price filter scripts -->
+    <script>
+
+        var slider = document.querySelector("#price_range");
+            
+        var valueMin = document.querySelector("#min_price");
+        var valueMax = document.querySelector("#max_price");
+
+        noUiSlider.create(slider, {
+            start: [{{ request('min_price') ?? 150 }}, {{ request('max_price') ?? 325 }} ],
+            connect: true,
+            range: {
+                "min": 150,
+                "max": 325
+            },
+            tooltips: [wNumb({decimals: 0}), wNumb({decimals: 0})],
+        });
+        
+        slider.noUiSlider.on("update", function (values, handle) {
+        if (handle) {
+            valueMax.value = values[handle];
+        } else {
+            valueMin.value = values[handle];
+        }
+        });
+    </script>
 @endpush

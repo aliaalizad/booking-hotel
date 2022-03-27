@@ -1,6 +1,6 @@
 @extends('layouts.app.master')
 
-@section('title', config('app.title') . ' | ' . 'لیست مراکز اقامتی' )
+@section('title', config('app.title') . ' | ' . $hotel->name)
 
 
 @push('styles')
@@ -132,6 +132,7 @@
 
 @endpush
 
+
 @section('content')
 
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -139,44 +140,60 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <!--begin::Container-->
             <div class="container">
-                <div class="row" style="margin-bottom: 50px">
-                    <x-searchForm-collapse />
+
+                <div class="row mx-10 justify-content-center">
+
+                    <div class="col-12">
+                        
+                        <div class="row" id="p2">
+                            <p class="h2">{{ $hotel->name }}</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row mx-10 justify-content-center">
+
+                    <div class="col-12">
+                        
+                        <div class="row" id="p2">
+                            <p class="h4 text-gray-600">اتاق ها</p>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="row justify-content-center">
 
-                    <div class="col-lg-10 col-md-10 col-sm-10 p-0">
+                    <div class="col-lg-6 col-md-10 col-sm-10 p-0">
 
-                    @foreach($hotels as $hotel)
+                    @foreach($rooms as $room)
 
                         <div class="card mb-7 mx-3 shadow-sm">
                             <div class="row g-0">
-                                <!-- image -->
-                                <div class="col-md-3 d-none d-md-block ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
-                                </div>
                                 <!-- details -->
                                 <div class="col-md-6 ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
-                                        <div class="card-body pb-0">
-                                            <h3 class="card-title">{{ $hotel->name }}</h3>
-                                            <p class="card-text text-muted ">{{ $hotel->phone }}</p>
-                                            <p class="card-text text-muted ">{{ $hotel->address }}</p>
-                                        </div>
-                                    </a>
+                                    <div class="card-body pb-0">
+                                        <h3 class="card-title">{{ $room->name }}</h3>
+                                        <p class="card-text">سرویس بهداشتی بیرون اتاق</p>
+                                        <p class="card-text"> آشپزخانه بیرون اتاق</p>
+                                    </div>
                                 </div>
+                                
                                 <!-- price -->
-                                <div class="col-md-3">
+                                <div class="col-md-6">
 
                                     <div class="card-body row align-items-center text-center border border-secondary border-top-0 border-bottom-0 border-right-0 d-none d-md-block">
                                         <div class="mb-4">
                                             <span>
-                                                <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}</strong>
+                                                <strong class="h1 text-primary">{{ $room->price }}</strong>
                                                 <small class="text-muted">ريال</small>
                                             </span>
                                         </div>
 
-                                        <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
+                                        <a href="{{ route('hotel', 123) }}" target="_blank" class="btn btn-primary ">رزرو اتاق</a>
 
                                         <div class="mt-4">
                                             <span>
@@ -187,14 +204,14 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="{{ route('hotel', 123) }}" target="_blank">
                                         <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
                                             <div class="mb-4">
-                                                <div class="separator my-3 "></div>
+                                                <div class="separator my-3"></div>
                                                 <span>
                                                     <small class="text-muted">1</small>
                                                     <small class="text-muted me-2">شب</small>
-                                                    <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}   </strong>
+                                                    <strong class="h1 text-primary">{{ $room->price }}</strong>
                                                     <small class="text-muted">ريال</small>
                                                 </span>
                                             </div>

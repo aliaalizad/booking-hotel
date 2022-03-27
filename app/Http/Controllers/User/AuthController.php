@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Classes\Sms\Sms;
-use App\Classes\Token\UserToken;
+use App\Helpers\Sms\Sms;
+use App\Helpers\Token\UserToken;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,13 +16,13 @@ class AuthController extends Controller
 
     public function index()
     {
-        return view('user.profile');
+        return view('panels.user.profile');
     }
 
 
     public function showRegisterForm()
     {
-        return view('user.register');
+        return view('panels.user.register');
     }
 
 
@@ -81,7 +81,7 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('user.login');
+        return view('panels.user.login');
     }
 
 
@@ -144,7 +144,7 @@ class AuthController extends Controller
             return to_route('user.register');
         }
         
-        return view('user.confirm');
+        return view('panels.user.confirm');
     }
 
 
@@ -157,7 +157,7 @@ class AuthController extends Controller
 
         // redirect
         if ( ! $request->session()->has('id') || ! UserToken::exists($request->session()->get('id'), 'register') ) {
-            return to_route('user.register');
+            return to_route('panels.user.register');
         }
 
 
@@ -192,7 +192,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return to_route('user.register');
+        return to_route('panels.user.register');
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\Token;
+namespace App\Helpers\Token;
 
 class MemberToken extends Token
 {

@@ -3,7 +3,7 @@
     <!--begin::Wrapper-->
     <div class="bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom landing-dark-bg" style="background-image: url(/media/svg/illustrations/landing.svg)">
         <!--begin::Header-->
-        <div class="landing-header" data-kt-sticky="true" data-kt-sticky-name="landing-header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+        <div class="landing-header" data-kt-sticky="true" data-kt-sticky-name="landing-header" data-kt-sticky-offset="{default: '200px', lg: '400px'}">
             <!--begin::Container-->
             <div class="container">
                 <!--begin::Wrapper-->
@@ -63,7 +63,56 @@
                     <!--end::Menu wrapper-->
                     <!--begin::Toolbar-->
                     <div class="flex-equal text-end ms-1">
-                        <a href="../../demo1/dist/authentication/flows/basic/sign-in.html" class="btn btn-success">ورود | ثبت نام</a>
+                        @auth('web')
+                            <!--begin::Trigger-->
+                            <button type="button" class="btn btn-primary"
+                                data-kt-menu-trigger="click"
+                                data-kt-menu-placement="bottom-start">
+                                {{ Auth::guard('web')->user()->name }}
+                            </button>
+                            <!--end::Trigger-->
+
+                            <!--begin::Menu-->
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-200px py-4"
+                                data-kt-menu="true">
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="{{ route('user.profile') }}" class="menu-link px-3">
+                                        پروفایل
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3">
+                                        رزروها
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3">
+                                        مسافران
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3">
+                                        پیام ها
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+                            </div>
+                            <!--end::Menu-->
+                        @endauth
+
+                        @guest('web')
+                            <a href="{{ route('user.login') }}" class="btn btn-primary">ورود | ثبت نام</a>
+                        @endguest
                     </div>
                     <!--end::Toolbar-->
                 </div>
@@ -72,8 +121,11 @@
             <!--end::Container-->
         </div>
         <!--end::Header-->
+        @yield('landing_hero')
     </div>
     <!--end::Wrapper-->
 
 </div>
 <!--end::Header Section-->
+
+@yield('header_stick')

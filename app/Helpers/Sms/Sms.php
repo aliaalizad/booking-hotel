@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\Sms;
+namespace App\Helpers\Sms;
 
 use Illuminate\Support\Facades\Log;
 

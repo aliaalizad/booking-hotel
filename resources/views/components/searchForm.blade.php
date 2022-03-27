@@ -1,4 +1,4 @@
-<form action="{{ route('rooms') }}" id="search" autocomplete="off" class="form min-w-lg-1000px">
+<form action="{{ route('search') }}" id="search_form" autocomplete="off" class="form min-w-lg-1000px">
     <!--begin::Row-->
     <div class="row">
         <!--begin::Col-->
@@ -6,9 +6,9 @@
                 <select class="form-select" name="dest" id="dest" data-control="select2" data-placeholder="مقصد یا هتل">
                     <option></option>
                     <optgroup label="شهر">
-                        <option value="1">تبریز</option>
-                        <option value="2">کلیبر</option>
-                        <option value="3">بستان آباد</option>
+                        <option value="tabriz">تبریز</option>
+                        <option value="tehran">تهران</option>
+                        <option value="mashhad">مشهد</option>
                     </optgroup>
                     <optgroup label="هتل">
                         <option value="1">مرکز تکریم فرهنگیان تبریز</option>
@@ -22,14 +22,14 @@
         <div class="col-xxl-4 mb-4">
             <div class="d-flex form-group">
                 <div class="input-control mx-1">
-                    <input type="text" name="checkin-input" class="date-from input-field" readonly placeholder="تاریخ ورود">
-                    <label for="checkin-input" class="input-label">تاریخ ورود</label>
+                    <input type="text" class="date-from input-field" readonly placeholder="تاریخ ورود">
+                    <label class="input-label">تاریخ ورود</label>
                     <input type="hidden" name="checkin" class="date-from-date"/>
                 </div>
                 <div class="input-control mx-1">
-                    <input type="text" name="checkout-input" class="date-to input-field" readonly placeholder="تاریخ خروج">
-                    <label for="checkout-input" class="input-label">تاریخ خروج</label>
-                    <input type="hidden" name="checkin" class="date-to-date"/>
+                    <input type="text" class="date-to input-field" readonly placeholder="تاریخ خروج">
+                    <label class="input-label">تاریخ خروج</label>
+                    <input type="hidden" name="checkout" class="date-to-date"/>
                 </div>
             </div>
         </div>
@@ -38,8 +38,8 @@
         <div class="col-xxl-3 mb-4">
             <!--begin::Menu toggle-->
             <div class="input-control show menu-dropdown" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                <input type="text" id="passengers" name="passengers" class="input-field" value="1" readonly placeholder="مسافران" />
-                <label for="passengers" class="input-label">مسافران</label>
+                <input type="text" id="passengers" class="input-field" value="1" readonly placeholder="مسافران" />
+                <label class="input-label">مسافران</label>
 
             </div>
             <!--end::Menu toggle-->
@@ -115,7 +115,7 @@
                                 </button>
                                 <!--end::Decrease control-->
                                 <!--begin::Input control-->
-                                <input type="text" class="form-control form-control-solid border-0 text-center" data-kt-dialer-control="input" placeholder="Children" name="children" id="children" readonly="readonly" value="0">
+                                <input type="text" class="form-control form-control-solid border-0 text-center" data-kt-dialer-control="input" placeholder="Children" id="children" readonly="readonly" value="0">
                                 <!--end::Input control-->
                                 <!--begin::Increase control-->
                                 <button type="button" class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 end-0 dialer-button" data-kt-dialer-control="increase">
@@ -144,10 +144,9 @@
 
         <!--begin::Col-->
         <div class="col-xxl-2">
-            <a class="btn btn-primary" onclick="document.getElementById('search').submit()">جستجو</a>
+            <a class="btn btn-primary" onclick="document.getElementById('search_form').submit()">جستجو</a>
         </div>
         <!--end::Col-->
     </div>
     <!--end::Row-->
 </form>
-        

@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'title' => env('APP_TITLE', 'وبسایت'),
 
     /*
     |--------------------------------------------------------------------------
@@ -175,7 +176,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Helpers\Booking\BookingServiceProvider::class,
+        App\Helpers\Cart\CartServiceProvider::class,
+        
     ],
 
     /*
@@ -232,6 +235,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Verta' => Hekmatinasser\Verta\Verta::class,
+        'Booking' => App\Helpers\Booking\Booking::class,
+        'Cart' => App\Helpers\Cart\Cart::class,
     ],
 
 ];

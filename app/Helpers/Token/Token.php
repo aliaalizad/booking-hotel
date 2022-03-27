@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\Token;
+namespace App\Helpers\Token;
 
 use App\Models\Token as TokenModel;
 use Illuminate\Support\Facades\Hash;
