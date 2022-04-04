@@ -13,7 +13,6 @@ class Token
     public static function make($id, $content, $type, $validitylength) 
     {
         if ((static::$class_name)::find($id) != null && static::get($id, $type) == null) {
-
             TokenModel::create([
                 'token' => Hash::make($content),
                 'tokenable_id' => $id,

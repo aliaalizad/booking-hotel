@@ -93,17 +93,10 @@
 
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">
-                                        مسافران
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">
-                                        پیام ها
-                                    </a>
+                                    <form action="{{ route('user.logout') }}" method="post" id="logout">
+                                        @csrf
+                                    </form>
+                                    <a onclick="document.getElementById('logout').submit()" class="menu-link px-3">خروج از حساب کاربری</a>
                                 </div>
                                 <!--end::Menu item-->
                             </div>

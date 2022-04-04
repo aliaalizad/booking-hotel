@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Booking extends Model
+class Unbookable extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
         'room_id',
-        'checkin',
-        'checkout',
+        'start_date',
+        'end_date',
+        'expiration',
     ];
 
     public function room()
@@ -21,8 +22,7 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function passengers()
-    {
-        return $this->hasMany(Passenger::class);
-    }
+    protected $table = 'unbookable';
+
 }
+

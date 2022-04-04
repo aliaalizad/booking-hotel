@@ -22,8 +22,6 @@ class CreateUsersTable extends Migration
             $table->boolean('is_blocked')->default(0);
             $table->rememberToken();
             $table->string('national_code', 10)->nullable();
-            $table->boolean('is_teacher')->default(0);
-            $table->string('personnel_code', 10)->nullable();
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->timestamps();

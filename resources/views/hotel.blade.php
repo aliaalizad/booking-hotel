@@ -1,6 +1,6 @@
 @extends('layouts.app.master')
 
-@section('title', config('app.title') . ' | ' . $hotel->name)
+@section('title', config('app.title') . ' | ' . Booking::getHotel()->name)
 
 
 @push('styles')
@@ -146,7 +146,7 @@
                     <div class="col-12">
                         
                         <div class="row" id="p2">
-                            <p class="h2">{{ $hotel->name }}</p>
+                            <p class="h2">{{ Booking::getHotel()->name }}</p>
                         </div>
 
                     </div>
@@ -188,41 +188,50 @@
                                     <div class="card-body row align-items-center text-center border border-secondary border-top-0 border-bottom-0 border-right-0 d-none d-md-block">
                                         <div class="mb-4">
                                             <span>
-                                                <strong class="h1 text-primary">{{ $room->price }}</strong>
+                                                <strong class="h1 text-primary">{{ $room->price * Booking::getLength() }}</strong>
                                                 <small class="text-muted">ريال</small>
                                             </span>
                                         </div>
 
-                                        <a href="{{ route('hotel', 123) }}" target="_blank" class="btn btn-primary ">رزرو اتاق</a>
+                                        <form action="{{ route('reserve.passengers') }}" method="get" id="{{ $room->code }}">
+                                            <input type="hidden" name="room" value="{{ $room->code }}">
+                                            <input type="hidden" name="checkin" value="{{ Booking::getCheckin() }}">
+                                            <input type="hidden" name="checkout" value="{{ Booking::getCheckout() }}">
+                                            <input type="hidden" name="adults" value="{{ Booking::getAdults() }}">
+                                        </form>
+
+                                        <a class="btn btn-primary" onclick="document.getElementById('{{ $room->code }}').submit()">رزرو اتاق</a>
 
                                         <div class="mt-4">
                                             <span>
                                                 <small class="text-muted">قیمت برای</small>
-                                                <small class="text-muted">1</small>
+                                                <small class="text-muted">{{ Booking::getLength() }}</small>
                                                 <small class="text-muted">شب</small>
                                             </span>
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('hotel', 123) }}" target="_blank">
-                                        <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
-                                            <div class="mb-4">
-                                                <div class="separator my-3"></div>
-                                                <span>
-                                                    <small class="text-muted">1</small>
-                                                    <small class="text-muted me-2">شب</small>
-                                                    <strong class="h1 text-primary">{{ $room->price }}</strong>
-                                                    <small class="text-muted">ريال</small>
-                                                </span>
-                                            </div>
+                                    <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
+                                        <a class="btn btn-primary" onclick="document.getElementById('{{ $room->code }}').submit()">رزرو اتاق</a>
+                                        <div class="mb-4">
+                                            <div class="separator my-3"></div>
+                                            <span>
+                                                <small class="text-muted">{{ Booking::getLength() }}</small>
+                                                <small class="text-muted me-2">شب</small>
+                                                <strong class="h1 text-primary">{{ $room->price * Booking::getLength() }}</strong>
+                                                <small class="text-muted">ريال</small>
+                                            </span>
                                         </div>
-                                    </a>
+                                    </div>
 
                                 </div>  
                             </div>
                         </div>
                     @endforeach
 
+                    @if($rooms->isEmpty())
+                        {{ 'نتیجه ای یافت نشد' }}
+                    @endif
                     </div>
 
                 </div>

@@ -7,6 +7,8 @@ use App\Models\Contract;
 use App\Models\Hotel;
 use App\Models\Manager;
 use App\Models\Member;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,5 +29,7 @@ class DatabaseSeeder extends Seeder
         )->create();
 
         Member::factory(200)->create();
+        User::factory(1)->create();
+
     }
 }

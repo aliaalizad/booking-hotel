@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(Room::class);
             $table->date('checkin');
             $table->date('checkout');
+            $table->string('voucher');
             $table->timestamps();
         });
     }

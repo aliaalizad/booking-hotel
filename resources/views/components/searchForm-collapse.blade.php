@@ -5,8 +5,8 @@
         <!--begin::Compact form-->
         <div class="d-flex align-items-center justify-content-center position-relative me-md-2" >
             <span>
-                <span class="d-none d-md-inline" style="font-size: 18px;">مراکز اقامتی  <strong>تبریز</strong>  از  <strong>1400/12/13</strong>  تا  <strong>1400/12/15</strong>  برای  <strong>2</strong>  نفر </span>
-                <span class="d-inline d-md-none" style="font-size: 14px;">مراکز اقامتی  <strong>تبریز</strong>  از  <strong>1400/12/13</strong>  تا  <strong>1400/12/15</strong>  برای  <strong>2</strong>  نفر </span>
+                <span class="d-none d-md-inline" style="font-size: 18px;">مراکز اقامتی  <strong>{{ Booking::getDest() }}</strong>  از  <strong>{{ Booking::getCheckinJalali() }}</strong>  تا  <strong>{{ Booking::getCheckoutJalali() }}</strong>  برای  <strong>{{ Booking::getAdults() }}</strong>  نفر </span>
+                <span class="d-inline d-md-none" style="font-size: 14px;">مراکز اقامتی  <strong>{{ Booking::getDest() }}</strong>  از  <strong>{{ Booking::getCheckinJalali() }}</strong>  تا  <strong>{{ Booking::getCheckoutJalali() }}</strong>  برای  <strong>{{ Booking::getAdults() }}</strong>  نفر </span>
                 <div class="symbol symbol-35px symbol-circle">
                     <div class="symbol-label bg-warning mx-2 p-2">
                         <a href="#search_box" data-bs-toggle="collapse"  title="جستجوی مجدد">

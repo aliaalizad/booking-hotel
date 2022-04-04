@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Hotel;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,15 +15,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('unbookable', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->string('type');
-            $table->integer('capacity');
-            $table->integer('price');
-            $table->text('description')->nullable();
-            $table->foreignIdFor(Hotel::class);
+            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(Room::class);
+            $table->dateTime('start_date', $precision = 0);
+            $table->dateTime('end_date', $precision = 0);
+            $table->dateTime('expiration', $precision = 0)->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('unbookable');
     }
 };

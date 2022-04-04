@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Hotel>
@@ -19,6 +20,7 @@ class HotelFactory extends Factory
     {
         return [
             'name' => $this->faker->numerify('hotel-####'),
+            'code' => Str::random(20),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
             'city' => $this->faker->city(),

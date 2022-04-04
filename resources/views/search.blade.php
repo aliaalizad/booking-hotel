@@ -153,11 +153,11 @@
                             <div class="row g-0">
                                 <!-- image -->
                                 <div class="col-md-3 d-none d-md-block ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
                                 </div>
                                 <!-- details -->
                                 <div class="col-md-6 ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
                                         <div class="card-body pb-0">
                                             <h3 class="card-title">{{ $hotel->name }}</h3>
                                             <p class="card-text text-muted ">{{ $hotel->phone }}</p>
@@ -171,30 +171,30 @@
                                     <div class="card-body row align-items-center text-center border border-secondary border-top-0 border-bottom-0 border-right-0 d-none d-md-block">
                                         <div class="mb-4">
                                             <span>
-                                                <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}</strong>
+                                                <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') * Booking::getLength() }}</strong>
                                                 <small class="text-muted">ريال</small>
                                             </span>
                                         </div>
 
-                                        <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
+                                        <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
 
                                         <div class="mt-4">
                                             <span>
                                                 <small class="text-muted">قیمت برای</small>
-                                                <small class="text-muted">1</small>
+                                                <small class="text-muted">{{ Booking::getLength() }}</small>
                                                 <small class="text-muted">شب</small>
                                             </span>
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->id, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
                                         <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
                                             <div class="mb-4">
                                                 <div class="separator my-3 "></div>
                                                 <span>
-                                                    <small class="text-muted">1</small>
+                                                    <small class="text-muted">{{ Booking::getLength() }}</small>
                                                     <small class="text-muted me-2">شب</small>
-                                                    <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') }}   </strong>
+                                                    <strong class="h1 text-primary">{{ $rooms->where('hotel_id', $hotel->id)->min('price') * Booking::getLength() }}   </strong>
                                                     <small class="text-muted">ريال</small>
                                                 </span>
                                             </div>
@@ -206,6 +206,9 @@
                         </div>
                     @endforeach
 
+                    @if($hotels->isEmpty())
+                        {{ 'نتیجه ای یافت نشد' }}
+                    @endif
                     </div>
 
                 </div>

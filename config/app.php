@@ -177,7 +177,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Helpers\Booking\BookingServiceProvider::class,
-        App\Helpers\Cart\CartServiceProvider::class,
         
     ],
 
@@ -236,7 +235,6 @@ return [
 
         'Verta' => Hekmatinasser\Verta\Verta::class,
         'Booking' => App\Helpers\Booking\Booking::class,
-        'Cart' => App\Helpers\Cart\Cart::class,
     ],
 
 ];

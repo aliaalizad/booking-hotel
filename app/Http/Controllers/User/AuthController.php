@@ -81,6 +81,11 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
+        if (! session()->has('url.intended')) {
+            session()->forget('url.intended');
+            session()->put('url.intended', url()->previous());
+        }
+
         return view('panels.user.login');
     }
 
@@ -116,8 +121,11 @@ class AuthController extends Controller
             }
             $request->session()->forget('id');
             $request->session()->regenerate();
-            return to_route('user.profile');
 
+            $url = session('url.intended') ?? route('user.profile');
+            $request->session()->forget('url.intended');
+
+            return redirect($url);
         }
 
         return back()->withErrors([
@@ -183,8 +191,12 @@ class AuthController extends Controller
                 Auth::guard('member')->logout();
                 //login user
                 Auth::guard('web')->loginUsingId($id);
+                
                 // redirect
-                return to_route('user.profile');
+                $url = session('url.intended') ?? route('user.profile');
+                $request->session()->forget('url.intended');
+    
+                return redirect($url);
             }
 
             return back()->withErrors([
