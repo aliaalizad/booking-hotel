@@ -153,11 +153,11 @@
                             <div class="row g-0">
                                 <!-- image -->
                                 <div class="col-md-3 d-none d-md-block ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()] ) }}" target="_blank"><img src="/media/hotel/blank.png" class="img-fluid rounded-start " style="width: 239.9px; height: 167.75px; object-fit: cover; object-position: 50% 50%;" alt="..."></a>
                                 </div>
                                 <!-- details -->
                                 <div class="col-md-6 ">
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()] ) }}" target="_blank">
                                         <div class="card-body pb-0">
                                             <h3 class="card-title">{{ $hotel->name }}</h3>
                                             <p class="card-text text-muted ">{{ $hotel->phone }}</p>
@@ -176,7 +176,7 @@
                                             </span>
                                         </div>
 
-                                        <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
+                                        <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()] ) }}" target="_blank" class="btn btn-primary ">مشاهده اتاق ها و رزرو</a>
 
                                         <div class="mt-4">
                                             <span>
@@ -187,7 +187,7 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => request('checkin'), 'checkout' => request('checkout'), 'adults' => request('adults')] ) }}" target="_blank">
+                                    <a href="{{ route('hotel', ['hotel' => $hotel->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()] ) }}" target="_blank">
                                         <div class="card-body row align-items-end text-end d-block d-md-none pb-0" >
                                             <div class="mb-4">
                                                 <div class="separator my-3 "></div>
@@ -230,8 +230,7 @@
         $(document).ready(function(){
             $('.dialer-button').click(function(){
             var adults = $('#adults').val();
-            var children = $('#children').val();
-            var passengers = +adults + +children;
+            var passengers = +adults;
                 $('#passengers').val(passengers);
             });
         });

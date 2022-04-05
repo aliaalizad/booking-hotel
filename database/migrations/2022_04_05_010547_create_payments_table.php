@@ -14,13 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('passengers', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Booking::class);
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('national_code');
-            $table->string('personnel_code')->nullable();
+            $table->integer('amount');
+            $table->string('res');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('passengers');
+        Schema::dropIfExists('payments');
     }
 };

@@ -47,11 +47,18 @@ class User extends Authenticatable
     protected $table = 'users';
 
 
-    public function ScopeClear(){
+    public function ScopeClear()
+    {
         User::where('is_active', 0)->delete();
     }
 
-    public function tokens(){
+    public function tokens()
+    {
         return $this->morphMany(Token::class, 'tokenable');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

@@ -2,12 +2,10 @@
 
 namespace App\Helpers\Booking;
 
-use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\Unbookable;
-use App\Models\Waiting;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 trait BookingTrait {
@@ -67,8 +65,8 @@ trait BookingTrait {
         $this->checkin = $checkin;
         $this->checkout = $checkout;
         $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
-        $this->checkinJalali = verta(Carbon::parse($checkin))->format('Y/m/d');
-        $this->checkoutJalali = verta(Carbon::parse($checkout))->format('Y/m/d');
+        $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
+        $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
     }
 
     private function adultsValidator()
@@ -88,24 +86,31 @@ trait BookingTrait {
             $adults = $this->room->capacity;
         }
 
+        // if (! is_null($this->passengers) && $this->passengers->count() != $adults) {
+        //     $adults = min([$this->passengers->count(), $adults]);
+        // }
+
         $this->adults = $adults;
     }
 
     private function destValidator()
     {
-        
-        $dest = request()->dest;
 
-        if (! is_null($this->hotel)) {
-            $dest = $this->hotel->city;
+        if (request()->has('dest')) {
+            $dest = request()->dest;
+
         } else {
-            $dest = Hotel::find(1)->city;
-        }
 
-        if (! is_null($this->room)) {
-            $dest = $this->room->hotel->city;
+            if (! is_null($this->hotel)) {
+                $dest = $this->hotel->city;
+            } else {
+                $dest = Hotel::find(1)->city;
+            }
+    
+            if (! is_null($this->room)) {
+                $dest = $this->room->hotel->city;
+            }
         }
-
         $this->dest = $dest;
     }
 
@@ -129,11 +134,11 @@ trait BookingTrait {
         $this->hotel = Hotel::where('code', $hotel_code)->firstOrFail();
     }
 
-
     private function passengersValidator()
     {
         if (request()->has('passengers')) {
             $validator = Validator::make(request()->all(), [
+                'passengers' => ['required', 'array', 'size:3' ],
                 'passengers.*.first_name' => ['required'],
                 'passengers.*.last_name' => ['required'],
                 'passengers.*.national_code' => ['required'],
@@ -142,14 +147,14 @@ trait BookingTrait {
             
             session( ['passengers' => $validator['passengers'] ]);
 
-            return count($validator['passengers']) < $this->adults ? abort(404) : $this->passengers = $validator['passengers'];
+            return count($validator['passengers']) < $this->adults ? abort(400) : $this->passengers = $validator['passengers'];
         }
         
         if (session()->has('passengers')) {
-            return count(session()->get('passengers')) < $this->adults ? abort(404) : $this->passengers = session()->get('passengers');
+            return count(session()->get('passengers')) < $this->adults ? abort(400) : $this->passengers = session()->get('passengers');
         }
 
-        return abort(404);
+        return abort(400);
     }
 
     private function teacherValidator()
@@ -228,9 +233,15 @@ trait BookingTrait {
         return $this->teacher;
     }
 
-    public function isRoomBookable()
+    public function isRoomBookable($room = null)
     {
-        $this->roomValidator();
+
+        if (!is_null($room)) {
+            $this->room = Room::find($room);
+        } else {
+            $this->roomValidator();
+        }
+
         $this->roomEngine();
 
         $condition1 = $this->rooms->contains($this->room); // bookable for all users

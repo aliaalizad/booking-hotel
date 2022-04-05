@@ -14,7 +14,16 @@ class Booking extends Model
         'room_id',
         'checkin',
         'checkout',
+        'voucher',
+        'phone',
+        'amount',
+        'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function room()
     {
@@ -24,5 +33,10 @@ class Booking extends Model
     public function passengers()
     {
         return $this->hasMany(Passenger::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

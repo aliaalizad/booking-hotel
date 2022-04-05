@@ -3,17 +3,12 @@
     <div class="row">
         <!--begin::Col-->
         <div class="col-xxl-3 mb-4 mb-md-0">
-                <select class="form-select" name="dest" id="dest" data-control="select2" data-placeholder="مقصد یا هتل">
+                <select class="form-select" name="dest" id="dest" data-control="select2" data-placeholder="مقصد">
                     <option></option>
-                    <optgroup label="شهر">
-                        <option value="tabriz">تبریز</option>
-                        <option value="tehran">تهران</option>
-                        <option value="mashhad">مشهد</option>
-                    </optgroup>
-                    <optgroup label="هتل">
-                        <option value="1">مرکز تکریم فرهنگیان تبریز</option>
-                        <option value="2">باشگاه فرهنگیان تبریز</option>
-                        <option value="3">خانه معلم 2 تبریز</option>
+                    <optgroup>
+                        @foreach(App\Models\Hotel::all() as $hotel)
+                        <option value="{{ $hotel->city }}">{{ $hotel->city }}</option>
+                        @endforeach
                     </optgroup>
                 </select>
         </div>
@@ -40,7 +35,6 @@
             <div class="input-control show menu-dropdown" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                 <input type="text" id="passengers" class="input-field" value="1" readonly placeholder="مسافران" />
                 <label class="input-label">مسافران</label>
-
             </div>
             <!--end::Menu toggle-->
             

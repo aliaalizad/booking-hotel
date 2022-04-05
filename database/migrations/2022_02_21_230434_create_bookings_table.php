@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -21,7 +22,10 @@ return new class extends Migration
             $table->foreignIdFor(Room::class);
             $table->date('checkin');
             $table->date('checkout');
-            $table->string('voucher');
+            $table->string('voucher')->nullable();
+            $table->string('phone');
+            $table->integer('amount');  
+            $table->enum('status', ['unpaid', 'paid', 'pending', 'confirmed', 'rejected']);
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Manager\HotelController;
 use App\Http\Controllers\SearchController;
 use App\Models\Room;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use illuminate\Support\Str;
 /*
@@ -74,8 +75,12 @@ Route::get('/add-rooms', function(){
 
 
 Route::get('test', function() {
-    dd(session()->get('teacher'));
-    // dd(Booking::getAdults());
+
+
+
+    dd(config('services.zibal.merchant'));
+
+
 })->name('test');
 
 
@@ -85,9 +90,23 @@ Route::get('/search', [BookingController::class, 'searchResults'])->name('search
 
 Route::get('/hotel', [BookingController::class, 'singleHotel'])->name('hotel');
 
+
 Route::prefix('reserve')->name('reserve.')->middleware(['auth:web', 'access_check'])->group(function(){
+
     Route::get('/passengers', [BookingController::class, 'showPassengersForm'])->name('passengers');
-    Route::get('/confirm', [BookingController::class, 'showConfirmForm']);
-    Route::post('/confirm', [BookingController::class, 'showConfirmForm'])->name('confirm');
+
+    Route::post('/proccess', [BookingController::class, 'proccess'])->name('proccess');
+
+    Route::get('/confirm', [BookingController::class, 'showConfirmForm'])->name('confirm');
+
+    Route::post('/payment', [BookingController::class, 'payment'])->name('payment');
+
+    Route::get('payment/callback', [BookingController::class, 'paymentCallback'])->name('payment.callback');
+
+    Route::post('/ajaxCheck', [BookingController::class, 'lastConfirmation'])->name('lastConfirmation');
 });
 
+
+Route::get('error/not-bookable', function(){
+    return view('errors.not-bookable');
+})->name('errors.not-bookable');

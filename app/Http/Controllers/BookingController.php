@@ -17,6 +17,7 @@ class BookingController extends Controller
         return view('search', compact('hotels', 'rooms'));
     }
 
+
     public function singleHotel()
     {
         Booking::getHotel();
@@ -25,23 +26,56 @@ class BookingController extends Controller
         return view('hotel', compact('rooms'));
     }
 
+
     public function showPassengersForm()
     {
         $room = Booking::getRoom();
         return view('reserve.passengers', compact('room'));
     }
 
+
+    public function proccess()
+    {
+        $booking = Booking::putBookingToSession();
+        return to_route('reserve.confirm', ['booking' => $booking->get('id')] );
+    }
+
+
     public function showConfirmForm()
     {
-        $room = Booking::getRoom();
-        $passengers = Booking::getPassengers();
-        $teacher = Booking::getTeacher();
-        
-        return view('reserve.confirm', compact('room', 'passengers', 'teacher'));
+        $booking = Booking::pullBookingFromSession(request()->booking);
+
+
+        return view('reserve.confirm', compact('booking'));
     }
 
-    public function proccess() {
+
+    public function payment() 
+    {
+        if ( ! $this->lastConfirmation() ){
+            return to_route('home');
+        }
+
+        $booking = Booking::pullBookingFromSession(request()->booking);
+
+        Booking::newBooking($booking);
+
+        Booking::unbookable();
+
+        Booking::newPayment();
+
     }
 
-    
+    public function paymentCallback()
+    {
+        Booking::verifyPayment();
+    }
+
+    public function lastConfirmation()
+    {
+        $booking = Booking::pullBookingFromSession(request()->booking);
+        $room = $booking->get('room');
+
+        return Booking::isRoomBookable($room->id);
+    }
 }

@@ -129,8 +129,8 @@
 @endpush
 
 @php
-    session()->flash('edit-passengers', $passengers);
-    session()->flash('edit-teacher', $teacher);
+    session()->flash('edit-passengers', $booking->get('passengers'));
+    session()->flash('edit-teacher', $booking->get('teacher'));
 @endphp
 
 @section('content')
@@ -140,8 +140,6 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <!--begin::Container-->
             <div class="container">
-                <form action="{{ route('reserve.confirm') }}" id="reserve.confirm" method="get" autocomplete="off" class="form min-w-lg-1000px">
-
                     <div class="card mb-10">
                         <div class="card-header">
                             <div class="card-title">مشخصات اقامتگاه</div>
@@ -150,8 +148,8 @@
                         <div class="row card-body">
                             <!--begin::Col-->
                             <div class="col-md-8 mb-10 mb-md-0 border border-secondary border-top-0 border-bottom-0 border-right-0">
-                                <p> <span class="h3">{{ $room->hotel->name }}</span>&nbsp;|&nbsp;<span class="text-gray-800" style="font-size: 1.3rem;">{{ $room->name }}</span></p>
-                                <p class="text-gray-600" style="font-size: 1.3rem;">{{ $room->hotel->address }}</p> 
+                                <p> <span class="h3">{{ $booking->get('room')->hotel->name }}</span>&nbsp;|&nbsp;<span class="text-gray-800" style="font-size: 1.3rem;">{{ $booking->get('room')->name }}</span></p>
+                                <p class="text-gray-600" style="font-size: 1.3rem;">{{ $booking->get('room')->hotel->address }}</p> 
                             </div>
                             <!--end::Col-->
 
@@ -160,17 +158,17 @@
                                 <div class="col-6 ps-2 border border-secondary border-top-0 border-bottom-0 border-right-0">
                                     <p class="text-gray-600" style="font-size: 1.3rem;">تاریخ ورود</p>
                                     <span class="h3 d-flex mb-0">
-                                        <p>{{ Booking::getCheckinJalali() }}</p>
+                                        <p>{{ $booking->get('checkinJalali') }}</p>
                                         <p>&nbsp;-&nbsp;ساعت&nbsp;</p>
-                                        <p>12:00</p>
+                                        <p>14:00</p>
                                     </span>
                                 </div>
                                 <div class="col-6 ps-2 border border-secondary border-top-0 border-bottom-0 border-right-0">
                                     <p class="text-gray-600" style="font-size: 1.3rem;">تاریخ خروج</p>
                                     <span class="h3 d-flex mb-0">
-                                        <p>{{ Booking::getCheckoutJalali() }}</p>
+                                        <p>{{ $booking->get('checkoutJalali') }}</p>
                                         <p>&nbsp;-&nbsp;ساعت&nbsp;</p>
-                                        <p>14:00</p>
+                                        <p>12:00</p>
                                     </span>
                                 </div>
                             </div>
@@ -191,24 +189,24 @@
                                 <span class="badge badge-secondary mb-5" style="font-size: 1.1rem;">اطاعات فرهنگی</span>
 
                                 <p style="font-size: 1.3rem;">
-                                    <span class="text-gray-600">نام:</span>&nbsp;<span >{{ $teacher['first_name'] . ' ' . $teacher['last_name'] }}</span>
+                                    <span class="text-gray-600">نام:</span>&nbsp;<span >{{ $booking->get('teacher')['first_name'] . ' ' . $booking->get('teacher')['last_name'] }}</span>
                                     <br class="d-block d-sm-none">
-                                    <span class="text-gray-600">کد ملی:</span>&nbsp;<span>{{ $teacher['national_code'] }}</span>
+                                    <span class="text-gray-600">کد ملی:</span>&nbsp;<span>{{ $booking->get('teacher')['national_code'] }}</span>
                                     <br class="d-block d-sm-none">
-                                    <span class="text-gray-600">شماره پرسنلی:</span>&nbsp;<span>{{ $teacher['personnel_code'] }}</span>
+                                    <span class="text-gray-600">شماره پرسنلی:</span>&nbsp;<span>{{ $booking->get('teacher')['personnel_code'] }}</span>
                                 </p>
                             </div>
                             <!--end::Col-->
                             <!--begin::Col-->
                             <div class="col-md-2 mb-10 mb-md-0 ">
                             <span class="badge badge-secondary mb-5" style="font-size: 1.1rem;">سرپرست</span>
-                                <p style="font-size: 1.3rem;">{{ $passengers[1]['first_name'] . ' ' . $passengers[1]['last_name']}}</p>
+                                <p style="font-size: 1.3rem;">{{ $booking->get('passengers')[1]['first_name'] . ' ' . $booking->get('passengers')[1]['last_name']}}</p>
                             </div>
                             <!--end::Col-->
                             <!--begin::Col-->
                             <div class="col-md-2 mb-10 mb-md-0 ">
                             <span class="badge badge-secondary mb-5" style="font-size: 1.1rem;">تلفن تماس</span>
-                                <p style="font-size: 1.3rem;">{{ $passengers[1]['phone'] }}</p>
+                                <p style="font-size: 1.3rem;">{{ $booking->get('passengers')[1]['phone'] }}</p>
                             </div>
                             <!--end::Col-->
                         </div>
@@ -228,11 +226,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(range(1, Booking::getAdults()) as $item)
+                                        @foreach(range(1, $booking->get('adults')) as $item)
                                             <tr class="text-center fw-bold fs-6 text-gray-800 border-bottom border-gray-200">
                                                 <td>{{ $item }}</td>
-                                                <td>{{ $passengers[$item]['first_name'] . ' ' . $passengers[$item]['last_name'] }}</td>
-                                                <td>{{ $passengers[$item]['national_code'] }}</td>
+                                                <td>{{ $booking->get('passengers')[$item]['first_name'] . ' ' . $booking->get('passengers')[$item]['last_name'] }}</td>
+                                                <td>{{ $booking->get('passengers')[$item]['national_code'] }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -251,7 +249,7 @@
                                     <p>هزينه اتاق</p>
                                 </div>
                                 <div class="col">
-                                    <p>1500000</p>
+                                    <p>{{ $price = $booking->get('room')->price * 1 }}</p>
                                 </div>
                             </div>
                             <div class="row" style="font-size: 1.25rem;">
@@ -259,7 +257,7 @@
                                     <p>هزینه رزرو اینترنتی (%5)</p>
                                 </div>
                                 <div class="col">
-                                    <p>75000</p>
+                                    <p>{{ $commision = $price * 0.05 }}</p>
                                 </div>
                             </div>
                             <div class="separator my-4"></div>
@@ -268,7 +266,7 @@
                                     <p>جمع کل مبلغ پرداختی</p>
                                 </div>
                                 <div class="col">
-                                    <p>1575000</p>
+                                    <p>{{ $amount = $price + $commision }}</p>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +274,7 @@
                         <div class="card-footer">
                             <div class="row text-center">
                                 <div class="col">
-                                    <a href="{{ route('reserve.passengers', ['room' => Booking::getRoom()->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults() ]) }}" class="btn btn-secondary">بازگشت</a>
+                                    <a href="{{ route('reserve.passengers', ['room' => $booking->get('room')->code, 'checkin' => $booking->get('checkin'), 'checkout' => $booking->get('checkout'), 'adults' => $booking->get('adults') ]) }}" class="btn btn-secondary">بازگشت</a>
 
                                     <button type="button" class="btn btn-primary me-10" id="kt_button_1">
                                         <span class="indicator-label">
@@ -290,11 +288,11 @@
                                 </div>
                             </div> 
                         </div>
-                        
                     </div>
-                                        
-
-                </form>
+                    <form action="{{ route('reserve.payment') }}" id="reserve.payment" method="post">
+                        @csrf
+                        <input type="hidden" name="booking" value="{{ $booking->get('id') }}">
+                    </form>
             </div>
             <!--end::Container-->
         </div>
@@ -308,21 +306,41 @@
 @push('scripts')
 
 <script src="/plugins/global/persian-datepicker.js"></script>
+
 <script>
 
-// Element to indecate
-var button = document.querySelector("#kt_button_1");
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-// Handle button click event
-button.addEventListener("click", function() {
-    // Activate indicator
-    button.setAttribute("data-kt-indicator", "on");
+    var button = document.querySelector("#kt_button_1");
 
-    // Disable indicator after 3 seconds
-    setTimeout(function() {
-        button.removeAttribute("data-kt-indicator");
-    }, 8000);
-});
+    var booking = $("input[name=booking]").val();
+
+    button.addEventListener("click", function() {
+
+        button.setAttribute("data-kt-indicator", "on");
+
+        $.ajax({
+                type:'POST',
+                url:"{{ route('reserve.lastConfirmation') }}",
+                data:{
+                    "_token": "{{ csrf_token() }}",
+                    "booking": booking,
+                },
+                success:function(data){
+                    button.removeAttribute("data-kt-indicator");
+                    if (data) {
+                        document.getElementById('reserve.payment').submit();
+                    } else {
+                        alert('اتاق غیرقابل رزرو است');
+                    }
+                }
+        });
+    });
+
 </script>
 
 @endpush

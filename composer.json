@@ -11,7 +11,8 @@
         "hekmatinasser/verta": "^2.0",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "shetabit/payment": "^4.2"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

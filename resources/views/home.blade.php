@@ -239,7 +239,7 @@
             $('.dialer-button').click(function(){
             var adults = $('#adults').val();
             var children = $('#children').val();
-            var passengers = +adults + +children;
+            var passengers = +adults ;
                 $('#passengers').val(passengers);
             });
         });

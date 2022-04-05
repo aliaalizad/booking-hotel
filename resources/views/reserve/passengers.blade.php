@@ -136,7 +136,7 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <!--begin::Container-->
             <div class="container">
-                <form action="{{ route('reserve.confirm', ['room' => $room->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()]) }}" id="reserve.passengers" method="post" autocomplete="off" class="form min-w-lg-1000px">
+                <form action="{{ route('reserve.proccess', ['room' => $room->code, 'checkin' => Booking::getCheckin(), 'checkout' => Booking::getCheckout(), 'adults' => Booking::getAdults()]) }}" id="reserve.passengers" method="post" autocomplete="off" class="form min-w-lg-1000px">
                     @csrf
                     <div class="card mb-10">
                         <div class="card-header">
@@ -161,7 +161,7 @@
                                     <span class="h3 d-flex mb-0">
                                         <p>{{ Booking::getCheckinJalali() }}</p>
                                         <p>&nbsp;-&nbsp;ساعت&nbsp;</p>
-                                        <p>12:00</p>
+                                        <p>14:00</p>
                                     </span>
                                 </div>
                                 <div class="col-6 ps-2 border border-secondary border-top-0 border-bottom-0 border-right-0">
@@ -169,7 +169,7 @@
                                     <span class="h3 d-flex mb-0">
                                         <p>{{ Booking::getCheckoutJalali() }}</p>
                                         <p>&nbsp;-&nbsp;ساعت&nbsp;</p>
-                                        <p>14:00</p>
+                                        <p>12:00</p>
                                     </span>
                                 </div>
                             </div>
