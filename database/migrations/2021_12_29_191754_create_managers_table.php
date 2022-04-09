@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Contract;
+use App\Models\City;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,8 +22,10 @@ class CreateManagersTable extends Migration
             $table->boolean('is_blocked')->default(0);
             $table->string('phone')->unique();
             $table->string('email')->unique();
-            $table->string('province');
-            $table->foreignIdFor(Contract::class);
+            $table->foreignIdFor(City::class);
+            $table->string('bank_account');
+            $table->float('commission');
+            $table->float('thirdParty_commission');
             $table->timestamps();
         });
     }

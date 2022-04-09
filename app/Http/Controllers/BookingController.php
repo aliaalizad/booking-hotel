@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Booking\Booking;
-use App\Models\Room;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+
 
 class BookingController extends Controller
 {
@@ -17,7 +15,6 @@ class BookingController extends Controller
         return view('search', compact('hotels', 'rooms'));
     }
 
-
     public function singleHotel()
     {
         Booking::getHotel();
@@ -26,20 +23,17 @@ class BookingController extends Controller
         return view('hotel', compact('rooms'));
     }
 
-
     public function showPassengersForm()
     {
         $room = Booking::getRoom();
         return view('reserve.passengers', compact('room'));
     }
 
-
     public function proccess()
     {
         $booking = Booking::putBookingToSession();
         return to_route('reserve.confirm', ['booking' => $booking->get('id')] );
     }
-
 
     public function showConfirmForm()
     {
@@ -49,7 +43,6 @@ class BookingController extends Controller
         return view('reserve.confirm', compact('booking'));
     }
 
-
     public function payment() 
     {
         if ( ! $this->lastConfirmation() ){
@@ -57,13 +50,10 @@ class BookingController extends Controller
         }
 
         $booking = Booking::pullBookingFromSession(request()->booking);
-
+        
         Booking::newBooking($booking);
-
-        Booking::unbookable();
-
-        Booking::newPayment();
-
+        Booking::freezeRoom();
+        return Booking::newPayment();
     }
 
     public function paymentCallback()
@@ -76,6 +66,7 @@ class BookingController extends Controller
         $booking = Booking::pullBookingFromSession(request()->booking);
         $room = $booking->get('room');
 
-        return Booking::isRoomBookable($room->id);
+        return Booking::isRoomBookable($room);
     }
+
 }

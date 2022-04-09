@@ -1,0 +1,12 @@
+# shetabit/payment package
+
++ vendor/shetabit/multipay/src/Drivers/Zibal/Zibal.php
+- delete $tooman and set amount in data = $amount
+- add multiplexingInfos under allowedCards section
+- set $orderId = null
+
+
+# Database
+
++ states / cities
+- always should import .sql files to database

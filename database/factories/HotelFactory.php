@@ -23,7 +23,7 @@ class HotelFactory extends Factory
             'code' => Str::random(20),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
-            'city' => $this->faker->city(),
+            'city_id' => 1,
         ];
     }
 }

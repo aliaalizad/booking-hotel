@@ -249,7 +249,7 @@
                                     <p>هزينه اتاق</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $price = $booking->get('room')->price * 1 }}</p>
+                                    <p>{{ $price = $booking->get('room')->price * $booking->get('length') }}</p>
                                 </div>
                             </div>
                             <div class="row" style="font-size: 1.25rem;">

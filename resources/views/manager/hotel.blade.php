@@ -106,7 +106,7 @@ input:checked + .slider:before {
             </div>
             
             <div class="form-group">
-                <input type="text" class="form-control item" name="city" id="city" placeholder="City" value="{{ $hotel->city }}">
+                <input type="text" class="form-control item" name="city" id="city" placeholder="City" value="{{ $hotel->city_id }}">
                 @if ($errors->has('city'))
                     @error('name') 
                         <div style="color: red;">{{ $message }}</div>

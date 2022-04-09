@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Booking;
 
+use App\Models\City;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\Unbookable;
@@ -23,11 +24,10 @@ trait BookingTrait {
     private $dest;
     private $teacher;
     private $passengers;
+    private $booking;
 
 
 
-
-    // validators
     private function dateValidator()
     {
         $validator = Validator::make(request()->all(), [
@@ -62,11 +62,15 @@ trait BookingTrait {
             $checkout = request()->checkout;
         }
 
-        $this->checkin = $checkin;
-        $this->checkout = $checkout;
-        $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
-        $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
-        $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
+
+        if (is_null($this->checkin) && is_null($this->checkout)) {
+
+            $this->checkin = $checkin;
+            $this->checkout = $checkout;
+            $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
+            $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
+            $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
+        }
     }
 
     private function adultsValidator()
@@ -102,13 +106,13 @@ trait BookingTrait {
         } else {
 
             if (! is_null($this->hotel)) {
-                $dest = $this->hotel->city;
+                $dest = $this->hotel->city_id;
             } else {
-                $dest = Hotel::find(1)->city;
+                $dest = Hotel::find(1)->city_id;
             }
     
             if (! is_null($this->room)) {
-                $dest = $this->room->hotel->city;
+                $dest = $this->room->hotel->city_id;
             }
         }
         $this->dest = $dest;
@@ -179,23 +183,36 @@ trait BookingTrait {
         return abort(404);
     }
 
-    // engines
     private function roomEngine()
     {
         $this->dateValidator();
         $this->adultsValidator();
         $this->destValidator();
         
+
         $rooms = Room::where('capacity', '>=', $this->adults)
 
             ->whereHas('hotel', function($query) {
-            $query->where('city', $this->dest);
+            $query->where('city_id', $this->dest);
             })
 
             ->whereDoesntHave('bookings', function ($query) {
-                $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout]])
-                    ->orWhere([['checkout', '>', $this->checkin], ['checkout', '<=', $this->checkout]])
-                    ->orWhere([['checkin', '<', $this->checkin], ['checkout', '>', $this->checkout]]);
+                $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout], ['status', 'paid']])
+                    ->orWhere([['checkout', '>', $this->checkin], ['checkout', '<=', $this->checkout], ['status', 'paid']])
+                    ->orWhere([['checkin', '<', $this->checkin], ['checkout', '>', $this->checkout], ['status', 'paid']]);
+            })
+
+            ->whereDoesntHave('bookings', function ($query) {
+                $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout], ['status', 'unpaid']])->whereHas('payments', function($query){
+                        $query->where('status', 1);
+                    })
+                    ->orWhere([['checkout', '>', $this->checkin], ['checkout', '<=', $this->checkout], ['status', 'unpaid']])->whereHas('payments', function($query){
+                        $query->where('status', 1);
+                    })
+                    ->orWhere([['checkin', '<', $this->checkin], ['checkout', '>', $this->checkout], ['status', 'unpaid']])->whereHas('payments', function($query){
+                        $query->where('status', 1);
+                    });
+
             })
 
             ->whereDoesntHave('unbookable', function ($query) {
@@ -237,7 +254,7 @@ trait BookingTrait {
     {
 
         if (!is_null($room)) {
-            $this->room = Room::find($room);
+            $this->room = $room;
         } else {
             $this->roomValidator();
         }
@@ -273,7 +290,6 @@ trait BookingTrait {
         return $rooms;
     }
 
-
     public function getHotel()
     {
         $this->hotelValidator();
@@ -285,7 +301,6 @@ trait BookingTrait {
         $this->hotelEngine();
         return $this->hotels;
     }
-
 
     public function getCheckin()
     {
@@ -323,12 +338,15 @@ trait BookingTrait {
         return $this->adults;
     }
 
-
-
-
     public function getDest()
     {
         $this->destValidator();
-        return $this->dest;
+        $city = City::find($this->dest);
+        return $city->name;
+    }
+
+    public function getBooking()
+    {
+        return $this->booking;
     }
 }

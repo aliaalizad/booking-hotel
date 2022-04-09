@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Manager\HotelController;
 use App\Http\Controllers\SearchController;
+use App\Models\Booking as BookingModel;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -78,10 +79,10 @@ Route::get('test', function() {
 
 
 
-    dd(config('services.zibal.merchant'));
-
-
 })->name('test');
+
+
+
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

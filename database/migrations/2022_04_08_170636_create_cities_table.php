@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\State;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContractsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +15,15 @@ class CreateContractsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contracts', function (Blueprint $table) {
+        Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('fee');
-            $table->timestamps();
+            $table->foreignIdFor(State::class);
         });
+
+        foreach(config('predefined.cities') as $city) {
+            DB::insert("insert into cities (id, name, state_id) values (?, ?, ?)", $city);
+        }
     }
 
     /**
@@ -28,6 +33,6 @@ class CreateContractsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contracts');
+        Schema::dropIfExists('cities');
     }
-}
+};

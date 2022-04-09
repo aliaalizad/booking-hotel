@@ -9,6 +9,7 @@ use App\Models\Room;
 use App\Models\Unbookable;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use illuminate\Support\Str;
 
 use Shetabit\Multipay\Invoice;
@@ -18,8 +19,6 @@ use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 class BookingService {
 
     use BookingTrait;
-
-    private $booking;
 
 
     public function putBookingToSession()
@@ -66,10 +65,13 @@ class BookingService {
             abort(404);
         }
 
+        $this->checkin = $booking->get('checkin');
+        $this->checkout = $booking->get('checkout');
+
         return $booking;
     }
 
-    
+
     public function newBooking($booking)
     {
         $user = $booking->get('user');
@@ -81,35 +83,44 @@ class BookingService {
         $teacher = $booking->get('teacher');
         $passengers = $booking->get('passengers');
 
+        $existing_booking = BookingModel::where([['user_id', $user->id], ['room_id', $room->id], ['checkin', $checkin], ['checkout', $checkout]])->first();
+        
+        if (is_null($existing_booking)) {
 
-        // create booking
-        $booking = BookingModel::create([
-            'user_id' => $user->id,
-            'room_id' => $room->id,
-            'checkin' => $checkin,
-            'checkout' => $checkout,
-            'amount' => $amount,
-            'phone' => $phone,
-            'status' => 'unpaid',
-        ]);
+            // create booking
+            $booking = BookingModel::create([
+                'user_id' => $user->id,
+                'room_id' => $room->id,
+                'checkin' => $checkin,
+                'checkout' => $checkout,
+                'amount' => $amount,
+                'phone' => $phone,
+                'status' => 'unpaid',
+            ]);
+        
+            // add passengers
+            $booking->passengers()->create($teacher);
+            foreach ($passengers as $item) {
+                $booking->passengers()->create($item);
+            }
 
-        // add passengers
-        $booking->passengers()->create($teacher);
-        foreach ($passengers as $item) {
-            $booking->passengers()->create($item);
+            return $this->booking = $booking;
         }
 
-        return $this->booking = $booking;
+        // delete existing passengers
+        $existing_booking->passengers()->delete();
+
+        // create new passengers
+        $existing_booking->passengers()->create($teacher);
+        foreach ($passengers as $item) {
+            $existing_booking->passengers()->create($item);
+        }
+
+        return $this->booking = $existing_booking;
     }
 
 
-    public function getBooking()
-    {
-        return $this->booking;
-    }
-
-
-    public function unbookable()
+    public function freezeRoom()
     {
         $user_id = $this->booking->user_id;
         $room_id = $this->booking->room_id;
@@ -128,48 +139,88 @@ class BookingService {
                 'expiration' => $expiration,
             ]);
         }
+
+    }
+
+
+    public function defreezeRoom($booking_id)
+    {
+        $booking = BookingModel::findOrFail($booking_id);
+
+        $user_id = $booking->user_id;
+        $room_id = $booking->room_id;
+        $start_date = $booking->checkin;
+        $end_date = $booking->checkout;
+
+        $unbookable = Unbookable::where([['user_id', $user_id], ['room_id', $room_id], ['start_date', $start_date], ['end_date', $end_date]])->firstOrFail();
+
+        $unbookable->delete();
     }
 
 
     public function newPayment()
     {
-        $amount = $this->booking->price * 1.05;
+        $beneficiary_amount = ($this->booking->amount);
+        $beneficiary_account = 'IR132000300120002722448001'; // retrieve from db
 
+        $self_amount = ($this->booking->amount) * 0.05 ;
+        
+        $amount = $beneficiary_amount + $self_amount;
 
         $invoice = new Invoice;
-        $invoice->amount(1000);
+        $invoice->amount($amount);
+
         // $invoice->detail([
-        //     'merchant' => config('services.zibal.merchant'),
+        //     'multiplexingInfos' => [
+        //         [ 'id' => 'self', 'amount' => $self_amount],
+        //         ['bankAccount' => $beneficiary_account, 'amount' => $beneficiary_amount ]
+        //     ]
         // ]);
 
-        return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($amount){
+        return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($amount) {
 
             Payment::create([
                 'booking_id' => $this->booking->id,
                 'amount' => $amount,
-                'res' => $transactionId,
+                'track_id' => $transactionId,
             ]);
 
         })->pay()->render();
     }
 
+
     public function verifyPayment()
     {
-        $payment = Payment::where('res', request()->trackId)->firstOrFail();
+        $payment = Payment::where('track_id', request()->trackId)->firstOrFail();
 
         try {
-            $receipt = ShetabitPayment::amount(1000)->transactionId($payment->res)->verify();
+            $receipt = ShetabitPayment::amount($payment->amount)->transactionId($payment->track_id)->verify();
 
-            // You can show payment referenceId to the user.
-            echo $receipt->getReferenceId();
+            $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code
+
+            $payment->update([
+                'status' => 1,
+            ]);
+
+
+            while(1) {
+                $voucher = rand(111111, 999999);
+                if (! BookingModel::where('voucher', $voucher)->exists()){
+                    break;
+                }
+            }
+            $payment->booking()->update([
+                'voucher' => $voucher,
+                'status' => 'paid',
+            ]);
+
 
         } catch (InvalidPaymentException $exception) {
-            /**
-                when payment is not verified, it will throw an exception.
-                We can catch the exception to handle invalid payments.
-                getMessage method, returns a suitable message that can be used in user interface.
-            **/
-            echo $exception->getMessage();
+
+            $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code
+
+            echo 'پرداخت با خطا مواجه شد. در صورتی که مبلغ از حساب شما برداشت شده حداکثر تا 72 ساعت به حساب شما باز خواهد گشت';
         }
     }
+
 }

@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\City;
 use App\Models\Manager;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 class CreateHotelsTable extends Migration
 {
     /**
@@ -20,7 +22,7 @@ class CreateHotelsTable extends Migration
             $table->string('phone');
             $table->string('address');
             $table->text('description')->nullable();
-            $table->string('city'); 
+            $table->foreignIdFor(City::class);
             $table->foreignIdFor(Manager::class);
             $table->timestamps();
         });

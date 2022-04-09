@@ -95,7 +95,7 @@
                         <select name="hotel" class="form-select form-select-solid" data-allow-clear="true" data-control="select2" data-placeholder="هتل را انتخاب کنید">
                             <option></option>
                             @foreach (App\Models\Hotel::all() as $hotel)
-                                <option value="{{ $hotel->id }}" @selected(request('hotel') == $hotel->id)>{{ $hotel->name . " ( $hotel->city ) "}}</option>
+                                <option value="{{ $hotel->id }}" @selected(request('hotel') == $hotel->id)>{{ $hotel->name . " ( $hotel->city_id ) "}}</option>
                             @endforeach
                         </select>
                     </div>

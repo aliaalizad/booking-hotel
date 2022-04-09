@@ -20,8 +20,10 @@ class Manager extends Authenticatable
         'is_blocked',
         'phone',
         'email',
-        'province',
-        'contract_id'
+        'city_id',
+        'bank_account',
+        'commission',
+        'thirdParty_commission',
     ];
 
     protected $hidden = [

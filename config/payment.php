@@ -11,7 +11,7 @@ return [
     |
     */
     'default' => 'zibal',
-
+    
     /*
     |--------------------------------------------------------------------------
     | List of Drivers
@@ -265,7 +265,7 @@ return [
 
             'mode' => 'normal', // can be normal, direct
 
-            'merchantId' => config('services.zibal.merchant'),
+            'merchantId' => env('ZIBAL_MERCHANT', 'zibal'),
             'callbackUrl' => 'http://yoursite.com/path/to',
             'description' => 'payment using zibal',
         ],

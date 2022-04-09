@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Booking;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,14 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Booking::class);
-            $table->integer('amount');
-            $table->string('track_id');
-            $table->boolean('status')->default(0);
-            $table->timestamps();
+            $table->string('name');
         });
+
+        foreach(config('predefined.states') as $state) {
+            DB::insert("insert into states (id, name) values (?, ?)", $state);
+        }
     }
 
     /**
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('states');
     }
 };

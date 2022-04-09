@@ -13,7 +13,7 @@ class Hotel extends Model
         'code',
         'name',
         'phone',
-        'city',
+        'city_id',
         'address',
         'manager_id',
     ];

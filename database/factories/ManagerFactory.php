@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Contract;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +23,10 @@ class ManagerFactory extends Factory
             'is_blocked' => $this->faker->randomElement([0, 1]),
             'phone' => $this->faker->e164PhoneNumber(),
             'email' => $this->faker->email(),
-            'province' => $this->faker->state(),
+            'city_id' => 1,
+            'bank_account' => 'IR111111111111111111111111',
+            'commission' => 0,
+            'thirdParty_commission' => 5,
         ];
     }
 }

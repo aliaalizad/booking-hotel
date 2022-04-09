@@ -22,9 +22,9 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
-            <thead>
-                <tr>
+        <table class="table table-hover table-rounded border gy-7 gs-7">
+            <thead class="table-light">
+                <tr class="text-center">
                     <th>ردیف</th>
                     <th>نام و نام  خانوادگی</th>
                     <th>کد پرسنلی</th>
@@ -41,7 +41,7 @@
                 @endphp
 
                 @foreach ($members as $member)
-                    <tr>
+                    <tr class="text-center fw-bold fs-6 border-bottom border-gray-200">
                         <td>{{ $i++ }}</td>
                     
                         <td>{{ $member->name }}</td>

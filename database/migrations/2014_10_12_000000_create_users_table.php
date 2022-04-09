@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\City;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,8 +23,7 @@ class CreateUsersTable extends Migration
             $table->boolean('is_blocked')->default(0);
             $table->rememberToken();
             $table->string('national_code', 10)->nullable();
-            $table->string('province')->nullable();
-            $table->string('city')->nullable();
+            $table->foreignIdFor(City::class)->nullable();
             $table->timestamps();
         });
     }

@@ -44,7 +44,7 @@ tr:nth-child(even) {
             <th>{{ $loop->iteration }}</th>
             <td>{{ $hotel->name }}</td>
             <td>{{ $hotel->phone }}</td>
-            <td>{{ $hotel->city }}</td>
+            <td>{{ $hotel->city_id }}</td>
             <td>{{ $hotel->address }}</td>
             <td><a href="{{ route('manager.hotels.edit', $hotel->id) }}">edit</a></td>
         </tr>
