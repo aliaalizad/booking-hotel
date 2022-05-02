@@ -25,7 +25,6 @@ class CreateManagersTable extends Migration
             $table->foreignIdFor(City::class);
             $table->string('bank_account');
             $table->float('commission');
-            $table->float('thirdParty_commission');
             $table->timestamps();
         });
     }

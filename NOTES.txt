@@ -6,7 +6,7 @@
 - set $orderId = null
 
 
-# Database
+# fullcalendar 
 
-+ states / cities
-- always should import .sql files to database
++ public/plugins/custom/fullcalendar/fullcalendar.bundle.js
+- change noEventsText from هیچ رویدادی به نمایش to رزروی ثبت نشده است

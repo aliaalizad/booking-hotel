@@ -137,7 +137,7 @@
         <!--begin::Heading-->
         <div class="text-center mb-5 mb-lg-10 py-10 py-lg-20">
             <!--begin::Title-->
-            <h1 class="text-white lh-base fw-bolder fs-2x fs-lg-3x mb-15">رزرو مراکز اقامتی آموزش و پرورش</h1>
+            <h1 class="text-white lh-base fw-bolder fs-2x fs-lg-3x mb-15">رزرو مراکز اقامتی</h1>
             <!--end::Title-->
             <!--begin::Action-->
                 <div class="card">

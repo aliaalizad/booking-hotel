@@ -1,11 +1,12 @@
 @extends('panels.admin.master')
 
-@section('page_title', 'مدیران هتل')
+@section('page_title', 'مدیران')
 
 
 @section('breadcrumb')
     <x-panels.header.breadcrumb.menu>
-        <x-panels.header.breadcrumb.item name="مدیران هتل" muted />
+        <x-panels.header.breadcrumb.item name="مراكز اقامتی" muted />
+        <x-panels.header.breadcrumb.item name="مدیران" muted />
     </x-panels.header.breadcrumb.menu>
 @endsection
 
@@ -16,22 +17,22 @@
 
 <div class="card card-bordered">
     <div class="card-header">
-        <h3 class="card-title">مدیران هتل</h3>
+        <h3 class="card-title">مدیران</h3>
         <div class="card-toolbar ">
             <a href="{{ route('admin.managers.create') }}" class="btn btn-primary btn-sm">افزودن مدیر جدید</a>
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
-            <thead>
-                <tr>
+        <table class="table table-hover table-rounded border gy-7 gs-7">
+            <thead class="table-light">
+                <tr class="text-center">
                     <th>ردیف</th>
                     <th>نام و نام  خانوادگی</th>
                     <th>نام کاربری</th>
                     <th>وضعیت حساب کاربری</th>
                     <th>شماره تلفن</th>
                     <th>استان</th>
-                    <th>قرارداد</th>
+                    <th>شهرستان</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
@@ -42,7 +43,7 @@
                 @endphp
 
                 @foreach ($managers as $manager)
-                    <tr>
+                    <tr class="text-center fw-bold fs-6 border-bottom border-gray-200">
                         <td>{{ $i++ }}</td>
                     
                         <td>{{ $manager->name }}</td>
@@ -55,8 +56,8 @@
                             @endif
                         </td>
                         <td>{{ $manager->phone }}</td>
-                        <td>{{ $manager->province }}</td>
-                        <td><a href="#">{{ $manager->contract->name ?? '-' }}</a></td>
+                        <td>{{ $manager->city->state->name }}</td>
+                        <td>{{ $manager->city->name }}</td>
                         <td><a href="{{ route('admin.managers.edit', $manager->id) }}" class="btn btn-secondary btn-sm">ویرایش</a></td>
                     </tr>
                 @endforeach

@@ -46,6 +46,40 @@ trait ResourceControllerHelpers {
         return $members->paginate(20);
     }
 
+    public function getHotels($manager=false)
+    {
+        $hotels = Hotel::query();
+
+        // checkCurrent
+        if ($manager) {
+            $hotels = $this->getCurrentManager()->hotels();
+        }
+
+        // filter
+        if ($data = request('code')) {
+            $hotels->where('personnel_code', $data);
+        }
+        if ($data = request('name')) {
+            $hotels->where('name', 'LIKE', "%$data%");
+        }
+        if ($data = request('status')) {
+            if ( $data =='active' ) {
+                $hotels->where('is_blocked', 0);
+            }
+            if ( $data =='inactive' ) {
+                $hotels->where('is_blocked', 1);
+            }
+        }
+        if ($data = request('manager')) {
+            $hotels->where('manager_id', $data);
+        }
+        if ($data = request('hotel')) {
+            $hotels->where('hotel_id', $data);
+        }
+
+        return $hotels->paginate(20);
+    }
+
     public function getManagers()
     {
         $managers = Manager::query();
@@ -78,21 +112,8 @@ trait ResourceControllerHelpers {
         return $managers->paginate(20);
     }
 
-    public function getContracts()
-    {
-        return Contract::paginate(20);
-    }
 
 
-    // getAllX
-    public function getAllHotels($manager=false)
-    {
-        if ($manager) {
-            return Hotel::where('manager_id', $this->getCurrentManager()->id)->get();
-        }
-
-        return Hotel::all();
-    }
 
     public function getAllMembers()
     {
@@ -104,16 +125,14 @@ trait ResourceControllerHelpers {
         return Manager::all();
     }
 
-    public function getAllContracts()
+    public function getAllHotels()
     {
-        return Contract::all();
+        return Hotel::all();
     }
 
-
-    // getCurrentX
     public function getCurrentManager()
     {
         return Auth::guard('manager')->user();
     }
-    
+
 }

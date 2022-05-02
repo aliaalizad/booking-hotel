@@ -5,7 +5,10 @@
 
 @section('breadcrumb')
     <x-panels.header.breadcrumb.menu>
-        <x-panels.header.breadcrumb.item name="ویرایش مدیر" muted />
+        <x-panels.header.breadcrumb.item name="مراکز اقامتی" muted />
+        <x-panels.header.breadcrumb.item name="مدیران" route="admin.managers.index" />
+        <x-panels.header.breadcrumb.item name="{{ $manager->name }}" muted />
+        <x-panels.header.breadcrumb.item name="ویرایش" muted />
     </x-panels.header.breadcrumb.menu>
 @endsection
 
@@ -16,28 +19,28 @@
     @method("PUT")
 
 
-    <div class="card col-xxl-9">
+    <div class="col-xxl-10">
         
         <!--begin::Card body-->
         <div class="card-body">
         
             <div class="row">
-                <x-panels.admin.managers.edit.personal-information :manager="$manager" />
+                <x-panels.admin.managers.personal-information :manager="$manager" />
             </div>
 
             <div class="row">
-                <x-panels.admin.managers.edit.account :manager="$manager" />
+                <x-panels.admin.managers.account :manager="$manager" />
             </div>
 
             <div class="row">
-                <x-panels.admin.managers.edit.contract :manager="$manager" />
+                <x-panels.admin.managers.config :manager="$manager" />
             </div>
 
         </div>
         <!--end::Card body-->
 
         <!--begin::Card footer-->
-        <div class="card-footer d-flex justify-content-end py-6">
+        <div class="card-footer d-flex justify-content-center py-6">
             <a href="{{ route('admin.managers.index') }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
             <button type="submit" class="btn btn-primary">ثبت</button>
         </div>

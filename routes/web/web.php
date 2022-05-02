@@ -1,14 +1,11 @@
 <?php
 
-use App\Helpers\Booking\Booking;
+use App\Helpers\Logs\Logs;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Manager\HotelController;
-use App\Http\Controllers\SearchController;
-use App\Models\Booking as BookingModel;
+use App\Models\Manager;
 use App\Models\Room;
-use App\Models\User;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use illuminate\Support\Str;
 /*
@@ -77,8 +74,10 @@ Route::get('/add-rooms', function(){
 
 Route::get('test', function() {
 
+    // Logs::put(auth('web')->user(), 'login', [request()->ip(), 5, true]);
+    // $logs = Logs::get(auth('web')->user(), 1);
 
-
+    
 })->name('test');
 
 

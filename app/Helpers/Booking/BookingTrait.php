@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Booking;
 
+use App\Models\Booking;
 use App\Models\City;
 use App\Models\Hotel;
 use App\Models\Room;
@@ -99,8 +100,7 @@ trait BookingTrait {
 
     private function destValidator()
     {
-
-        if (request()->has('dest')) {
+        if (request()->filled('dest')) {
             $dest = request()->dest;
 
         } else {
@@ -183,7 +183,7 @@ trait BookingTrait {
         return abort(404);
     }
 
-    private function roomEngine()
+    private function roomEngine_0()
     {
         $this->dateValidator();
         $this->adultsValidator();
@@ -221,6 +221,38 @@ trait BookingTrait {
                     ->orWhere([['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
         })
         ->get();
+
+        $this->rooms = $rooms;
+    }
+
+    private function roomEngine()
+    {
+        $this->dateValidator();
+        $this->adultsValidator();
+        $this->destValidator();
+
+        $bookedRoomId  = Booking::where(function($query){
+            $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout], ['status', 'paid']])
+                ->orWhere([['checkout', '>', $this->checkin], ['checkout', '<=', $this->checkout], ['status', 'paid']])
+                ->orWhere([['checkin', '<', $this->checkin], ['checkout', '>', $this->checkout], ['status', 'paid']]);
+        })->pluck('room_id');
+
+        $unbookabledRoomId =  Unbookable::where(function($query){
+            $query->where([['start_date', '>=', $this->checkin], ['start_date', '<', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['end_date', '>', $this->checkin], ['end_date', '<=', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
+        })->pluck('room_id');
+
+
+        $occupiedRoomId = $bookedRoomId->merge($unbookabledRoomId)->countBy();
+
+
+        $rooms = collect();
+        Room::each(function($room) use ($occupiedRoomId, $rooms){
+            if ( ($room->count  >  $occupiedRoomId->get($room->id)) && ($room->capacity >= $this->adults) && ($room->hotel->city_id == $this->dest)) {
+                $rooms->push($room);
+            }
+        });
 
         $this->rooms = $rooms;
     }
@@ -283,11 +315,11 @@ trait BookingTrait {
     {
         $this->roomEngine();
 
-        $rooms = $this->rooms->unique(function ($item) {
-            return $item['hotel_id'].$item['type'];
-        });
+        // $rooms = $this->rooms->unique(function ($item) {
+        //     return $item['hotel_id'].$item['type'];
+        // });
 
-        return $rooms;
+        return $this->rooms;
     }
 
     public function getHotel()
@@ -348,5 +380,31 @@ trait BookingTrait {
     public function getBooking()
     {
         return $this->booking;
+    }
+
+    public function getHotelBookings(Hotel $hotel)
+    {
+        $bookings = collect();
+
+        foreach( $hotel->rooms as $room ) {
+
+           if($room->bookings->isNotEmpty()){
+                $room->bookings->each(function ($booking) use ($bookings){
+
+                    if (in_array($booking->status, ['paid'])) {
+                        $bookings->push($booking);
+                    }
+
+                });
+           }
+        };
+
+        return $bookings;
+    }
+
+    public function getBookingLastPayment(Booking $booking)
+    {
+        $payment = $this->getBookingPayments($booking)->last();
+        return $payment;
     }
 }

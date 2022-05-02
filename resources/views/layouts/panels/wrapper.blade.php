@@ -76,16 +76,15 @@
                                 <div class="separator my-2"></div>
 
                                 <!--begin::Menu item-->
-                                <form action='logout' method="post">
+                                <form action="logout" method="post" id="exit">
                                     @csrf
-                                    <div class="menu-item px-1">
+                                    <div class="menu-item px-1" onclick="document.getElementById('exit').submit()">
                                         <label class="menu-link" for="submit">
                                             <span class="menu-icon">
                                                 <i class="bi bi-grid-1x2-fill"></i>
                                             </span>
                                             خروج از حساب کاربری
                                         </label>
-                                        <input type="submit" id="submit" hidden>
                                     </div>
                                 </form>
                                 <!--end::Menu item-->

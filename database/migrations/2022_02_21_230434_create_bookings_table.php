@@ -23,7 +23,6 @@ return new class extends Migration
             $table->date('checkin');
             $table->date('checkout');
             $table->string('voucher')->nullable()->unique();
-            $table->string('phone');
             $table->integer('amount');  
             $table->enum('status', ['unpaid', 'paid', 'pending', 'confirmed', 'rejected']);
             $table->timestamps();

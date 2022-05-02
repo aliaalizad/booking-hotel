@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Booking::class);
             $table->integer('amount');
+            $table->integer('booking_amount');
             $table->string('track_id');
             $table->boolean('status')->default(0);
             $table->timestamps();

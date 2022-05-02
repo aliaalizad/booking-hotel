@@ -7,7 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Token;
-
+use App\Models\Log;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Str;
 
 class Manager extends Authenticatable 
 {
@@ -33,12 +35,26 @@ class Manager extends Authenticatable
     protected $table = 'managers';
 
 
+    public function bankAccount(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => Str::replaceFirst('IR', null, $value),
+            set: fn ($value) => 'IR' . $value,
+        );
+    }
+
+
     // relationships
     public function tokens()
     {
         return $this->morphMany(Token::class, 'tokenable');
     }
-    
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
     public function hotels()
     {
         return $this->hasMany(Hotel::class);
@@ -49,8 +65,9 @@ class Manager extends Authenticatable
         return $this->hasMany(Member::class);
     }
 
-    public function contract()
+    public function city()
     {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsTo(City::class);
     }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Helpers\Booking;
 
 use App\Models\Booking as BookingModel;
+use App\Models\Manager;
 use App\Models\Passenger;
 use App\Models\Payment;
 use App\Models\Room;
@@ -36,6 +37,7 @@ class BookingService {
         $passengers = Booking::getPassengers();
 
 
+        
         session()->push('bookings', collect([
                 'id' => $id,
                 'user' => $user,
@@ -75,16 +77,43 @@ class BookingService {
     public function newBooking($booking)
     {
         $user = $booking->get('user');
-        $room = $booking->get('room');
+        $room = Room::find($booking->get('room')->id);
         $checkin = $booking->get('checkin');
         $checkout = $booking->get('checkout');
         $amount = $booking->get('length') * $room->price;
-        $phone = $booking->get('passengers')[1]['phone'];
         $teacher = $booking->get('teacher');
         $passengers = $booking->get('passengers');
 
-        $existing_booking = BookingModel::where([['user_id', $user->id], ['room_id', $room->id], ['checkin', $checkin], ['checkout', $checkout]])->first();
+
+        $teacher = [
+            'teacher' => [
+                'name' => $teacher['first_name'] . ' ' . $teacher['last_name'],
+                'personnel_code' => $teacher['personnel_code'],
+                'national_code' => $teacher['national_code'],
+            ]
+        ];
+
+        $head = [
+            'head' => [
+                'name' => $passengers[1]['first_name'] . ' ' . $passengers[1]['last_name'],
+                'national_code' => $passengers[1]['national_code'],
+                'phone' => $passengers[1]['phone'],
+            ],
+        ];
         
+        $i=1;
+        foreach ($passengers as $passenger) {
+            $_passengers['passengers'][$i] = [
+                'name' => $passenger['first_name'] . ' ' . $passenger['last_name'],
+                'national_code' => $passenger['national_code'],
+            ];
+            $i++;
+        }
+
+        $detail = array_merge($teacher, $head, $_passengers);
+
+        $existing_booking = BookingModel::where([['user_id', $user->id], ['room_id', $room->id], ['checkin', $checkin], ['checkout', $checkout]])->first();
+
         if (is_null($existing_booking)) {
 
             // create booking
@@ -94,27 +123,30 @@ class BookingService {
                 'checkin' => $checkin,
                 'checkout' => $checkout,
                 'amount' => $amount,
-                'phone' => $phone,
                 'status' => 'unpaid',
             ]);
         
+
             // add passengers
-            $booking->passengers()->create($teacher);
-            foreach ($passengers as $item) {
-                $booking->passengers()->create($item);
-            }
+            $booking->passengers()->create([
+                'detail' => $detail
+            ]);
+
 
             return $this->booking = $booking;
         }
 
+        // update booking
+        $existing_booking->update([
+            'amount' => $amount,
+        ]);
+
         // delete existing passengers
         $existing_booking->passengers()->delete();
-
         // create new passengers
-        $existing_booking->passengers()->create($teacher);
-        foreach ($passengers as $item) {
-            $existing_booking->passengers()->create($item);
-        }
+        $existing_booking->passengers()->create([
+            'detail' => $detail
+        ]);
 
         return $this->booking = $existing_booking;
     }
@@ -160,28 +192,31 @@ class BookingService {
 
     public function newPayment()
     {
-        $beneficiary_amount = ($this->booking->amount);
-        $beneficiary_account = 'IR132000300120002722448001'; // retrieve from db
+        $room = Room::find($this->booking->room->id);
 
-        $self_amount = ($this->booking->amount) * 0.05 ;
-        
-        $amount = $beneficiary_amount + $self_amount;
+        $manager_account = ($room->hotel->manager->bank_account);
+        $commission = ($room->hotel->manager->commission);
+
+        $manager_amount = ($this->booking->amount);
+        $self_amount = ($this->booking->amount) * (($commission)/100);
+        $payment_amount = $this->booking->amount + $self_amount;
 
         $invoice = new Invoice;
-        $invoice->amount($amount);
+        $invoice->amount($payment_amount);
 
         // $invoice->detail([
         //     'multiplexingInfos' => [
         //         [ 'id' => 'self', 'amount' => $self_amount],
-        //         ['bankAccount' => $beneficiary_account, 'amount' => $beneficiary_amount ]
+        //         ['bankAccount' => $manager_account, 'amount' => $manager_amount ]
         //     ]
         // ]);
 
-        return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($amount) {
+        return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($payment_amount, $manager_amount) {
 
             Payment::create([
                 'booking_id' => $this->booking->id,
-                'amount' => $amount,
+                'amount' => $payment_amount,
+                'booking_amount' => $manager_amount,
                 'track_id' => $transactionId,
             ]);
 
@@ -204,7 +239,7 @@ class BookingService {
 
 
             while(1) {
-                $voucher = rand(111111, 999999);
+                $voucher = rand(11111111, 99999999);
                 if (! BookingModel::where('voucher', $voucher)->exists()){
                     break;
                 }

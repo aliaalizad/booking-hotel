@@ -30,16 +30,15 @@ class ManagerController extends Controller {
 
     public function store(Request $request)
     {
-        // dd($request->input());
         $request->validate([
             'name' => ['required'],
             'username' => ['required','unique:managers,username'],
-            'status' => ['boolean'],
             'phone' => ['required','unique:managers,phone'],
             'email' => ['required','unique:managers,email'],
-            'province' => ['required'],
             'password' => ['required', 'confirmed'],
-            'contract' => ['required', Rule::exists('contracts', 'id')],
+            'bank_account' => ['required', 'unique:managers,bank_account'],
+            'commission' => ['required'],
+            'city' => ['required', 'exists:cities,id'],
         ]);
 
         // set is_blocked value
@@ -52,11 +51,12 @@ class ManagerController extends Controller {
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'email' => $request->email,
-            'province' => $request->province,
-            'contract_id' => $request->contract,
+            'bank_account' => $request->bank_account,
+            'commission' => $request->commission,
+            'city_id' => $request->city,
         ]);
 
-        return to_route( $this->panel . '.managers.index');
+        return to_route($this->panel . '.managers.index');
     }
 
 
@@ -73,9 +73,8 @@ class ManagerController extends Controller {
             'username' => ['required', Rule::unique('managers', 'username')->ignore($manager->id)],
             'phone' => ['required', Rule::unique('managers', 'phone')->ignore($manager->id)],
             'email' => ['required', Rule::unique('managers', 'email')->ignore($manager->id)],
-            'contract' => ['required', Rule::exists('contracts', 'id')],
-            'province' => ['required'],
-            'status' => ['boolean'],
+            'bank_account' => ['required', Rule::unique('managers', 'bank_account')->ignore($manager->id)],
+            'commission' => ['required'],
         ]);
 
         // set is_blocked value
@@ -87,9 +86,9 @@ class ManagerController extends Controller {
             'username' => $request->username,
             'phone' => $request->phone,
             'email' => $request->email,
-            'contract_id' => $request->contract,
-            'province' => $request->province,
             'is_blocked' => $is_blocked,
+            'bank_account' => $request->bank_account,
+            'commission' => $request->commission,
         ]);
 
         // update password

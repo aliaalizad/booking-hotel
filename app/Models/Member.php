@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Token;
+use App\Models\Log;
 use App\Models\Permission;
 
 class Member extends Authenticatable
@@ -35,6 +36,11 @@ class Member extends Authenticatable
     public function tokens()
     {
         return $this->morphMany(Token::class, 'tokenable');
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
     }
 
     public function hotel()

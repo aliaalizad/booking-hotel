@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->morphMany(Token::class, 'tokenable');
     }
 
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

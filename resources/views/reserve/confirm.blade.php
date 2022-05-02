@@ -241,32 +241,39 @@
                         <!--end::Row-->
 
                     </div>
-                    
+                    @php
+                        $room = App\Models\Room::find($booking->get('room')->id);
+                        $price = $room->price * $booking->get('length');
+                        $fee = $price * ($room->hotel->manager->commission / 100);
+                        $amount = $price + $fee;
+                    @endphp
                     <div class="card mb-10 align-items-center">
                         <div class="card-body w-md-50 text-center">
                             <div class="row " style="font-size: 1.25rem;">
                                 <div class="col">
-                                    <p>هزينه اتاق</p>
+                                    <p>هزینه اتاق ({{ $booking->get('length') }} شب)</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $price = $booking->get('room')->price * $booking->get('length') }}</p>
+                                    <p>{{ $price }}</p>
                                 </div>
                             </div>
+                            @if ($fee > 0)
                             <div class="row" style="font-size: 1.25rem;">
                                 <div class="col">
-                                    <p>هزینه رزرو اینترنتی (%5)</p>
+                                    <p>هزینه رزرو اینترنتی (%{{ ($fee / $price) * 100 }})</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $commision = $price * 0.05 }}</p>
+                                    <p>{{ $fee }}</p>
                                 </div>
                             </div>
+                            @endif
                             <div class="separator my-4"></div>
                             <div class="row" style="font-size: 1.25rem;">
                                 <div class="col">
                                     <p>جمع کل مبلغ پرداختی</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $amount = $price + $commision }}</p>
+                                    <p>{{ $amount }}</p>
                                 </div>
                             </div>
                         </div>

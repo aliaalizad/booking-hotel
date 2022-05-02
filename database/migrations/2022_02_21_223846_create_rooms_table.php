@@ -18,8 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('name');
-            $table->string('type');
             $table->integer('capacity');
+            $table->integer('count');
             $table->integer('price');
             $table->text('description')->nullable();
             $table->foreignIdFor(Hotel::class);

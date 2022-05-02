@@ -11,12 +11,13 @@ class Passenger extends Model
 
     protected $fillable = [
         'booking_id',
-        'user_id',
-        'first_name',
-        'last_name',
-        'national_code',
-        'personnel_code',
+        'detail'
     ];
+
+    protected $casts = [
+        'detail' => 'array',
+    ];
+
 
     public function booking()
     {

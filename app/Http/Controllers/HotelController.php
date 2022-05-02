@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ResourceControllerHelpers;
+use App\Models\City;
 use App\Models\Hotel;
+use App\Models\Manager;
 use App\Models\Member;
+use App\Models\Room;
+use Illuminate\Support\Str;
 
 class HotelController extends Controller{
 
@@ -16,63 +20,63 @@ class HotelController extends Controller{
     public function index()
     {
         if ( $this->panel == 'admin' ) {
-            $hotels = $this->getAllHotels();
+            $hotels = $this->getHotels();
         
         } elseif ( $this->panel == 'manager') {
-            $hotels = $this->getCurrentManager()->hotels;
+            $hotels = $this->getHotels(true);
         }
 
-        return view($this->panel . '.hotels', compact('hotels') );
+        return view('panels.' . $this->panel . '.hotels.all', compact('hotels') );
     }
 
     public function create()
     {
-        if ( $this->panel == 'manager' ) {
-            $members = $this->getCurrentManager()->members->where('hotel_id', null);
-        }
-
-        return view($this->panel . '.add-hotel', compact('members') );
+        return view('panels.' . $this->panel . '.hotels.add');
     }
 
 
     public function store(Request $request)
     {
-        if ($request->members == null) {
-            return back()->withErrors(['members' => 'باید حداقل 1 کارمند را انتخاب کنید']);
+        // Set manager_id based on panel
+        if ( $this->panel == 'admin' ) {
+            $manager_id = $request->manager;
+        }
+        if ( $this->panel == 'manager' ) {
+            $manager_id = $this->getCurrentManager()->id;
         }
 
+        // First validation
         $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'string'],
             'phone' => ['required'],
-            'address' => ['required'],
-            'city' => ['required'],
-            'members' => ['required'],
+            'address' => ['required', 'string'],
+            'manager' => ['exists:managers,id'],
         ]);
 
-        if ( $this->panel == 'manager' ) {
 
-            $manager_id = $this->getCurrentManager()->id;
+        // Check whether the selected city belongs to the manager state or not
+        $manager = Manager::find($manager_id);
 
-            $request->validate([
-            'members.*' => ['required', 'distinct', Rule::exists('members', 'id')->where('manager_id', $manager_id)->where('hotel_id', null)],
-            ]);
-        }
+        $state = $manager->city->state;
+
+        $cities = City::whereHas('state', function($query) use ($state) {
+            $query->where('state_id', $state->id);
+        })->pluck('id');
+
+        $request->validate([
+            'city' => ['required', Rule::in($cities)],
+        ]);
+
 
         // add hotel
-        $hotel = Hotel::create([
+        Hotel::create([
+            'code' => Str::random(20),
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
-            'city' => $request->city,
+            'city_id' => $request->city,
             'manager_id' => $manager_id,
         ]);
-
-         // update member
-         foreach ( $request->members as $id ) {
-            $member = Member::find($id);
-            $member->hotel_id = $hotel->id;
-            $member->save();
-        }
 
         return to_route( $this->panel . '.hotels.index');
     }
@@ -80,79 +84,35 @@ class HotelController extends Controller{
 
     public function edit(Hotel $hotel)
     {
-        $manager = $this->getCurrentManager();
-
-        if ( $hotel->manager_id != $manager->id ) {
-            abort(404);
-        }
-
-        $hotel_members = Member::where([['manager_id', $manager->id], ['hotel_id', $hotel->id]])->get();
-        $available_members = Member::where([['manager_id', $manager->id], ['hotel_id', null]])->get();
-
-        return view( $this->panel . '.hotel', compact('hotel', 'hotel_members', 'available_members'));
+        return view('panels.' . $this->panel . '.hotels.edit', compact('hotel'));
 
     }
 
 
     public function update(Request $request, Hotel $hotel)
     {
-
-        if ($request->members == null) {
-            return back()->withErrors(['members' => 'باید حداقل 1 کارمند را انتخاب کنید']);
-        }
-
+        // First validation
         $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'string'],
             'phone' => ['required'],
-            'address' => ['required'],
-            'city' => ['required'],
-            'members' => ['required'],
+            'address' => ['required', 'string'],
         ]);
 
-        if ( $this->panel == 'manager' ) {
-
-            $manager_id = $this->getCurrentManager()->id;
-
-            $request->validate([
-                'members.*' => ['required', 'distinct', Rule::exists('members', 'id')->where('manager_id', $manager_id)->where(function ($query) use ($hotel) {
-                    return $query->where('hotel_id', $hotel->id)->orWhere('hotel_id', null);
-                })]
-            ]);
-        }
-
+        // Update hotel
         $hotel->update([
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
-            'city' => $request->city,
         ]);
 
-
-        // remove old members form hotel
-        foreach ( $hotel->members as $member ) {
-            $member->hotel_id = null;
-            $member->save();
-        }
-        // add new members form hotel
-        foreach ( $request->members as $id ) {
-            $member = Member::find($id) ;
-            $member->hotel_id = $hotel->id;
-            $member->save();
-        }
-
-        return to_route($this->panel .  '.hotels.index');
+        // Redirect
+        return to_route($this->panel . '.hotels.index');
     }
 
 
     public function destroy(Hotel $hotel)
     {
-        foreach ( $hotel->members as $member ) {
-            $member->hotel_id = null;
-            $member->save();
-        }
-
         $hotel->delete();
-        
         return to_route($this->panel . '.hotels.index');
     }
 

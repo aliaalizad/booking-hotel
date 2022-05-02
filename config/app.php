@@ -177,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Helpers\Booking\BookingServiceProvider::class,
-        
+        App\Helpers\Logs\LogsServiceProvider::class,
     ],
 
     /*
@@ -235,6 +235,7 @@ return [
 
         'Verta' => Hekmatinasser\Verta\Verta::class,
         'Booking' => App\Helpers\Booking\Booking::class,
+        'Log' => App\Helpers\Logs\Logs::class,
     ],
 
 ];

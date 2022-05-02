@@ -9,17 +9,19 @@ class Item extends Component
     public $name;
     public $muted;
     public $route;
+    public $params;
     
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($name, $muted = false, $route = null)
+    public function __construct($name, $muted = false, $route = null, $params = null)
     {
         $this->name = $name;
         $this->muted = $muted == "true" ? true : false;
         $this->route = $route;
+        $this->params = $params;
     }
 
     /**

@@ -25,8 +25,7 @@ class ManagerFactory extends Factory
             'email' => $this->faker->email(),
             'city_id' => 1,
             'bank_account' => 'IR111111111111111111111111',
-            'commission' => 0,
-            'thirdParty_commission' => 5,
+            'commission' => 5,
         ];
     }
 }

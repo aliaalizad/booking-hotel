@@ -12,9 +12,16 @@
 
 @section('aside-menu-items')
 
-	<x-panels.aside.menu-section name="مراکز اقامتی"/>
-	<x-panels.aside.menu-item name="مدیران" route="admin.managers.index" icon="bi bi-grid-1x2-fill"/>
-	<x-panels.aside.menu-item name="کارمندان" route="admin.members.index" icon="bi bi-grid-1x2-fill"/>
+
+	<x-panels.aside.menu-accordion name="مراکز اقامتی" icon="bi bi-grid-1x2-fill">
+
+		<x-panels.aside.menu-sub name="مراکز" route="admin.hotels.index" />
+		<x-panels.aside.menu-sub name="مدیران" route="admin.managers.index" />
+		<x-panels.aside.menu-sub name="کارمندان" route="admin.members.index" />
+	
+	</x-panels.aside.menu-accordion>
+	
+
 
 	<x-panels.aside.menu-section name="امور فنی"/>
 	<x-panels.aside.menu-item name="منو" route="admin.dashboard" icon="bi bi-grid-1x2-fill"/>

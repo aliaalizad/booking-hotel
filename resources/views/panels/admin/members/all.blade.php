@@ -4,7 +4,8 @@
 
 
 @section('breadcrumb')
-    <x-panels.header.breadcrumb.menu>
+<x-panels.header.breadcrumb.menu>
+        <x-panels.header.breadcrumb.item name="مراكز اقامتی" muted />
         <x-panels.header.breadcrumb.item name="کارمندان" muted />
     </x-panels.header.breadcrumb.menu>
 @endsection

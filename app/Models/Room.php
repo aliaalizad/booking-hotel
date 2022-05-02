@@ -12,8 +12,8 @@ class Room extends Model
     protected $fillable = [
       'code',
       'name',
-      'type',
       'capacity',
+      'count',
       'price',
       'hotel_id'
     ];
@@ -33,5 +33,4 @@ class Room extends Model
         return $this->belongsTo(Hotel::class);
     }
 
-    
 }
