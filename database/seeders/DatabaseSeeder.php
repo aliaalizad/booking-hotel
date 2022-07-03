@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         Manager::factory()->count(2)->has(Hotel::factory()->count(3))->create();
 
-        Member::factory(200)->create();
+        // Member::factory(200)->create();
 
         User::factory(1)->create();
     }

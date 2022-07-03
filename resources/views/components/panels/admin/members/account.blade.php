@@ -53,6 +53,7 @@
                 <!--begin::Body-->
                 <div id="change_password" class="fs-6 ps-10 collapse" >
 
+                @if($panel == "member")
                     <!--begin::Row-->
                     <div class="row mb-8">
                         <!--begin::Col-->
@@ -69,7 +70,7 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Row-->
-
+                @endif
                     <!--begin::Row-->
                     <div class="row mb-8">
                         <!--begin::Col-->
@@ -86,6 +87,7 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Row-->
+
                     <!--begin::Row-->
                     <div class="row mb-8">
                         <!--begin::Col-->
@@ -113,7 +115,7 @@
                 <!--begin::Col-->
                 <div class="col-xl-4 ">
                     <label for="password" class="form-label d-flex align-items-center">
-                        <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور:</span>
+                        <span class="fs-6 fw-bold mt-2 mb-3 ">رمز عبور:</span>
                     </label>
                 </div>
                 <!--end::Col-->

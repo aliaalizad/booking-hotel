@@ -1,20 +1,20 @@
-@extends('panels.admin.master')
+@extends('panels.manager.master')
 
 @section('page_title', 'افزودن اتاق جدید')
 
 
 @section('breadcrumb')
     <x-panels.header.breadcrumb.menu>
-        <x-panels.header.breadcrumb.item name="مراكز اقامتی" route="admin.hotels.index" />
+        <x-panels.header.breadcrumb.item name="مراكز اقامتی" route="manager.hotels.index" />
         <x-panels.header.breadcrumb.item name="{{ $hotel->name }}" muted />
-        <x-panels.header.breadcrumb.item name="لیست اتاق ها" route="admin.rooms.index" params="{{$hotel->id}}"/>
+        <x-panels.header.breadcrumb.item name="لیست اتاق ها" route="manager.rooms.index" params="{{$hotel->id}}"/>
         <x-panels.header.breadcrumb.item name="افزودن" muted />
     </x-panels.header.breadcrumb.menu>
 @endsection
 
 @section('content')
 
-<form class="form row justify-content-center" action="{{ route('admin.rooms.store', $hotel->id) }}" method="post">
+<form class="form row justify-content-center" action="{{ route('manager.rooms.store', $hotel->id) }}" method="post">
     @csrf
 
     <div class="col-xxl-10">
@@ -30,7 +30,7 @@
 
         <!--begin::Card footer-->
         <div class="card-footer d-flex justify-content-center py-6">
-                <a href="{{ route('admin.rooms.index', $hotel->id) }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
+                <a href="{{ route('manager.rooms.index', $hotel->id) }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
                 <button type="submit" class="btn btn-primary">ثبت</button>
         </div>
         <!--end::Card footer-->

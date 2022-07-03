@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('capacity');
             $table->integer('count');
             $table->integer('price');
+            $table->json('numbers');
             $table->text('description')->nullable();
             $table->foreignIdFor(Hotel::class);
             $table->timestamps();

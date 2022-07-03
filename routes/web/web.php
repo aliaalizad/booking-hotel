@@ -5,9 +5,16 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Models\Manager;
 use App\Models\Room;
+use App\Models\LogEvent;
+use App\Models\Booking;
+use App\Models\Payment;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use illuminate\Support\Str;
+use Symfony\Component\Mailer\Transport\Dsn;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,10 +81,35 @@ Route::get('/add-rooms', function(){
 
 Route::get('test', function() {
 
-    // Logs::put(auth('web')->user(), 'login', [request()->ip(), 5, true]);
-    // $logs = Logs::get(auth('web')->user(), 1);
+    // LogEvent::create([
+    //     'name' => 'booking',
+    //     'description' => 'رزرو',
+    //     'parameters' => [
+    //         'room',
+    //     ],
+    // ]);
 
-    
+    // $payment = Payment::where('track_id', 2962757848)->firstOrFail();
+
+    // dd($payment->booking->room->numbers);
+
+    // Logs::putBooking(2, [
+    //     'room' => [
+    //         'numbers' => $payment->booking->room->numbers,
+    //         'price' => $payment->booking->room->price,
+    //     ]
+    // ]);
+
+    // $log = Logs::getBooking(2);
+
+    // dd($log->last());
+$guard='manager';
+    if (Gate::forUser(auth($guard)->user())->allows('edit-room')) {
+        return 'میتوانید قیمت را تغییر دهید';
+    }
+
+    return 'شما اجازه تغییر قیمت را ندارید';
+
 })->name('test');
 
 

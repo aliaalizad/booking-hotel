@@ -3,6 +3,7 @@
 use App\Http\Controllers\Manager\AuthController;
 use App\Http\Controllers\Manager\HotelController;
 use App\Http\Controllers\Manager\MemberController;
+use App\Http\Controllers\Manager\RoomController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -18,4 +19,11 @@ Route::middleware(['auth:manager', 'access_check'])->group(function(){
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::resource('/members', MemberController::class)->except('show');
     Route::resource('/hotels', HotelController::class)->except('show');
+    Route::resource('/hotels/{hotel}/rooms', RoomController::class);
+
+    Route::prefix('/hotels')->name('hotels.')->group(function(){
+        Route::get('/{hotel}/bookings', [HotelController::class, 'indexBookings'])->name('bookings.index');
+        Route::get('/{hotel}/bookings/{booking}', [HotelController::class, 'showBookings'])->name('bookings.show');
+    });
 });
+

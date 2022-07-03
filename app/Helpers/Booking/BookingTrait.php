@@ -73,7 +73,7 @@ trait BookingTrait {
             $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
         }
     }
-
+   
     private function adultsValidator()
     {
 
@@ -243,14 +243,26 @@ trait BookingTrait {
                 ->orWhere([['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
         })->pluck('room_id');
 
-
         $occupiedRoomId = $bookedRoomId->merge($unbookabledRoomId)->countBy();
 
-
         $rooms = collect();
+
         Room::each(function($room) use ($occupiedRoomId, $rooms){
-            if ( ($room->count  >  $occupiedRoomId->get($room->id)) && ($room->capacity >= $this->adults) && ($room->hotel->city_id == $this->dest)) {
-                $rooms->push($room);
+
+            if ( ($room->count  >  $occupiedRoomId->get($room->id)) && ($room->capacity >= $this->adults) ) {
+
+                if ( ! is_null($this->hotel) ) {
+
+                    if ( $room->hotel->id == $this->hotel->id ) {
+                        $rooms->push($room);
+                    }
+
+                } else {
+
+                    if ($room->hotel->city_id == $this->dest) {
+                        $rooms->push($room);
+                    }
+                }
             }
         });
 

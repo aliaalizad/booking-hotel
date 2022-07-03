@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use illuminate\Support\Str;
+use App\Helpers\Logs\Logs;
 
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment as ShetabitPayment;
@@ -123,6 +124,7 @@ class BookingService {
                 'checkin' => $checkin,
                 'checkout' => $checkout,
                 'amount' => $amount,
+                'rooms' => $room->numbers,
                 'status' => 'unpaid',
             ]);
         
@@ -249,7 +251,7 @@ class BookingService {
                 'status' => 'paid',
             ]);
 
-
+            
         } catch (InvalidPaymentException $exception) {
 
             $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code

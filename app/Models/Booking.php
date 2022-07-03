@@ -17,8 +17,13 @@ class Booking extends Model
         'voucher',
         'phone',
         'amount',
+        'rooms',
         'status',
     ];
+
+    protected $casts = [
+        'rooms' => 'array',
+      ];
 
     public function user()
     {
@@ -38,5 +43,10 @@ class Booking extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'loggable');
     }
 }

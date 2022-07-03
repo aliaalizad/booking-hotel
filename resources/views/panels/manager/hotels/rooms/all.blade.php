@@ -1,11 +1,11 @@
-@extends('panels.admin.master')
+@extends('panels.manager.master')
 
 @section('page_title', 'لیست اتاق ها')
 
 
 @section('breadcrumb')
     <x-panels.header.breadcrumb.menu>
-        <x-panels.header.breadcrumb.item name="مراكز اقامتی" route="admin.hotels.index" />
+        <x-panels.header.breadcrumb.item name="مراكز اقامتی" route="manager.hotels.index" />
         <x-panels.header.breadcrumb.item name="{{ $hotel->name }}" muted />
         <x-panels.header.breadcrumb.item name="لیست اتاق ها" muted />
     </x-panels.header.breadcrumb.menu>
@@ -19,7 +19,7 @@
     <div class="card-header">
         <h3 class="card-title">اتاق ها</h3>
         <div class="card-toolbar ">
-            <a href="{{ route('admin.rooms.create', $hotel->id) }}" class="btn btn-primary btn-sm">افزودن اتاق جدید</a>
+            <a href="{{ route('manager.rooms.create', $hotel->id) }}" class="btn btn-primary btn-sm">افزودن اتاق جدید</a>
         </div>
     </div>
     <div class="card-body">
@@ -51,7 +51,7 @@
                                 <td>{{ implode(' - ' ,$room->numbers) }}</td>
                                 <td>{{ $room->price }}</td>
                                 <td>
-                                    <a href="{{ route('admin.rooms.edit',[$hotel->id, $room->id]) }}" class="btn btn-secondary btn-sm">ویرایش</a>
+                                    <a href="{{ route('manager.rooms.edit',[$hotel->id, $room->id]) }}" class="btn btn-secondary btn-sm">ویرایش</a>
                                 </td>
                             </tr>
                         @endforeach

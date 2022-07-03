@@ -45,18 +45,19 @@
         </div>
         <!--end::Row-->
 
+
         <!--begin::Row-->
         <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
-                <label for="count" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">تعداد:</span>
+                <label for="rooms" class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3 required">اتاق ها:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" id="count" name="count" class="form-control" placeholder="تعداد اتاق را وارد کنید"  value="{{ isset($room) ? old('count', $room->count) : old('count') }}"/>
+                <input name="rooms" class="form-control form-control-lg form-control" placeholder="شماره اتاق ها را وارد کنید" value="{{ isset($room) ? old('', implode(',' ,$room->numbers)) : old('rooms') }}" id="tagify"/>
             </div>
             <!--end::Col-->
         </div>

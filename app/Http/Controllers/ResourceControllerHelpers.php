@@ -113,8 +113,6 @@ trait ResourceControllerHelpers {
     }
 
 
-
-
     public function getAllMembers()
     {
         return Member::all();
@@ -133,6 +131,11 @@ trait ResourceControllerHelpers {
     public function getCurrentManager()
     {
         return Auth::guard('manager')->user();
+    }
+
+    public function getCurrentMember()
+    {
+        return Auth::guard('member')->user();
     }
 
 }

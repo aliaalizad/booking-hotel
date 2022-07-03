@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Logs;
 
+use App\Models\Booking;
 use App\Models\Log;
 use App\Models\LogEvent;
 use Illuminate\Database\Eloquent\Model;
@@ -9,48 +10,53 @@ use Illuminate\Database\Eloquent\Model;
 class LogsService {
 
 
-    public function put(Model $loggable, $event, array $detail)
+    private function put($loggable_type, $loggable_id, $event, array $data)
     {
-
-        if (is_numeric($event)) {
-            $log_event = LogEvent::findOrFail($event);
-        }
-        
-        if (is_string($event)) {
-            $log_event= LogEvent::where('name', $event)->firstOrFail();
-        }
+        $log_event = LogEvent::whereName($event)->firstOrFail();
 
         $params = $log_event->parameters;
 
-        $db_detail = null;
+        $db_data = null;
         $i = 0;
         foreach($params as $key => $value) {
-            $db_detail[$value] = $detail[$i];
+            $db_data[$value] = $data[$value];
             $i++;
         }
 
+        $loggable = $loggable_type :: findOrFail($loggable_id);
+
         $loggable->logs()->create([
-            'log_event_id' => 1,
-            'detail' => $db_detail,
+            'log_event_id' => $log_event->id,
+            'detail' => $db_data,
         ]);
     }
 
 
-    public function get(Model $loggable, $event)
+    private function get($loggable_type, $loggable_id, $event)
     {
-        if (is_numeric($event)) {
-            $log_event = LogEvent::findOrFail($event);
-        }
-        
-        if (is_string($event)) {
-            $log_event= LogEvent::where('name', $event)->firstOrFail();
-        }
+        $log_event = LogEvent::whereName($event)->firstOrFail();
 
-        $loggable_type = get_class($loggable);
-        $loggable_id = $loggable->id;
+        $loggable = $loggable_type :: findOrFail($loggable_id);
 
-        $logs = Log::where([['loggable_type', $loggable_type], ['loggable_id', $loggable_id], ['log_event_id', $log_event->id] ])->get();
+        $logs = $loggable->logs()->where('log_event_id', $log_event->id)->pluck('detail');
 
         return $logs;
+    }
+
+
+    public function putBooking($loggable_id, array $data)
+    {
+        $event = 'booking';
+        $loggaable_type = 'App\Models\Booking';
+
+        $this->put($loggaable_type, $loggable_id, $event, $data);
+    }
+
+    public function getBooking($loggable_id)
+    {
+        $event = 'booking';
+        $loggaable_type = 'App\Models\Booking';
+
+        return $this->get($loggaable_type, $loggable_id, $event);
     }
 }

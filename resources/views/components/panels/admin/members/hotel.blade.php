@@ -15,7 +15,7 @@
     <div class="row mb-8">
         <!--begin::Col-->
         <div class="col-xl-4">
-            <label for="hotel" class="form-label d-flex align-items-center">
+            <label for="hotel" class="form-label d-flex align-items-center required">
                 <span class="fs-6 fw-bold mt-2 mb-3">هتل:</span>
             </label>
         </div>
@@ -23,10 +23,10 @@
 
         <!--begin::Col-->
         <div class="col-xl-8">
-            <select name="hotel" class="form-select" data-allow-clear="true" data-control="select2" data-placeholder="هتل را انتخاب کنید" >
+            <select name="hotel" class="form-select" data-control="select2" data-placeholder="هتل را انتخاب کنید" >
                 <option></option>
-                @foreach ( App\Models\Hotel::all() as $hotel )
-                    <option value="{{ $hotel->id }}" @if(isset($member)) @selected($hotel->id == $member->hotel_id) @endif>{{ $hotel->name . " (" . $hotel->manager->name . ")" }}</option>
+                @foreach ( $hotels as $hotel )
+                    <option value="{{ $hotel->id }}" @if(isset($member)) @selected($hotel->id == $member->hotel_id) @endif>{{ $hotel->name }}</option>
                 @endforeach
             </select>
         </div>

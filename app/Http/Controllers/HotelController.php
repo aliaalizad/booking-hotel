@@ -20,9 +20,11 @@ class HotelController extends Controller{
     public function index()
     {
         if ( $this->panel == 'admin' ) {
+
             $hotels = $this->getHotels();
         
         } elseif ( $this->panel == 'manager') {
+
             $hotels = $this->getHotels(true);
         }
 
@@ -78,7 +80,7 @@ class HotelController extends Controller{
             'manager_id' => $manager_id,
         ]);
 
-        return to_route( $this->panel . '.hotels.index');
+        return to_route( $this->panel . '.hotels.index' );
     }
 
 

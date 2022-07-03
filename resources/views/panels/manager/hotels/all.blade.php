@@ -1,4 +1,4 @@
-@extends('panels.admin.master')
+@extends('panels.manager.master')
 
 @section('page_title', 'مراکز اقامتی')
 
@@ -17,7 +17,7 @@
     <div class="card-header">
         <h3 class="card-title">مراکز اقامتی</h3>
         <div class="card-toolbar ">
-            <a href="{{ route('admin.hotels.create') }}" class="btn btn-primary btn-sm">افزودن مرکز جدید</a>
+            <a href="{{ route('manager.hotels.create') }}" class="btn btn-primary btn-sm">افزودن مرکز جدید</a>
         </div>
     </div>
     <div class="card-body">
@@ -27,9 +27,7 @@
                     <th>ردیف</th>
                     <th>نام</th>
                     <th>شماره تلفن</th>
-                    <th>استان</th>
                     <th>شهرستان</th>
-                    <th>مدیر</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
@@ -45,13 +43,11 @@
                     
                         <td>{{ $hotel->name }}</td>
                         <td>{{ $hotel->phone }}</td>
-                        <td>{{ $hotel->city->state->name }}</td>
                         <td>{{ $hotel->city->name }}</td>
-                        <td><a href="#">{{ $hotel->manager->name ?? '-'}}</a></td>
                         <td>
-                            <a href="{{ route('admin.hotels.edit', $hotel->id) }}" class="btn btn-secondary btn-sm">ویرایش</a>
-                            <a href="{{ route('admin.rooms.index', $hotel->id) }}" class="btn btn-danger btn-sm">اتاق ها</a>
-                            <a href="{{ route('admin.hotels.bookings.index', $hotel->id) }}" class="btn btn-success btn-sm">رزروها</a>
+                            <a href="{{ route('manager.hotels.edit', $hotel->id) }}" class="btn btn-secondary btn-sm">ویرایش</a>
+                            <a href="{{ route('manager.rooms.index', $hotel->id) }}" class="btn btn-danger btn-sm">اتاق ها</a>
+                            <a href="{{ route('manager.hotels.bookings.index', $hotel->id) }}" class="btn btn-success btn-sm">رزروها</a>
                         </td>
                     </tr>
                 @endforeach

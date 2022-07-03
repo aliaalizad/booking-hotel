@@ -53,4 +53,23 @@ class Member extends Authenticatable
         return $this->belongsTo(Manager::class);
     }
 
+
+    // permission
+    public function permissions()
+    {
+        return $this->morphToMany(Permission::class, 'permissionable');
+    }
+    public function roles()
+    {
+        return $this->morphToMany(Role::class, 'roleable');
+    }
+    public function hasRole($roles)
+    {
+        return !! $roles->intersect($this->roles)->all();
+    }
+    public function hasPermission($permission)
+    {
+        return $this->permissions->contains($permission) || $this->hasRole($permission->roles);
+    }
+
 }

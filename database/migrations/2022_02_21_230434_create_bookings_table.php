@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('checkout');
             $table->string('voucher')->nullable()->unique();
             $table->integer('amount');  
+            $table->json('rooms');
             $table->enum('status', ['unpaid', 'paid', 'pending', 'confirmed', 'rejected']);
             $table->timestamps();
         });

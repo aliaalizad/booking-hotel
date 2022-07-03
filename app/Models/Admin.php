@@ -27,8 +27,29 @@ class Admin extends Authenticatable
 
     protected $table = 'admins';
 
+
     public function logs()
     {
         return $this->morphMany(Log::class, 'loggable');
     }
+
+
+    // permission
+    public function permissions()
+    {
+        return $this->morphToMany(Permission::class, 'permissionable');
+    }
+    public function roles()
+    {
+        return $this->morphToMany(Role::class, 'roleable');
+    }
+    public function hasRole($roles)
+    {
+        return !! $roles->intersect($this->roles)->all();
+    }
+    public function hasPermission($permission)
+    {
+        return $this->permissions->contains($permission) || $this->hasRole($permission->roles);
+    }
+
 }
