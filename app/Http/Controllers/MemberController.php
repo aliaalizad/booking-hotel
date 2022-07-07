@@ -8,7 +8,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ResourceControllerHelpers;
 use App\Models\Hotel;
-use Illuminate\Support\Facades\Gate;
+use App\Models\Permission;
+use App\Models\Role;
+
 
 class MemberController  extends Controller {
 
@@ -47,6 +49,7 @@ class MemberController  extends Controller {
 
     public function store(Request $request)
     {
+        // validation
         $request->validate([
             'name' => ['required'],
             'personnel_code' => ['required','unique:members,personnel_code'],
@@ -67,8 +70,8 @@ class MemberController  extends Controller {
         // set is_blocked value
         $is_blocked = is_null($request->status) ? 1 : 0;
 
-        // create new member
-        Member::create([
+        // create
+        $member = Member::create([
             'name' => $request->name,
             'personnel_code' => $request->personnel_code,
             'phone' => $request->phone,
@@ -78,7 +81,42 @@ class MemberController  extends Controller {
             'hotel_id' => $hotel->id,
         ]);
 
-        // redirect to index
+
+        // roles & permissions
+        if (isset($request->roles)) {
+
+            $request->validate([
+                'roles' => ['required', 'array'],
+            ]);
+
+            foreach ($request->roles as $role) {
+                $role_guard = Role::find($role)->guard;
+
+                if ( $role_guard != 'member' ) {
+                    return redirect()->back()->withErrors('invalid role !');
+                }
+            }
+        }
+
+        if (isset($request->permissions)) {
+
+            $request->validate([
+                'permissions' => ['required', 'array'],
+            ]);
+
+            foreach ($request->permissions as $permission) {
+                $permission_guard = Permission::find($permission)->guard;
+    
+                if ( $permission_guard != 'member' ) {
+                    return redirect()->back()->withErrors('invalid permissions !');
+                }
+            }
+        }
+
+        $member->roles()->sync($request->roles);
+        $member->permissions()->sync($request->permissions);
+
+        // redirect
         return to_route( $this->panel . '.members.index');
     }
 
@@ -103,6 +141,7 @@ class MemberController  extends Controller {
 
     public function update(Request $request, Member $member)
     {
+        // validation
         $request->validate([
             'name' => ['required'],
             'personnel_code' => ['required', Rule::unique('members', 'personnel_code')->ignore($member->id) ],
@@ -122,7 +161,7 @@ class MemberController  extends Controller {
         // set is_blocked value
         $is_blocked = is_null($request->status) ? 1 : 0;
 
-        // update data
+        // update
         $member->update([
             'name' => $request->name,
             'personnel_code' => $request->personnel_code,
@@ -158,19 +197,41 @@ class MemberController  extends Controller {
         }
 
 
-        // redirect to index
-        return to_route($this->panel . '.members.index');
-    }
+        // roles & permissions
+        if (isset($request->roles)) {
 
+            $request->validate([
+                'roles' => ['required', 'array'],
+            ]);
 
-    public function destroy(Member $member)
-    {
-        if ($member->hotel_id != null) {
-            return back()->withErrors(['deleteError' => 'this member has been assigned to ' . $member->hotel->name . ' first remove from hotel']);
+            foreach ($request->roles as $role) {
+                $role_guard = Role::find($role)->guard;
+
+                if ( $role_guard != 'member' ) {
+                    return redirect()->back()->withErrors('invalid role !');
+                }
+            }
         }
 
-        $member->delete();
+        if (isset($request->permissions)) {
 
+            $request->validate([
+                'permissions' => ['required', 'array'],
+            ]);
+
+            foreach ($request->permissions as $permission) {
+                $permission_guard = Permission::find($permission)->guard;
+    
+                if ( $permission_guard != 'member' ) {
+                    return redirect()->back()->withErrors('invalid permissions !');
+                }
+            }
+        }
+
+        $member->roles()->sync($request->roles);
+        $member->permissions()->sync($request->permissions);
+
+        // redirect
         return to_route($this->panel . '.members.index');
     }
 

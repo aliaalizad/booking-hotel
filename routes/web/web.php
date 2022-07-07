@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use illuminate\Support\Str;
-use Symfony\Component\Mailer\Transport\Dsn;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -103,12 +103,9 @@ Route::get('test', function() {
     // $log = Logs::getBooking(2);
 
     // dd($log->last());
-$guard='manager';
-    if (Gate::forUser(auth($guard)->user())->allows('edit-room')) {
-        return 'میتوانید قیمت را تغییر دهید';
-    }
 
-    return 'شما اجازه تغییر قیمت را ندارید';
+    dd(user());
+
 
 })->name('test');
 

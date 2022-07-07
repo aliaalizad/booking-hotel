@@ -87,7 +87,6 @@ class HotelController extends Controller{
     public function edit(Hotel $hotel)
     {
         return view('panels.' . $this->panel . '.hotels.edit', compact('hotel'));
-
     }
 
 

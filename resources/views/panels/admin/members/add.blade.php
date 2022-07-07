@@ -38,6 +38,12 @@
             </div>
             <!--end::Row-->
 
+            <!--begin::Row-->
+            <div class="row">
+                <x-panels.admin.members.permissions />
+            </div>
+            <!--end::Row-->
+
         </div>
         <!--end::Card body-->
 

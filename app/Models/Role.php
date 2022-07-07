@@ -12,6 +12,7 @@ class Role extends Model
     protected $fillable = [
         'name',
         'label',
+        'guard'
     ];
 
     public function admins()

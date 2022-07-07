@@ -34,6 +34,11 @@
                 <x-panels.admin.managers.config />
             </div>
             <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row">
+                <x-panels.admin.managers.permissions />
+            </div>
+            <!--end::Row-->
         </div>
         <!--end::Card body-->
 

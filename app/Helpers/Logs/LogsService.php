@@ -7,6 +7,9 @@ use App\Models\Log;
 use App\Models\LogEvent;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 class LogsService {
 
 
@@ -59,4 +62,5 @@ class LogsService {
 
         return $this->get($loggaable_type, $loggable_id, $event);
     }
+
 }

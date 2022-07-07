@@ -27,14 +27,14 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
+
         // custom blade directives
-        Blade::directive('canAdmin', function ($permission) {
-            return "<?php if (auth('admin')->user()->can($permission)) { ?>";
+        Blade::directive('can', function ($abilities) {
+            return "<?php if (permission($abilities)) { ?>";
         });
-        Blade::directive('endcanAdmin', function () {
+        Blade::directive('endcan', function () {
             return '<?php } ?>';
         });
-
 
     }
 }

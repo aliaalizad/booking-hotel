@@ -1,15 +1,15 @@
 @extends('layouts.panels.master')
 
 
-@section('page_title_prefix', 'پنل مدیریت هتل')
+@section('page_title_prefix', 'پنل مسئول پذیرش')
 
 
-@section('aside_logo', 'مدیریت هتل')
+@section('aside_logo', 'مسئول پذیرش')
 
 
-@section('mobile_logo', 'مدیریت هتل')
+@section('mobile_logo', 'مسئول پذیرش')
 
-	
+
 @section('aside-menu-items')
 	<x-panels.aside.menu-section name="بخش"/>
 	<x-panels.aside.menu-accordion name="منوی آبشاری" icon="bi bi-grid-1x2-fill">

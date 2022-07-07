@@ -59,7 +59,14 @@
                 <select class="form-select" name="city" id="city" data-control="select2" @if(isset($hotel)) {{ 'disabled' }} @endif  data-placeholder="شهرستان را انتخاب کنید">
                     <option></option>
                     <optgroup>
-                        @foreach(App\Models\City::all() as $city)
+                        @php
+                            if (guard('admin')) {
+                                $cities = App\Models\City::all();
+                            } elseif (guard('manager')) {
+                                $cities = App\Models\City::where('state_id', user('manager')->city->state->id)->get();
+                            }
+                        @endphp
+                        @foreach($cities as $city)
                             <option value="{{ $city->id }}" @if(isset($hotel)) @selected($hotel->city_id == $city->id) @endif>{{ $city->name }}</option>
                         @endforeach
                     </optgroup>

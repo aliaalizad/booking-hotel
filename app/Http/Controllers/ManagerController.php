@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ResourceControllerHelpers;
-use App\Models\Hotel;
 use App\Models\Manager;
-use App\Models\Member;
+use App\Models\Permission;
+use App\Models\Role;
 
 class ManagerController extends Controller {
 
@@ -22,6 +22,7 @@ class ManagerController extends Controller {
         return view('panels.' . $this->panel . '.managers.all', compact('managers') );
     }
 
+
     public function create()
     {
         return view('panels.' . $this->panel . '.managers.add');
@@ -30,6 +31,7 @@ class ManagerController extends Controller {
 
     public function store(Request $request)
     {
+        // validation
         $request->validate([
             'name' => ['required'],
             'username' => ['required','unique:managers,username'],
@@ -41,10 +43,13 @@ class ManagerController extends Controller {
             'city' => ['required', 'exists:cities,id'],
         ]);
 
+
         // set is_blocked value
         $is_blocked = is_null($request->status) ? 1 : 0;
 
-        Manager::create([
+
+        // create
+        $manager = Manager::create([
             'name' => $request->name,
             'username' => $request->username,
             'is_blocked' => $is_blocked,
@@ -56,6 +61,43 @@ class ManagerController extends Controller {
             'city_id' => $request->city,
         ]);
 
+
+        // roles & permissions
+        if (isset($request->roles)) {
+
+            $request->validate([
+                'roles' => ['required', 'array'],
+            ]);
+
+            foreach ($request->roles as $role) {
+                $role_guard = Role::find($role)->guard;
+
+                if ( $role_guard != 'manager' ) {
+                    return redirect()->back()->withErrors('invalid role !');
+                }
+            }
+        }
+
+        if (isset($request->permissions)) {
+
+            $request->validate([
+                'permissions' => ['required', 'array'],
+            ]);
+
+            foreach ($request->permissions as $permission) {
+                $permission_guard = Permission::find($permission)->guard;
+    
+                if ( $permission_guard != 'manager' ) {
+                    return redirect()->back()->withErrors('invalid permissions !');
+                }
+            }
+        }
+
+        $manager->roles()->sync($request->roles);
+        $manager->permissions()->sync($request->permissions);
+
+
+        // redirect
         return to_route($this->panel . '.managers.index');
     }
 
@@ -68,6 +110,7 @@ class ManagerController extends Controller {
 
     public function update(Request $request, Manager $manager)
     {
+        // validation
         $request->validate([
             'name' => ['required'],
             'username' => ['required', Rule::unique('managers', 'username')->ignore($manager->id)],
@@ -77,8 +120,10 @@ class ManagerController extends Controller {
             'commission' => ['required'],
         ]);
 
+
         // set is_blocked value
         $is_blocked = is_null($request->status) ? 1 : 0;
+
 
         // update data
         $manager->update([
@@ -91,7 +136,7 @@ class ManagerController extends Controller {
             'commission' => $request->commission,
         ]);
 
-        // update password
+        // password
         if ( ! is_null($request->current_password) || ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
             
             $request->validate([
@@ -115,17 +160,46 @@ class ManagerController extends Controller {
             }
         }
 
+
+        // roles & permissions
+        if (isset($request->roles)) {
+
+            $request->validate([
+                'roles' => ['array'],
+            ]);
+
+            foreach ($request->roles as $role) {
+                $role_guard = Role::find($role)->guard;
+
+                if ( $role_guard != 'manager' ) {
+                    return redirect()->back()->withErrors('invalid role !');
+                }
+            }
+        }
+
+        if (isset($request->permissions)) {
+
+            $request->validate([
+                'permissions' => ['array'],
+            ]);
+
+            foreach ($request->permissions as $permission) {
+                $permission_guard = Permission::find($permission)->guard;
+    
+                if ( $permission_guard != 'manager' ) {
+                    return redirect()->back()->withErrors('invalid permissions !');
+                }
+            }
+        }
+
+        $manager->roles()->sync($request->roles);
+        $manager->permissions()->sync($request->permissions);
+
+
+        // redirect
         return to_route($this->panel . '.managers.index');
     }
 
-    public function destroy(Manager $manager) {
 
-        Member::where('manager_id', $manager->id)->delete();
-        Hotel::where('manager_id', $manager->id)->delete();
-
-        $manager->delete();
-
-        return to_route( $this->panel . '.managers.index');
-    }
 
 }

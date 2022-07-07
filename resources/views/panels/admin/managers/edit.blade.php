@@ -36,6 +36,9 @@
                 <x-panels.admin.managers.config :manager="$manager" />
             </div>
 
+            <div class="row">
+                <x-panels.admin.managers.permissions :manager="$manager" />
+            </div>
         </div>
         <!--end::Card body-->
 

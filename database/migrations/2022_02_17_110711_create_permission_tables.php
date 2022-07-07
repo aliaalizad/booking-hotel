@@ -19,14 +19,16 @@ return new class extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('label')->nullable();
+            $table->string('label');
+            $table->string('guard');
             $table->timestamps();
         });
 
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('label')->nullable();
+            $table->string('label');
+            $table->string('guard');
             $table->timestamps();
         });
 

@@ -38,6 +38,10 @@
             </div>
             <!--end::Row-->
 
+            <div class="row">
+                <x-panels.admin.members.permissions />
+            </div>
+
         </div>
         <!--end::Card body-->
 

@@ -36,6 +36,10 @@
                 <x-panels.admin.members.hotel :member="$member" :hotels="$hotels"/>
             </div>
 
+            <div class="row">
+                <x-panels.admin.members.permissions :member="$member"/>
+            </div>
+
         </div>
         <!--end::Card body-->
 
