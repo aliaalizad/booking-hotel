@@ -28,6 +28,7 @@
                     <th>نام</th>
                     <th>شماره تلفن</th>
                     <th>شهرستان</th>
+                    <th>وضعیت رزرو</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
@@ -45,9 +46,18 @@
                         <td>{{ $hotel->phone }}</td>
                         <td>{{ $hotel->city->name }}</td>
                         <td>
+                            @if($hotel->is_bookable)
+                                <span class="badge badge-success">قابل رزرو</span>
+                            @else
+                                <span class="badge badge-danger">غیرقابل رزرو</span>
+                            @endif
+                        </td>
+                        <td>
                             <a href="{{ route('manager.hotels.edit', $hotel->id) }}" class="btn btn-secondary btn-sm">ویرایش</a>
-                            <a href="{{ route('manager.rooms.index', $hotel->id) }}" class="btn btn-danger btn-sm">اتاق ها</a>
-                            <a href="{{ route('manager.hotels.bookings.index', $hotel->id) }}" class="btn btn-success btn-sm">رزروها</a>
+                            <a href="{{ route('manager.rooms.index', $hotel->id) }}" class="btn btn-primary btn-sm">اتاق ها</a>
+                            <a href="{{ route('manager.hotels.bookings.index', $hotel->id) }}" class="btn btn-primary btn-sm">رزروها</a>
+                            <a href="{{ route('manager.hotels.unbookables.index', $hotel->id) }}" class="btn btn-primary btn-sm">محدودیت رزرو</a>
+
                         </td>
                     </tr>
                 @endforeach

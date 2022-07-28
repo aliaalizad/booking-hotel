@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class RoomController extends Controller
@@ -35,16 +34,30 @@ class RoomController extends Controller
             'capacity' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'integer'],
             'rooms' => ['required', 'array'],
-            'rooms.*' => ['required', 'integer'],
+            'rooms.*' => ['required', 'integer', 'distinct'],
         ]);
+
+        // set is_bookable value
+        $is_bookable = is_null($request->bookable) ? 0 : 1;
+
+        // return an error if the numbers are already registered
+        $pre_nums = Room::where('hotel_id', $hotel->id)->get()->flatMap(function($room){
+            return $room->numbers;
+        })->toArray();
+
+        foreach ($rooms as $room) {
+            if (in_array($room, $pre_nums)) {
+                return redirect()->back()->withErrors('Some numbers already are registered !'); 
+            }
+        }
 
         $hotel->rooms()->create([
             'code' => Str::random(40),
             'name' => $request->name,
             'capacity' => $request->capacity,
-            'count' => count($rooms),
             'numbers' => $rooms,
             'price' => $request->price,
+            'is_bookable' => $is_bookable,
         ]);
 
         return to_route($this->panel . '.rooms.index', $hotel->id);
@@ -68,19 +81,32 @@ class RoomController extends Controller
             'capacity' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'integer'],
             'rooms' => ['required', 'array'],
-            'rooms.*' => ['required', 'integer'],
+            'rooms.*' => ['required', 'integer', 'distinct'],
         ]);
+
+        // set is_bookable value
+        $is_bookable = is_null($request->bookable) ? 0 : 1;
+
+        // return an error if the numbers are already registered
+        $pre_nums = Room::where('hotel_id', $hotel->id)->where('id', '!=', $room->id)->get()->flatMap(function($room){
+            return $room->numbers;
+        })->toArray();
+
+        foreach ($rooms as $item) {
+            if (in_array($item, $pre_nums)) {
+                return redirect()->back()->withErrors('Some numbers already are registered !'); 
+            }
+        }
 
         $room->update([
             'code' => Str::random(40),
             'name' => $request->name,
             'capacity' => $request->capacity,
-            'count' => count($rooms),
             'numbers' => $rooms,
             'price' => $request->price,
+            'is_bookable' => $is_bookable,
         ]);
 
         return to_route($this->panel . '.rooms.index', $hotel->id);
-
     }
 }

@@ -85,14 +85,6 @@
 
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3">
-                                        رزروها
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
                                     <form action="{{ route('user.logout') }}" method="post" id="logout">
                                         @csrf
                                     </form>

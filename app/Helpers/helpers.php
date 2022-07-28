@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 
 function permission($abilities, $arguments = []){
 
@@ -41,8 +42,17 @@ function permission($abilities, $arguments = []){
     }
 }
 
-function guard($guard) {
-    return Auth::guard($guard)->check() ? true : false ;
+function guard($guards) {
+    if (is_array($guards)) {
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    return Auth::guard($guards)->check() ? true : false ;
 }
 
 function user($guard = null) {
@@ -71,3 +81,4 @@ function user($guard = null) {
 
     return $user;
 }
+

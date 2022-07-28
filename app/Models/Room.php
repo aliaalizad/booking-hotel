@@ -16,7 +16,8 @@ class Room extends Model
     'count',
     'price',
     'numbers',
-    'hotel_id'
+    'hotel_id',
+    'is_bookable',
   ];
 
   protected $casts = [
@@ -28,7 +29,7 @@ class Room extends Model
     return $this->hasMany(Booking::class);
   }
 
-  public function unbookable()
+  public function unbookables()
   {
     return $this->hasMany(Unbookable::class);
   }

@@ -22,8 +22,9 @@ class CreateMembersTable extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->boolean('is_blocked')->default(0);
-            $table->foreignIdFor(Hotel::class)->nullable();
+            $table->foreignIdFor(Hotel::class);
             $table->foreignIdFor(Manager::class);
+            $table->foreign('manager_id')->references('id')->on('managers');
             $table->timestamps();
         });
     }

@@ -29,9 +29,9 @@
                     <th>ردیف</th>
                     <th>نام و نام  خانوادگی</th>
                     <th>کد پرسنلی</th>
-                    <th>وضعیت حساب کاربری</th>
                     <th>مدیر</th>
                     <th>هتل</th>
+                    <th>وضعیت حساب کاربری</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
@@ -47,6 +47,8 @@
                     
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->personnel_code }}</td>
+                        <td><a href="#">{{ $member->manager->name ?? '-'}}</a></td>
+                        <td><a href="#">{{ $member->hotel->name ?? '-' }}</a></td>
                         <td>
                             @if(! $member->is_blocked)
                                 <span class="badge badge-success">فعال</span>
@@ -54,8 +56,6 @@
                                 <span class="badge badge-danger">غیرفعال</span>
                             @endif
                         </td>
-                        <td><a href="#">{{ $member->manager->name ?? '-'}}</a></td>
-                        <td><a href="#">{{ $member->hotel->name ?? '-' }}</a></td>
                         <td><a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-secondary btn-sm">ویرایش</a></td>
                     </tr>
                 @endforeach

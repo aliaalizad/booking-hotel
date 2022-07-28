@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->integer('capacity');
-            $table->integer('count');
             $table->integer('price');
             $table->json('numbers');
-            $table->text('description')->nullable();
+            $table->boolean('is_bookable')->default(0);
             $table->foreignIdFor(Hotel::class);
+            $table->foreign('hotel_id')->references('id')->on('hotels');
             $table->timestamps();
         });
     }

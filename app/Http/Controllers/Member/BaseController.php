@@ -14,19 +14,5 @@ class BaseController extends Controller
 {
     use ResourceControllerHelpers;
 
-    public function indexBookings(Hotel $hotel)
-    {
-        $hotel = $this->getCurrentMember()->hotel;
-        $bookings = Booking::getHotelBookings($hotel);
-
-        return view('panels.member.bookings.all', compact('hotel', 'bookings'));
-    }
-
-    public function showBookings(BookingModel $booking)
-    {
-        $passengers = $booking->passengers->first()->detail;
-        $payments = $booking->payments;
-
-        return view('panels.member.bookings.show', compact('booking', 'payments', 'passengers'));
-    }
+    
 }

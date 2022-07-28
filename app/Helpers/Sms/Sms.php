@@ -2,14 +2,12 @@
 
 namespace App\Helpers\Sms;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Facade;
 
-class Sms {
+class Sms extends Facade {
 
-    public static function send($content, $to)
+    protected static function getFacadeAccessor()
     {
-        $message = 'Code is ' . $content . " [$to]";
-        Log::info($message);
+        return 'sms';
     }
-
 }

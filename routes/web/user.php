@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\BaseController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -18,4 +19,5 @@ Route::post('/profile/logout', [AuthController::class, 'logout'])->name('logout'
 
 Route::middleware(['auth:web', 'access_check'])->prefix('/profile')->group(function(){
     Route::get('/', [AuthController::class, 'index'])->name('profile');
+    Route::get('/booking/{booking}', [BaseController::class, 'showBooking'])->name('showBooking');
 });

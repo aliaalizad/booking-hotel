@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Logs\Logs;
+use App\Helpers\Sms\Sms;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Models\Manager;
@@ -9,6 +10,8 @@ use App\Models\LogEvent;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Permission;
+use App\Models\Unbookable;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -104,8 +107,8 @@ Route::get('test', function() {
 
     // dd($log->last());
 
-    dd(user());
-
+    $until = 7;
+    $checkin = Carbon::create("2022/08/05");
 
 })->name('test');
 
@@ -134,8 +137,3 @@ Route::prefix('reserve')->name('reserve.')->middleware(['auth:web', 'access_chec
 
     Route::post('/ajaxCheck', [BookingController::class, 'lastConfirmation'])->name('lastConfirmation');
 });
-
-
-Route::get('error/not-bookable', function(){
-    return view('errors.not-bookable');
-})->name('errors.not-bookable');

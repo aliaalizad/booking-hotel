@@ -16,13 +16,13 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="name" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">نام:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3 required">عنوان:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" id="name" name="name" class="form-control" placeholder="نام اتاق را وارد کنید"  value="{{ isset($room) ? old('name', $room->name) : old('name') }}"/>
+                <input type="text" id="name" name="name" class="form-control" placeholder="عنوان اتاق را وارد کنید"  value="{{ isset($room) ? old('name', $room->name) : old('name') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -83,6 +83,25 @@
         </div>
         <!--end::Row-->
 
+        <!--begin::Row-->
+        <div class="row mb-8">
+            <!--begin::Col-->
+            <div class="col-xl-4">
+                <label class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3 ">وضعیت رزرو:</span>
+                </label>
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-xl-8">
+                <div class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input" type="checkbox" value="@if(isset($room)) {{ $room->is_bookable ? 1 : 0 }} @endif" id="bookable" name="bookable" @if(isset($room)) @checked($room->is_bookable == 1) @endif>
+                    <label class="form-check-label fw-bold text-gray-400 ms-3" for="bookable">قابل رزرو</label>
+                </div>
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
     </div>
     <!--end::Card body-->
 </div>

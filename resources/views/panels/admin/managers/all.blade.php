@@ -29,10 +29,10 @@
                     <th>ردیف</th>
                     <th>نام و نام  خانوادگی</th>
                     <th>نام کاربری</th>
-                    <th>وضعیت حساب کاربری</th>
                     <th>شماره تلفن</th>
                     <th>استان</th>
                     <th>شهرستان</th>
+                    <th>وضعیت حساب کاربری</th>
                     <th>اقدامات</th>
                 </tr>
             </thead>
@@ -48,6 +48,9 @@
                     
                         <td>{{ $manager->name }}</td>
                         <td>{{ $manager->username }}</td>
+                        <td>{{ $manager->phone }}</td>
+                        <td>{{ $manager->city->state->name }}</td>
+                        <td>{{ $manager->city->name }}</td>
                         <td>
                             @if(! $manager->is_blocked)
                                 <span class="badge badge-success">فعال</span>
@@ -55,9 +58,6 @@
                                 <span class="badge badge-danger">غیرفعال</span>
                             @endif
                         </td>
-                        <td>{{ $manager->phone }}</td>
-                        <td>{{ $manager->city->state->name }}</td>
-                        <td>{{ $manager->city->name }}</td>
                         <td><a href="{{ route('admin.managers.edit', $manager->id) }}" class="btn btn-secondary btn-sm">ویرایش</a></td>
                     </tr>
                 @endforeach

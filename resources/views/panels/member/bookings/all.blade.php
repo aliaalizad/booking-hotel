@@ -1,91 +1,76 @@
 @extends('panels.member.master')
 
-@section('page_title', 'لیست رزروها')
+@section('page_title', 'رزروها')
+
 
 @section('breadcrumb')
     <x-panels.header.breadcrumb.menu>
-        <x-panels.header.breadcrumb.item name="لیست رزروها" muted/>
+        <x-panels.header.breadcrumb.item name="رزروها" muted />
     </x-panels.header.breadcrumb.menu>
 @endsection
 
-@push('styles')
-    <link href="/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
-@endpush
-
 @section('content')
 
-<div class="card card-bordered">
+<x-panels.admin.booking.filter />
 
+
+<div class="card card-bordered">
+    <div class="card-header">
+        <h3 class="card-title">لیست رزروها</h3>
+        <div class="card-toolbar ">
+        </div>
+    </div>
     <div class="card-body">
-        <div id="calendar"></div>
-    </div>  
+        <table class="table table-hover table-rounded border gy-7 gs-7">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th>ردیف</th>
+                    <th>تاریخ ثبت رزرو</th>
+                    <th>شماره رزرو</th>
+                    <th>مبلغ رزرو</th>
+                    <th>تاریخ پذیرش</th>
+                    <th>اقدامات</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                @php
+                    $i = $bookings->firstItem();
+                @endphp
+
+                @foreach ($bookings as $booking)
+                    <tr class="text-center fw-bold fs-6 border-bottom border-gray-200">
+                        <td>{{ $i++ }}</td>
+                    
+                        <td>{{ verta($booking->created_at)->addMinutes(270)->format('H:i:s Y-m-d ') }}</td>
+                        <td>{{ $booking->voucher }}</td>
+                        <td>{{ number_format($booking->payments->last()->booking_amount) . ' ریال '}}</td>
+                        <td>{{ verta($booking->checkin)->format('Y/m/d') }}</td>
+                        <td><a href="{{ route('member.bookings.show', ['booking' => $booking->id]) }}" target="_blank" class="btn btn-secondary btn-sm">مشاهده</a></td>
+                    </tr>
+                @endforeach
+            </tbody>
+
+
+        </table>
+        
+        @if (count($bookings) == 0 )
+            <div class="d-flex justify-content-center fs-6 form-label fw-bolder text-dark">
+                <span>نتیجه ای پیدا نشد</span>
+            </div>
+        @endif
+
+    </div>
+
+    @if($bookings->hasPages())
+        <div class="card-footer">
+            <div class="d-flex justify-content-center ">
+                <div class="pagination pagination-outline">
+                {{ $bookings->withQueryString()->onEachSide(1)->links() }}
+                </div>
+            </div>
+        </div>
+    @endif
 
 </div>
 @endsection
-
-
-@push('scripts')
-
-    <script src="/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
-
-    <script>
-
-        var todayDate = moment().startOf("day");
-        var YM = todayDate.format("YYYY-MM");
-        var YESTERDAY = todayDate.clone().subtract(1, "day").format("YYYY-MM-DD");
-        var TODAY = todayDate.format("YYYY-MM-DD");
-        var TOMORROW = todayDate.clone().add(1, "day").format("YYYY-MM-DD");
-
-        var calendarEl = document.getElementById("calendar");
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'fa',
-            headerToolbar: {
-                left: "prev,next today",
-                center: "title",
-                right: "dayGridMonth,dayGridWeek,listDay"
-            },
-
-            // titleFormat: { year: 'numeric', month: 'long' },
-            height: 500,
-            contentHeight: 780,
-            aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-
-            nowIndicator: true,
-            now: TODAY + "T09:25:00", // just for demo
-
-            views: {
-                dayGridMonth: { buttonText: "ماه" },
-                dayGridWeek: { buttonText: "هفته" },
-                listDay: { buttonText: "روز" }
-            },
-            allDayText: '',
-            
-            initialView: "listDay",
-            initialDate: TODAY,
-
-            editable: false,
-            dayMaxEvents: true, // allow "more" link when too many events
-            navLinks: true,
-            
-            selectable: false,
-
-            events: [
-                @foreach($bookings as $booking)
-                    {
-                    title: "{{ $booking->passengers->first()->detail['teacher']['name'] }} - {{ $booking->voucher }} ",
-                    start: '{{ $booking->checkin }}',
-                    url: '{{ route("member.bookings.show", [$booking->id]) }}',
-                    display: 'list-item',
-                    backgroundColor: "@if($booking->status == 'received' ) {{ 'green' }} @endif",
-                    },
-                @endforeach
-            ],
-
-
-        });
-
-        calendar.render();
-    </script>
-
-@endpush

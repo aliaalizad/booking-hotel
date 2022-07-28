@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Manager\AuthController;
+use App\Http\Controllers\Manager\BookingController;
 use App\Http\Controllers\Manager\HotelController;
 use App\Http\Controllers\Manager\MemberController;
 use App\Http\Controllers\Manager\RoomController;
+use App\Http\Controllers\Manager\UnbookableController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,6 +26,14 @@ Route::middleware(['auth:manager', 'access_check'])->group(function(){
     Route::prefix('/hotels')->name('hotels.')->group(function(){
         Route::get('/{hotel}/bookings', [HotelController::class, 'indexBookings'])->name('bookings.index');
         Route::get('/{hotel}/bookings/{booking}', [HotelController::class, 'showBookings'])->name('bookings.show');
+
+        Route::prefix('/{hotel}/unbookables')->name('unbookables.')->group(function(){
+            Route::get('/', [UnbookableController::class, 'index'])->name('index');
+            Route::post('/create', [UnbookableController::class, 'store'])->name('store');
+            Route::delete('/{unbookable}', [UnbookableController::class, 'delete'])->name('delete');
+        });
     });
+
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings');
 });
 

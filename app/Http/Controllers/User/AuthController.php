@@ -16,13 +16,15 @@ class AuthController extends Controller
 
     public function index()
     {
-        return view('panels.user.profile');
+        $bookings = user()->bookings()->where('status', 'paid')->orderBy('created_at', 'desc')->paginate();
+
+        return view('user.dashboard', compact('bookings'));
     }
 
 
     public function showRegisterForm()
     {
-        return view('panels.user.register');
+        return view('user.register');
     }
 
 
@@ -31,7 +33,7 @@ class AuthController extends Controller
         // validate inputs
         $validator = Validator::make($request->all(),[
             'name'      => ['required'],
-            'phone'     => ['required'],
+            'phone'     => ['required', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
             'password'  => ['required'],
             'cpassword' => ['required', 'same:password'],
         ]);
@@ -69,7 +71,7 @@ class AuthController extends Controller
             UserToken::make($user->id, $code, 'register', 5);
 
             // send sms 
-            Sms::send($code, $request->phone);
+            Sms::sendCode($request->phone, $code);
         }
 
         // create session
@@ -86,7 +88,7 @@ class AuthController extends Controller
             session()->put('url.intended', url()->previous());
         }
 
-        return view('panels.user.login');
+        return view('user.login');
     }
 
 
@@ -152,7 +154,7 @@ class AuthController extends Controller
             return to_route('user.register');
         }
         
-        return view('panels.user.confirm');
+        return view('user.confirm');
     }
 
 

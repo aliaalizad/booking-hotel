@@ -75,7 +75,9 @@
                     </div>
                     <!--end::Col-->
                 </div>
+
                 <!--end::Row-->
+                @if(guard(['admin', 'manager']))
                 <!--begin::Row-->
                 <div class="row g-8 mb-8">
                     <!--begin::Col-->
@@ -94,15 +96,23 @@
                         <label class="fs-6 form-label text-dark">هتل</label>
                         <select name="hotel" class="form-select form-select-solid" data-allow-clear="true" data-control="select2" data-placeholder="هتل را انتخاب کنید">
                             <option></option>
-                            @foreach (App\Models\Hotel::all() as $hotel)
-                                <option value="{{ $hotel->id }}" @selected(request('hotel') == $hotel->id)>{{ $hotel->name . " ( $hotel->city_id ) "}}</option>
-                            @endforeach
+                            @if(guard('admin'))
+                                @foreach (App\Models\Hotel::all() as $hotel)
+                                    <option value="{{ $hotel->id }}" @selected(request('hotel') == $hotel->id)>{{ $hotel->name . " ( $hotel->city_id ) "}}</option>
+                                @endforeach
+                            @endif
+                            @if(guard('manager'))
+                                @foreach (App\Models\Hotel::where('manager_id', user('manager')->id)->get() as $hotel)
+                                    <option value="{{ $hotel->id }}" @selected(request('hotel') == $hotel->id)>{{ $hotel->name . " ( $hotel->city_id ) "}}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <!--end::Col-->
                 </div>
                 <!--end::Row-->
-                
+                @endif
+
             </div>
             <!--end::Advance form-->
         </div>

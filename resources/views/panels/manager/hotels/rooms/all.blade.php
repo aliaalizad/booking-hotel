@@ -32,6 +32,7 @@
                             <th>ظرفیت</th>
                             <th>اتاق ها</th>
                             <th>قیمت</th>
+                            <th>وضعیت رزرو</th>
                             <th>اقدامات</th>
                         </tr>
                     </thead>
@@ -49,7 +50,14 @@
                                 <td>{{ $room->name }}</td>
                                 <td>{{ $room->capacity }}</td>
                                 <td>{{ implode(' - ' ,$room->numbers) }}</td>
-                                <td>{{ $room->price }}</td>
+                                <td>{{ number_format($room->price) . ' ریال ' }}</td>
+                                <td>
+                                    @if($room->is_bookable)
+                                        <span class="badge badge-success">قابل رزرو</span>
+                                    @else
+                                        <span class="badge badge-danger">غیرقابل رزرو</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('manager.rooms.edit',[$hotel->id, $room->id]) }}" class="btn btn-secondary btn-sm">ویرایش</a>
                                 </td>

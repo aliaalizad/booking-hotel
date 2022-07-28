@@ -25,6 +25,10 @@
             <div class="row">
                 <x-panels.admin.hotels.info :hotel="$hotel" />
             </div>
+
+            <div class="row">
+                <x-panels.admin.hotels.config :hotel="$hotel" />
+            </div>
         </div>
         <!--end::Card body-->
 

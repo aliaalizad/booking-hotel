@@ -80,7 +80,7 @@
         <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
-                <label for="phone" class="form-label d-flex align-items-center">
+                <label for="address" class="form-label d-flex align-items-center">
                     <span class="fs-6 fw-bold mt-2 mb-3 required">آدرس:</span>
                 </label>
             </div>

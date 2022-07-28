@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 trait BookingTrait {
 
     private $room;
+    private $room_number;
     private $rooms;
     private $hotel;
     private $hotels;
@@ -249,24 +250,50 @@ trait BookingTrait {
 
         Room::each(function($room) use ($occupiedRoomId, $rooms){
 
-            if ( ($room->count  >  $occupiedRoomId->get($room->id)) && ($room->capacity >= $this->adults) ) {
+            if ($room->hotel->is_bookable && $room->is_bookable) {
+                if (Carbon::today()->addDays($room->hotel->bookable_until) >= $this->checkout) {
+                    if ($room->hotel->min_bookable <= $this->length && $this->length <= $room->hotel->max_bookable) {
+                        if ( (count($room->numbers)  >  $occupiedRoomId->get($room->id)) && ($room->capacity >= $this->adults) ) {
 
-                if ( ! is_null($this->hotel) ) {
+                            if ( ! is_null($this->hotel) ) {
 
-                    if ( $room->hotel->id == $this->hotel->id ) {
-                        $rooms->push($room);
-                    }
+                                if ( $room->hotel->id == $this->hotel->id ) {
+                                    $rooms->push($room);
+                                }
 
-                } else {
+                            } else {
 
-                    if ($room->hotel->city_id == $this->dest) {
-                        $rooms->push($room);
+                                if ($room->hotel->city_id == $this->dest) {
+                                    $rooms->push($room);
+                                }
+                            }
+                        }
                     }
                 }
             }
         });
 
         $this->rooms = $rooms;
+    }
+
+    private function getValidRoomNumbers($room){
+
+        $bookedRoomNumbers  = Booking::where('room_id', $room->id)->where(function($query){
+            $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout], ['status', 'paid']])
+                ->orWhere([['checkout', '>', $this->checkin], ['checkout', '<=', $this->checkout], ['status', 'paid']])
+                ->orWhere([['checkin', '<', $this->checkin], ['checkout', '>', $this->checkout], ['status', 'paid']]);
+        })->pluck('room_number');
+
+        $unbookabledRoomNumbers = Unbookable::where('room_id', $room->id)->where(function($query){
+            $query->where([['start_date', '>=', $this->checkin], ['start_date', '<', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['end_date', '>', $this->checkin], ['end_date', '<=', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
+        })->pluck('room_number');
+
+        $invalidRoomNumbers = $bookedRoomNumbers->merge($unbookabledRoomNumbers);
+        $validRoomNumbers = collect($room->numbers)->diff($invalidRoomNumbers)->sort();
+
+        return $validRoomNumbers->values();
     }
 
     private function hotelEngine() 

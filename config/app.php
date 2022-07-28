@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Helpers\Booking\BookingServiceProvider::class,
         App\Helpers\Logs\LogsServiceProvider::class,
+        App\Helpers\Sms\SmsServiceProvider::class,
     ],
 
     /*
@@ -236,6 +237,7 @@ return [
         'Verta' => Hekmatinasser\Verta\Verta::class,
         'Booking' => App\Helpers\Booking\Booking::class,
         'Log' => App\Helpers\Logs\Logs::class,
+        'Sms' => App\Helpers\Sms\Sms::class,
     ],
 
 ];

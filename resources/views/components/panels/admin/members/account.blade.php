@@ -59,7 +59,7 @@
                         <!--begin::Col-->
                         <div class="col-xl-4 ">
                             <label for="current_password" class="form-label d-flex align-items-center">
-                                <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور فعلی:</span>
+                                <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور فعلی:</span>
                             </label>
                         </div>
                         <!--end::Col-->
@@ -76,7 +76,7 @@
                         <!--begin::Col-->
                         <div class="col-xl-4 ">
                             <label for="password" class="form-label d-flex align-items-center">
-                                <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور جدید:</span>
+                                <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور جدید:</span>
                             </label>
                         </div>
                         <!--end::Col-->
@@ -115,7 +115,7 @@
                 <!--begin::Col-->
                 <div class="col-xl-4 ">
                     <label for="password" class="form-label d-flex align-items-center">
-                        <span class="fs-6 fw-bold mt-2 mb-3 ">رمز عبور:</span>
+                        <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور:</span>
                     </label>
                 </div>
                 <!--end::Col-->
@@ -131,7 +131,7 @@
                 <!--begin::Col-->
                 <div class="col-xl-4 ">
                     <label for="password_confirmation" class="form-label d-flex align-items-center">
-                        <span class="fs-6 fw-bold mt-2 mb-3 required">تکرار رمز عبور:</span>
+                        <span class="fs-6 fw-bold mt-2 mb-3">تکرار رمز عبور:</span>
                     </label>
                 </div>
                 <!--end::Col-->
@@ -149,14 +149,14 @@
             <!--begin::Col-->
             <div class="col-xl-4">
                 <label class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 ">وضعیت حساب کاربری:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">وضعیت حساب کاربری:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
                 <div class="form-check form-switch form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="@if(isset($member)) {{ $member->is_blocked ? 0 : 1 }} @endif" id="status" name="status" @if(isset($member)) @checked($member->is_blocked == 0) @endif>
+                    <input class="form-check-input" type="checkbox" value="@if(isset($member)) {{ $member->is_blocked ? 0 : 1 }} @else {{ 0 }} @endif" id="status" name="status" @if(isset($member)) @checked($member->is_blocked == 0) @endif>
                     <label class="form-check-label fw-bold text-gray-400 ms-3" for="status">فعال</label>
                 </div>
             </div>

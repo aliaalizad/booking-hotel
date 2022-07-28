@@ -16,6 +16,10 @@ class Hotel extends Model
         'city_id',
         'address',
         'manager_id',
+        'is_bookable',
+        'min_bookable',
+        'max_bookable',
+        'bookable_until',
     ];
 
     protected $table = 'hotels';

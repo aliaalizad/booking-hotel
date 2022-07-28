@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contract;
+use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\Manager;
 use App\Models\Member;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Auth;
 trait ResourceControllerHelpers {
 
     // getX
-    public function getMembers($manager=false)
+    public function getMembers()
     {
         $members = Member::query();
 
         // checkCurrent
-        if ($manager) {
+        if (guard('manager')) {
             $members = $this->getCurrentManager()->members();
         }
 
@@ -46,12 +46,12 @@ trait ResourceControllerHelpers {
         return $members->paginate(20);
     }
 
-    public function getHotels($manager=false)
+    public function getHotels()
     {
         $hotels = Hotel::query();
 
         // checkCurrent
-        if ($manager) {
+        if (guard('manager')) {
             $hotels = $this->getCurrentManager()->hotels();
         }
 
@@ -110,6 +110,65 @@ trait ResourceControllerHelpers {
         }
 
         return $managers->paginate(20);
+    }
+
+    public function getBookings() {
+
+        $bookings = Booking::query();
+
+        if (guard('manager')) {
+            $bookings->whereHas('room', function($room){
+                $room->whereHas('hotel', function($hotel) {
+                    $hotel->where('manager_id', user('manager')->id);
+                });
+            });
+        }
+
+        if (guard('member')) {
+            $bookings->whereHas('room', function($room){
+                $room->whereHas('hotel', function($hotel) {
+                    $hotel->where('id', user('member')->hotel->id);
+                });
+            });
+        }
+
+
+        // filter
+        if ($data = request('voucher')) {
+            $bookings->where('voucher', $data);
+        }
+
+        if ($data = request('book-from')) {
+            $bookings->where('created_at', '>=', $data);
+        }
+
+        if ($data = request('book-to')) {
+            $bookings->where('created_at', '<=', $data);
+        }
+
+        if ($data = request('checkin-from')) {
+            $bookings->where('checkin', '>=', $data);
+        }
+
+        if ($data = request('checkin-to')) {
+            $bookings->where('checkin', '<=', $data);
+        }
+
+        if ($data = request('hotels')) {
+            $bookings->whereHas('room', function($room) use ($data){
+                $room->where('hotel_id', $data);
+            });
+        }
+
+        if ($data = request('amount-from')) {
+            $bookings->where('amount', '>=', $data);
+        }
+
+        if ($data = request('amount-to')) {
+            $bookings->where('amount', '<=', $data);
+        }
+
+        return $bookings->orderBy('created_at', 'desc')->paginate(20);
     }
 
 

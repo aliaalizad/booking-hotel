@@ -41,9 +41,9 @@
             </div>
             <!--end::Col-->
             <!--begin::Col-->
-            <div class="col-xl-8">
+            <div class="col-xl-2">
                 <div class="input-group mb-5">
-                    <input type="text" id="commission" name="commission" class="form-control" placeholder="درصد را وارد کنید" aria-describedby="addon" dir="ltr" value="{{ isset($manager) ? old('commission', $manager->commission) : old('commission') }}" />
+                    <input type="text" id="commission" name="commission" class="form-control" placeholder="درصد را وارد کنید" aria-describedby="addon" style="text-align:center;" value="{{ isset($manager) ? old('commission', $manager->commission) : old('commission') }}" />
                     <span class="input-group-text" id="addon">%</span>
                 </div>
             </div>

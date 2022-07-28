@@ -12,6 +12,7 @@ class Unbookable extends Model
     protected $fillable = [
         'user_id',
         'room_id',
+        'room_number',
         'start_date',
         'end_date',
         'expiration',
@@ -22,7 +23,7 @@ class Unbookable extends Model
         return $this->belongsTo(Room::class);
     }
 
-    protected $table = 'unbookable';
+    protected $table = 'unbookables';
 
 }
 

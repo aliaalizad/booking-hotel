@@ -55,7 +55,7 @@ class MemberController  extends Controller {
             'personnel_code' => ['required','unique:members,personnel_code'],
             'phone' => ['required', 'unique:members,phone'],
             'password' => ['required', 'confirmed'],
-            'status' => ['boolean'],
+            'hotel' => ['required'],
         ]);
         
         if ( $this->panel == 'admin' ) {
@@ -146,7 +146,7 @@ class MemberController  extends Controller {
             'name' => ['required'],
             'personnel_code' => ['required', Rule::unique('members', 'personnel_code')->ignore($member->id) ],
             'phone' => ['required', Rule::unique('members', 'phone')->ignore($member->id) ],
-            'status' => ['boolean'],
+            'hotel' => ['required'],
         ]);
 
         if ( $this->panel == 'admin' ) {
@@ -170,7 +170,6 @@ class MemberController  extends Controller {
             'manager_id' => $hotel->manager_id,
             'hotel_id' => $hotel->id,
         ]);
-
 
         // update password
         if ( ! is_null($request->current_password) || ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
@@ -234,5 +233,4 @@ class MemberController  extends Controller {
         // redirect
         return to_route($this->panel . '.members.index');
     }
-
 }

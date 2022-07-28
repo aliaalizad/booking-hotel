@@ -23,7 +23,11 @@
                 <x-panels.admin.hotels.info />
             </div>
             <!--end::Row-->
-
+            <!--begin::Row-->
+            <div class="row">
+                <x-panels.admin.hotels.config />
+            </div>
+            <!--end::Row-->
             <!--begin::Row-->
             <div class="row">
                 <x-panels.admin.hotels.manager />

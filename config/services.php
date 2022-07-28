@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'farazsms' => [
+        'url' => env('FARAZSMS_URL'),
+        'api' => env('FARAZSMS_API'),
+        'number' => env('FARAZSMS_NUMBER'),
+    ],
 ];

@@ -23,13 +23,18 @@
                 <x-panels.admin.hotels.info />
             </div>
             <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row">
+                <x-panels.admin.hotels.config />
+            </div>
+            <!--end::Row-->
         </div>
         <!--end::Card body-->
 
         <!--begin::Card footer-->
         <div class="card-footer d-flex justify-content-center py-6">
-                <a href="{{ route('manager.hotels.index') }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
-                <button type="submit" class="btn btn-primary">ثبت</button>
+            <a href="{{ route('manager.hotels.index') }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
+            <button type="submit" class="btn btn-primary">ثبت</button>
         </div>
         <!--end::Card footer-->
 

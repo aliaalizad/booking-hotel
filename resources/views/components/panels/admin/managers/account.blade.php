@@ -171,7 +171,7 @@
             <!--begin::Col-->
             <div class="col-xl-8">
                 <div class="form-check form-switch form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="@if(isset($manager)) {{ $manager->is_blocked ? 0 : 1 }} @else {{ 1 }} @endif" id="status" name="status" @if(isset($manager)) @checked($manager->is_blocked == 0) @else {{ 'checked' }} @endif>
+                    <input class="form-check-input" type="checkbox" value="@if(isset($manager)) {{ $manager->is_blocked ? 0 : 1 }} @else {{ 0 }} @endif" id="status" name="status" @if(isset($manager)) @checked($manager->is_blocked == 0) @endif>
                     <label class="form-check-label fw-bold text-gray-400 ms-3" for="status">فعال</label>
                 </div>
             </div>

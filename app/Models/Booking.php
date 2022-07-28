@@ -12,18 +12,15 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'room_id',
+        'room_number',
         'checkin',
         'checkout',
         'voucher',
         'phone',
         'amount',
-        'rooms',
         'status',
     ];
 
-    protected $casts = [
-        'rooms' => 'array',
-      ];
 
     public function user()
     {

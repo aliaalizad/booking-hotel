@@ -3,10 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Booking\Booking;
-
+use App\Models\Booking as BookingModel;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+
+    use ResourceControllerHelpers;
+
+    public function index(Request $request)
+    {
+        // dd($request->all());
+        $bookings = $this->getBookings();
+        return view('panels.'. $this->panel . '.bookings.all', compact('bookings'));
+    }
+
     public function searchResults()
     {
         $hotels = Booking::getHotels();
@@ -38,8 +49,6 @@ class BookingController extends Controller
     public function showConfirmForm()
     {
         $booking = Booking::pullBookingFromSession(request()->booking);
-
-
         return view('reserve.confirm', compact('booking'));
     }
 

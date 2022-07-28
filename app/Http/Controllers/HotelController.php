@@ -53,8 +53,13 @@ class HotelController extends Controller{
             'phone' => ['required'],
             'address' => ['required', 'string'],
             'manager' => ['exists:managers,id'],
+            'min_bookable' => ['required', 'integer', 'min:1'],
+            'max_bookable' => ['required', 'integer', 'gte:min_bookable'],
+            'bookable_until' => ['required', 'integer', 'min:1'],
         ]);
 
+        // set is_bookable value
+        $is_bookable = is_null($request->bookable) ? 0 : 1;
 
         // Check whether the selected city belongs to the manager state or not
         $manager = Manager::find($manager_id);
@@ -78,6 +83,10 @@ class HotelController extends Controller{
             'address' => $request->address,
             'city_id' => $request->city,
             'manager_id' => $manager_id,
+            'is_bookable' => $is_bookable,
+            'min_bookable' => $request->min_bookable,
+            'max_bookable' => $request->max_bookable,
+            'bookable_until' => $request->bookable_until,
         ]);
 
         return to_route( $this->panel . '.hotels.index' );
@@ -97,13 +106,23 @@ class HotelController extends Controller{
             'name' => ['required', 'string'],
             'phone' => ['required'],
             'address' => ['required', 'string'],
+            'min_bookable' => ['required', 'integer', 'min:1'],
+            'max_bookable' => ['required', 'integer', 'gte:min_bookable'],
+            'bookable_until' => ['required', 'integer', 'min:1'],
         ]);
+
+        // set is_bookable value
+        $is_bookable = is_null($request->bookable) ? 0 : 1;
 
         // Update hotel
         $hotel->update([
             'name' => $request->name,
             'phone' => $request->phone,
             'address' => $request->address,
+            'is_bookable' => $is_bookable,
+            'min_bookable' => $request->min_bookable,
+            'max_bookable' => $request->max_bookable,
+            'bookable_until' => $request->bookable_until,            
         ]);
 
         // Redirect

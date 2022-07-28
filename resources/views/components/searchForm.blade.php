@@ -6,7 +6,7 @@
                 <select class="form-select" name="dest" id="dest" data-control="select2" data-placeholder="مقصد">
                     <option></option>
                     <optgroup>
-                        @foreach(App\Models\City::where('state_id', 1)->get() as $city)
+                        @foreach(App\Models\City::all() as $city)
                         <option value="{{ $city->id }}">{{ $city->name }}</option>
                         @endforeach
                     </optgroup>
