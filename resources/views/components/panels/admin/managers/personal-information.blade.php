@@ -16,7 +16,7 @@
             <!--begin::Col-->
             <div class="col-xl-4">
                 <label for="name" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">نام و نام خانوادگی:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">نام و نام خانوادگی:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -32,14 +32,14 @@
         <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
-                <label for="phone" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">شماره موبایل:</span>
+                <label for="mobile" class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3">شماره موبایل:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" id="phone" name="phone" class="form-control" placeholder="شماره موبایل را وارد کنید" value="{{ isset($manager) ? old('phone', $manager->phone) : old('phone') }}"/>
+                <input type="text" id="mobile" name="mobile" class="form-control" placeholder="شماره موبایل را وارد کنید" value="{{ isset($manager) ? old('phone', $manager->phone) : old('phone') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -50,7 +50,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="email" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">ایمیل:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">ایمیل:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -67,7 +67,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="city" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">شهرستان:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">شهرستان:</span>
                 </label>
             </div>
             <!--end::Col-->

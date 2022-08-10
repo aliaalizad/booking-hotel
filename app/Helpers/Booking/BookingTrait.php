@@ -69,17 +69,18 @@ trait BookingTrait {
 
             $this->checkin = $checkin;
             $this->checkout = $checkout;
-            $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
-            $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
-            $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
         }
+
+        $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
+        $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
+        $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
     }
    
     private function adultsValidator()
     {
 
         $validator = Validator::make(request()->all(), [
-            'adults' => ['required', 'integer'],
+            'adults' => ['required', 'integer', 'min:1'],
         ]);
 
         if ($validator->fails()) {
@@ -143,13 +144,13 @@ trait BookingTrait {
     {
         if (request()->has('passengers')) {
             $validator = Validator::make(request()->all(), [
-                'passengers' => ['required', 'array', 'size:3' ],
-                'passengers.*.first_name' => ['required'],
-                'passengers.*.last_name' => ['required'],
-                'passengers.*.national_code' => ['required'],
-                'passengers.1.phone' => ['required'],
+                'passengers' => ['required', 'array'],
+                'passengers.*.first_name' => ['bail', 'required', 'string', 'max:20'],
+                'passengers.*.last_name' => ['bail', 'required', 'string', 'max:20'],
+                'passengers.*.national_code' => ['bail', 'required', 'numeric', 'digits:10', 'distinct'],
+                'passengers.1.phone' => ['bail', 'required', 'regex:/(09)[0-9]{9}/', 'numeric', 'digits:11'],
             ])->validated();
-            
+
             session( ['passengers' => $validator['passengers'] ]);
 
             return count($validator['passengers']) < $this->adults ? abort(400) : $this->passengers = $validator['passengers'];
@@ -166,10 +167,10 @@ trait BookingTrait {
     {
         if (request()->has('teacher')) {
             $validator = Validator::make(request()->all(), [
-                'teacher.first_name' => ['required'],
-                'teacher.last_name' => ['required'],
-                'teacher.national_code' => ['required'],
-                'teacher.personnel_code' => ['required'],
+                'teacher.first_name' => ['bail', 'required', 'string', 'max:20'],
+                'teacher.last_name' => ['bail', 'required', 'string', 'max:20'],
+                'teacher.national_code' => ['bail', 'required', 'numeric', 'digits:10'],
+                'teacher.personnel_code' => ['bail', 'required', 'numeric', 'digits_between:1,15'],
             ])->validated();
             
             session( ['teacher' => $validator['teacher'] ]);
@@ -285,9 +286,9 @@ trait BookingTrait {
         })->pluck('room_number');
 
         $unbookabledRoomNumbers = Unbookable::where('room_id', $room->id)->where(function($query){
-            $query->where([['start_date', '>=', $this->checkin], ['start_date', '<', $this->checkout], ['expiration', '>=', Carbon::now()]])
-                ->orWhere([['end_date', '>', $this->checkin], ['end_date', '<=', $this->checkout], ['expiration', '>=', Carbon::now()]])
-                ->orWhere([['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
+            $query->where([['user_id', '!=', user('web')->id], ['start_date', '>=', $this->checkin], ['start_date', '<', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['user_id', '!=', user('web')->id], ['end_date', '>', $this->checkin], ['end_date', '<=', $this->checkout], ['expiration', '>=', Carbon::now()]])
+                ->orWhere([['user_id', '!=', user('web')->id], ['start_date', '<', $this->checkin], ['end_date', '>', $this->checkout], ['expiration', '>=', Carbon::now()]]);
         })->pluck('room_number');
 
         $invalidRoomNumbers = $bookedRoomNumbers->merge($unbookabledRoomNumbers);
@@ -323,7 +324,6 @@ trait BookingTrait {
 
     public function isRoomBookable($room = null)
     {
-
         if (!is_null($room)) {
             $this->room = $room;
         } else {

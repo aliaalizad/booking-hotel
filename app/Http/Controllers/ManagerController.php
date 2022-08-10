@@ -9,6 +9,7 @@ use App\Http\Controllers\ResourceControllerHelpers;
 use App\Models\Manager;
 use App\Models\Permission;
 use App\Models\Role;
+use Illuminate\Validation\Rules\Password;
 
 class ManagerController extends Controller {
 
@@ -33,14 +34,14 @@ class ManagerController extends Controller {
     {
         // validation
         $request->validate([
-            'name' => ['required'],
-            'username' => ['required','unique:managers,username'],
-            'phone' => ['required','unique:managers,phone'],
-            'email' => ['required','unique:managers,email'],
-            'password' => ['required', 'confirmed'],
-            'bank_account' => ['required', 'unique:managers,bank_account'],
-            'commission' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'username' => ['bail', 'required','unique:managers,username', 'string', 'between:5,20'],
+            'mobile' => ['bail', 'required','unique:managers,phone', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
+            'email' => ['bail', 'required','unique:managers,email', 'email'],
             'city' => ['required', 'exists:cities,id'],
+            'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
+            'bank_account' => ['bail', 'required', 'numeric', 'digits:24', 'unique:managers,bank_account'],
+            'commission' => ['bail', 'required', 'numeric', 'between:0, 100'],
         ]);
 
 
@@ -54,7 +55,7 @@ class ManagerController extends Controller {
             'username' => $request->username,
             'is_blocked' => $is_blocked,
             'password' => Hash::make($request->password),
-            'phone' => $request->phone,
+            'phone' => $request->mobile,
             'email' => $request->email,
             'bank_account' => $request->bank_account,
             'commission' => $request->commission,
@@ -73,7 +74,7 @@ class ManagerController extends Controller {
                 $role_guard = Role::find($role)->guard;
 
                 if ( $role_guard != 'manager' ) {
-                    return redirect()->back()->withErrors('invalid role !');
+                    return redirect()->back()->withErrors('نفش انتخابی اشتباه است.');
                 }
             }
         }
@@ -88,7 +89,7 @@ class ManagerController extends Controller {
                 $permission_guard = Permission::find($permission)->guard;
     
                 if ( $permission_guard != 'manager' ) {
-                    return redirect()->back()->withErrors('invalid permissions !');
+                    return redirect()->back()->withErrors('دسترسی انتخابی اشتباه است.');
                 }
             }
         }
@@ -112,24 +113,22 @@ class ManagerController extends Controller {
     {
         // validation
         $request->validate([
-            'name' => ['required'],
-            'username' => ['required', Rule::unique('managers', 'username')->ignore($manager->id)],
-            'phone' => ['required', Rule::unique('managers', 'phone')->ignore($manager->id)],
-            'email' => ['required', Rule::unique('managers', 'email')->ignore($manager->id)],
-            'bank_account' => ['required', Rule::unique('managers', 'bank_account')->ignore($manager->id)],
-            'commission' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'username' => ['bail', 'required', Rule::unique('managers', 'username')->ignore($manager->id), 'string', 'between:5,20'],
+            'mobile' => ['bail', 'required', Rule::unique('managers', 'phone')->ignore($manager->id), 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
+            'email' => ['bail', 'required', Rule::unique('managers', 'email')->ignore($manager->id)], 'email', 'bail',
+            'bank_account' => ['bail', 'required', Rule::unique('managers', 'bank_account')->ignore($manager->id), 'numeric', 'digits:24', 'unique:managers,bank_account'],
+            'commission' => ['bail', 'required', 'numeric', 'between:0, 100'],
         ]);
-
 
         // set is_blocked value
         $is_blocked = is_null($request->status) ? 1 : 0;
-
 
         // update data
         $manager->update([
             'name' => $request->name,
             'username' => $request->username,
-            'phone' => $request->phone,
+            'phone' => $request->mobile,
             'email' => $request->email,
             'is_blocked' => $is_blocked,
             'bank_account' => $request->bank_account,
@@ -137,27 +136,15 @@ class ManagerController extends Controller {
         ]);
 
         // password
-        if ( ! is_null($request->current_password) || ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
-            
+        if ( ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
+
             $request->validate([
-                'current_password' => ['required'],
-                'password' => ['required'],
-                'password_confirmation' => ['required'],
+                'password' => [ 'bail','required', Password::min(8)->letters()->numbers(), 'confirmed'],
             ]);
 
-            if ( Hash::check($request->current_password, $manager->password) ) {
-                $request->validate([
-                    'password' => ['confirmed'],
-                ]);
-                $manager->update([
-                    'password' => Hash::make($request->password),
-                ]); 
-
-            } else {
-                return back()->withInput()->withErrors([
-                    'invalidCurrentPasword' => 'current password is invalid'
-                ]);
-            }
+            $manager->update([
+                'password' => Hash::make($request->password),
+            ]);
         }
 
 
@@ -172,7 +159,7 @@ class ManagerController extends Controller {
                 $role_guard = Role::find($role)->guard;
 
                 if ( $role_guard != 'manager' ) {
-                    return redirect()->back()->withErrors('invalid role !');
+                    return redirect()->back()->withErrors('نقش انتخابی اشتباه است.');
                 }
             }
         }
@@ -187,7 +174,7 @@ class ManagerController extends Controller {
                 $permission_guard = Permission::find($permission)->guard;
     
                 if ( $permission_guard != 'manager' ) {
-                    return redirect()->back()->withErrors('invalid permissions !');
+                    return redirect()->back()->withErrors('دسترسی انتخابی اشتباه است.');
                 }
             }
         }
@@ -199,7 +186,4 @@ class ManagerController extends Controller {
         // redirect
         return to_route($this->panel . '.managers.index');
     }
-
-
-
 }

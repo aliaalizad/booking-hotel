@@ -14,7 +14,7 @@
     <link href="/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
-
+    @stack('styles')
 
 </head>
 <!--end::Head-->
@@ -51,6 +51,8 @@
     <script src="/plugins/global/plugins.bundle.js"></script>
     <script src="/plugins/global/persianumber.js"></script>
     <script src="/plugins/global/persian-date.js"></script>
+
+    @stack('scripts')
 
 </body>
 </html>

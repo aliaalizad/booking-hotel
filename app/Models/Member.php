@@ -17,7 +17,7 @@ class Member extends Authenticatable
 
     protected $fillable = [
         'name',
-        'personnel_code',
+        'username',
         'phone',
         'manager_id',
         'password',

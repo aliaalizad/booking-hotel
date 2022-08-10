@@ -254,7 +254,7 @@
                                     <p>هزینه اتاق ({{ $booking->get('length') }} شب)</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $price }}</p>
+                                    <p>{{ number_format($price) . ' ریال '}}</p>
                                 </div>
                             </div>
                             @if ($fee > 0)
@@ -263,7 +263,7 @@
                                     <p>هزینه رزرو اینترنتی (%{{ ($fee / $price) * 100 }})</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $fee }}</p>
+                                    <p>{{ number_format($fee) . ' ریال ' }}</p>
                                 </div>
                             </div>
                             @endif
@@ -273,7 +273,7 @@
                                     <p>جمع کل مبلغ پرداختی</p>
                                 </div>
                                 <div class="col">
-                                    <p>{{ $amount }}</p>
+                                     <p>{{ number_format($amount) . ' ریال ' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -339,6 +339,7 @@
                 },
                 success:function(data){
                     button.removeAttribute("data-kt-indicator");
+
                     if (data) {
                         document.getElementById('reserve.payment').submit();
                     } else {

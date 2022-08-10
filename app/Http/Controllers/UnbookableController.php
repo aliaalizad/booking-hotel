@@ -23,7 +23,7 @@ class UnbookableController extends Controller
 
         $unbookables = $hotel->rooms->flatMap(function($room){
             return $room->unbookables->where('expiration', '>=', Carbon::now());
-        })->sortBy('end_date');
+        })->sortBy('start_date');
 
         return view($path, compact('unbookables', 'hotel'));
     }

@@ -10,7 +10,7 @@ use App\Http\Controllers\ResourceControllerHelpers;
 use App\Models\Hotel;
 use App\Models\Permission;
 use App\Models\Role;
-
+use Illuminate\Validation\Rules\Password;
 
 class MemberController  extends Controller {
 
@@ -19,7 +19,6 @@ class MemberController  extends Controller {
 
     public function index()
     {
-
         if ( $this->panel == 'admin' ) {
 
             $members = $this->getMembers();
@@ -51,10 +50,10 @@ class MemberController  extends Controller {
     {
         // validation
         $request->validate([
-            'name' => ['required'],
-            'personnel_code' => ['required','unique:members,personnel_code'],
-            'phone' => ['required', 'unique:members,phone'],
-            'password' => ['required', 'confirmed'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'username' => ['bail', 'required','unique:members,username', 'string', 'between:5,10'],
+            'mobile' => ['bail', 'required', 'unique:members,phone', 'regex:/(09)[0-9]{9}/', 'numeric', 'digits:11'],
+            'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
             'hotel' => ['required'],
         ]);
         
@@ -73,8 +72,8 @@ class MemberController  extends Controller {
         // create
         $member = Member::create([
             'name' => $request->name,
-            'personnel_code' => $request->personnel_code,
-            'phone' => $request->phone,
+            'username' => $request->username,
+            'phone' => $request->mobile,
             'password' => Hash::make($request->password),
             'is_blocked' => $is_blocked,
             'manager_id' => $hotel->manager_id,
@@ -93,7 +92,7 @@ class MemberController  extends Controller {
                 $role_guard = Role::find($role)->guard;
 
                 if ( $role_guard != 'member' ) {
-                    return redirect()->back()->withErrors('invalid role !');
+                    return redirect()->back()->withErrors('نقش انتخابی اشتباه است.');
                 }
             }
         }
@@ -108,7 +107,7 @@ class MemberController  extends Controller {
                 $permission_guard = Permission::find($permission)->guard;
     
                 if ( $permission_guard != 'member' ) {
-                    return redirect()->back()->withErrors('invalid permissions !');
+                    return redirect()->back()->withErrors('دسترسی انتخابی اشتباه است.');
                 }
             }
         }
@@ -117,7 +116,7 @@ class MemberController  extends Controller {
         $member->permissions()->sync($request->permissions);
 
         // redirect
-        return to_route( $this->panel . '.members.index');
+        return to_route($this->panel . '.members.index');
     }
 
 
@@ -134,7 +133,7 @@ class MemberController  extends Controller {
 
         $panel = $this->panel;
 
-        return view( 'panels.' . $this->panel . '.members.edit', compact('member', 'hotels', 'panel'));
+        return view('panels.' . $this->panel . '.members.edit', compact('member', 'hotels', 'panel'));
 
     }
 
@@ -143,9 +142,9 @@ class MemberController  extends Controller {
     {
         // validation
         $request->validate([
-            'name' => ['required'],
-            'personnel_code' => ['required', Rule::unique('members', 'personnel_code')->ignore($member->id) ],
-            'phone' => ['required', Rule::unique('members', 'phone')->ignore($member->id) ],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'username' => ['bail', 'required', Rule::unique('members', 'username')->ignore($member->id),'string', 'between:5,10'],
+            'mobile' => ['bail','required', Rule::unique('members', 'phone')->ignore($member->id), 'regex:/(09)[0-9]{9}/', 'numeric', 'digits:11'],
             'hotel' => ['required'],
         ]);
 
@@ -164,31 +163,19 @@ class MemberController  extends Controller {
         // update
         $member->update([
             'name' => $request->name,
-            'personnel_code' => $request->personnel_code,
-            'phone' => $request->phone,
+            'username' => $request->username,
+            'phone' => $request->mobile,
             'is_blocked' => $is_blocked,
             'manager_id' => $hotel->manager_id,
             'hotel_id' => $hotel->id,
         ]);
 
         // update password
-        if ( ! is_null($request->current_password) || ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
+        if ( ! is_null($request->password) || ! is_null($request->password_confirmation) ) {
 
             $request->validate([
-                'password' => ['required', 'confirmed'],
+                'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
             ]);
-
-            if ( $this->panel == 'member' ) {
-                $request->validate([
-                    'current_password' => ['required'],
-                ]);
-
-                if ( ! Hash::check($request->current_password, $member->password) ) {
-                    return back()->withInput()->withErrors([
-                        'invalidCurrentPasword' => 'current password is invalid'
-                    ]);
-                }
-            }
 
             $member->update([
                 'password' => Hash::make($request->password),
@@ -207,7 +194,7 @@ class MemberController  extends Controller {
                 $role_guard = Role::find($role)->guard;
 
                 if ( $role_guard != 'member' ) {
-                    return redirect()->back()->withErrors('invalid role !');
+                    return redirect()->back()->withErrors('نقش انتخابی اشتباه است.');
                 }
             }
         }
@@ -222,7 +209,7 @@ class MemberController  extends Controller {
                 $permission_guard = Permission::find($permission)->guard;
     
                 if ( $permission_guard != 'member' ) {
-                    return redirect()->back()->withErrors('invalid permissions !');
+                    return redirect()->back()->withErrors('دسترسی انتخابی اشتباه است.');
                 }
             }
         }

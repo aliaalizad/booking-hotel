@@ -28,7 +28,7 @@
                 <tr class="text-center">
                     <th>ردیف</th>
                     <th>نام و نام  خانوادگی</th>
-                    <th>کد پرسنلی</th>
+                    <th>نام کاربری</th>
                     <th>مدیر</th>
                     <th>هتل</th>
                     <th>وضعیت حساب کاربری</th>
@@ -46,7 +46,7 @@
                         <td>{{ $i++ }}</td>
                     
                         <td>{{ $member->name }}</td>
-                        <td>{{ $member->personnel_code }}</td>
+                        <td>{{ $member->username }}</td>
                         <td><a href="#">{{ $member->manager->name ?? '-'}}</a></td>
                         <td><a href="#">{{ $member->hotel->name ?? '-' }}</a></td>
                         <td>

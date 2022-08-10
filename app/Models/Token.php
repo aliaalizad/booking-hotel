@@ -19,11 +19,10 @@ class Token extends Model
         'tokenable_type',
         'type',
         'expired_at',
-        'created_at',
     ];
 
-    public $timestamps = false;
 
+    
     protected $table = 'tokens';
 
     protected $hidden = [

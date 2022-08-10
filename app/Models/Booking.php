@@ -19,6 +19,8 @@ class Booking extends Model
         'phone',
         'amount',
         'status',
+        'created_at',
+        'updated_at',
     ];
 
 

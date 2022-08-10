@@ -56,7 +56,7 @@
                         </td>
                         <td>
                             <a href="{{ route('admin.hotels.edit', $hotel->id) }}" class="btn btn-secondary btn-sm">ویرایش</a>
-                            <a href="{{ route('admin.rooms.index', $hotel->id) }}" class="btn btn-primary btn-sm">اتاق ها</a>
+                            <a href="{{ route('admin.hotels.rooms.index', $hotel->id) }}" class="btn btn-primary btn-sm">اتاق ها</a>
                             <a href="{{ route('admin.hotels.bookings.index', $hotel->id) }}" class="btn btn-primary btn-sm">رزروها</a>
                             <a href="{{ route('admin.hotels.unbookables.index', $hotel->id) }}" class="btn btn-primary btn-sm">محدودیت رزرو</a>
                         </td>

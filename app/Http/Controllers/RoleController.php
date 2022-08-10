@@ -24,8 +24,8 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated_data = $request->validate([
-            'name' => ['required'],
-            'label' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'label' => ['bail', 'required', 'string', 'max:200'],
             'guard' => ['required', Rule::in(['admin', 'manager', 'member'])],
             'permissions' => ['required', 'array'],
         ]);
@@ -36,7 +36,7 @@ class RoleController extends Controller
             $permission_guard = Permission::find($permission)->guard;
 
             if ( $permission_guard != $request->guard ) {
-                return redirect()->back()->withErrors('invalid permissions !');
+                return redirect()->back()->withErrors('برخی از دسترسی های انتخابی اشتباه است.');
             }
         }
 
@@ -55,8 +55,8 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $validated_data = $request->validate([
-            'name' => ['required'],
-            'label' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'label' => ['bail', 'required', 'string', 'max:200'],
             'guard' => ['required', Rule::in(['admin', 'manager', 'member'])],
             'permissions' => ['required', 'array'],
         ]);
@@ -65,7 +65,7 @@ class RoleController extends Controller
             $permission_guard = Permission::find($permission)->guard;
 
             if ( $permission_guard != $request->guard ) {
-                return redirect()->back()->withErrors('invalid permissions !');
+                return redirect()->back()->withErrors('برخی از دسترسی های انتخابی اشتباه است.');
             }
         }
 

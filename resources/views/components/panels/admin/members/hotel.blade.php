@@ -15,7 +15,7 @@
     <div class="row mb-8">
         <!--begin::Col-->
         <div class="col-xl-4">
-            <label for="hotel" class="form-label d-flex align-items-center required">
+            <label for="hotel" class="form-label d-flex align-items-center">
                 <span class="fs-6 fw-bold mt-2 mb-3">هتل:</span>
             </label>
         </div>

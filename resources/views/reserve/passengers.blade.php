@@ -178,6 +178,8 @@
                         <!--end::Row-->
                     </div>
 
+                        <x-error/>
+
                     <div class="card mb-10">
                         <div class="card-header">
                             <h3 class="card-title">مشخصات فرهنگی</h3>
@@ -291,8 +293,14 @@
                             <div class="separator"></div>
                         @endforeach
                     </div>
-                    
-                    <a onclick="document.getElementById('reserve.passengers').submit()" class="btn btn-primary">تایید و ادامه خرید</a>
+
+                    <div class="row justify-content-center text-center my-10 p-0">
+                        <div class="col">
+                            <a onclick="document.getElementById('reserve.passengers').submit()" class="btn btn-primary">تایید و ادامه خرید
+                            <i class="bi bi-arrow-left"></i></a>
+                        </div>
+                    </div>
+
                 </form>
 
             </div>
@@ -307,7 +315,6 @@
 
 @push('scripts')
 
-<script src="/plugins/global/persian-datepicker.js"></script>
-
+    <script src="/plugins/global/persian-datepicker.js"></script>
 
 @endpush

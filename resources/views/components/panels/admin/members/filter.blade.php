@@ -19,7 +19,7 @@
                         </svg>
                     </span>
                     <!--end::Svg Icon-->
-                    <input type="text" class="form-control form-control-solid ps-10" name="code" value="{{ request('code') }}" placeholder="جستجو بر اساس کد پرسنلی ..." />
+                    <input type="text" class="form-control form-control-solid ps-10" name="code" value="{{ request('code') }}" placeholder="جستجو بر اساس نام کاربری ..." />
                 </div>
                 <!--end::Input group-->
                 <!--begin:Action-->

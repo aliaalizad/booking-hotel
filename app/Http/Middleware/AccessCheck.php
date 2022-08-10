@@ -38,7 +38,6 @@ class AccessCheck
                 }
 
 
-
             } elseif ($request->routeIs('member.*')) { // member
 
                 $is_blocked = Member::find(Auth::guard('member')->user()->id)->is_blocked;

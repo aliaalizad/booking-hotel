@@ -52,25 +52,6 @@
 
                 <!--begin::Body-->
                 <div id="change_password" class="fs-6 ps-10 collapse" >
-
-                @if($panel == "member")
-                    <!--begin::Row-->
-                    <div class="row mb-8">
-                        <!--begin::Col-->
-                        <div class="col-xl-4 ">
-                            <label for="current_password" class="form-label d-flex align-items-center">
-                                <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور فعلی:</span>
-                            </label>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xl-8">
-                            <input type="password" id="current_password" name="current_password" class="form-control" placeholder="رمز عبور فعلی را وارد کنید"/>
-                        </div>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Row-->
-                @endif
                     <!--begin::Row-->
                     <div class="row mb-8">
                         <!--begin::Col-->

@@ -23,7 +23,7 @@ trait ResourceControllerHelpers {
 
         // filter
         if ($data = request('code')) {
-            $members->where('personnel_code', $data);
+            $members->where('username', $data);
         }
         if ($data = request('name')) {
             $members->where('name', 'LIKE', "%$data%");
@@ -57,7 +57,7 @@ trait ResourceControllerHelpers {
 
         // filter
         if ($data = request('code')) {
-            $hotels->where('personnel_code', $data);
+            $hotels->where('username', $data);
         }
         if ($data = request('name')) {
             $hotels->where('name', 'LIKE', "%$data%");
@@ -116,6 +116,8 @@ trait ResourceControllerHelpers {
 
         $bookings = Booking::query();
 
+        $bookings->where('status', 'paid');
+
         if (guard('manager')) {
             $bookings->whereHas('room', function($room){
                 $room->whereHas('hotel', function($hotel) {
@@ -168,7 +170,7 @@ trait ResourceControllerHelpers {
             $bookings->where('amount', '<=', $data);
         }
 
-        return $bookings->orderBy('created_at', 'desc')->paginate(20);
+        return $bookings->orderBy('created_at', 'desc')->paginate(50);
     }
 
 

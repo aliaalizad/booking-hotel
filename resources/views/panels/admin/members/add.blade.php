@@ -20,6 +20,8 @@
         <!--begin::Card body-->
         <div class="card-body">
 
+            <x-error />
+
             <!--begin::Row-->
             <div class="row">
                 <x-panels.admin.members.personal-information />

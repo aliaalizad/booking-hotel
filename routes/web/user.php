@@ -6,18 +6,19 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['guest:web'])->controller(AuthController::class)->group(function(){
-    Route::get('/register', 'showRegisterForm')->name('register');
-    Route::post('/register', 'register');
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'login');
-
-    Route::get('/register/confirm', 'showConfirmForm')->name('confirm');
-    Route::post('/register/confirm', 'confirm');
+    Route::get('/auth', 'getAuth')->name('getAuth');
+    Route::post('/auth', 'postAuth')->name('postAuth');
+    Route::get('/auth/confirm', 'getConfirm')->name('getConfirm');
+    Route::post('/auth/confirm', 'postConfirm')->name('postConfirm');
+    Route::get('/auth/register', 'getRegister')->name('getRegister');
+    Route::post('/auth/register', 'postRegister')->name('postRegister');
+    Route::get('/auth/login', 'getLogin')->name('getLogin');
+    Route::post('/auth/login', 'postLogin')->name('postLogin');
 });
 
 Route::post('/profile/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:web', 'access_check'])->prefix('/profile')->group(function(){
-    Route::get('/', [AuthController::class, 'index'])->name('profile');
+    Route::get('/', [AuthController::class, 'profile'])->name('profile');
     Route::get('/booking/{booking}', [BaseController::class, 'showBooking'])->name('showBooking');
 });

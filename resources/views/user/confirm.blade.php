@@ -1,47 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Confirm</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+@extends('user.auth-master')
 
-    <div class="registration-form">
+@section('content')
 
-        <form action="{{ route('user.confirm') }}" method="post" autocomplete="off">
-            @csrf
-
-            @if ($errors->has('invalidError'))
-                    @error('invalidError')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-            @endif
-
-            <div class="form-group">
-                <input type="text" class="form-control item" name="code" id="code" placeholder="Code" }}">
-                @if ($errors->has('code'))
-                    @error('code')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-                @endif
+    <div class="row">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="/media/illustrations/enter-OTP-bro.svg" alt="">
             </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <h3>کد تایید را وارد کنید</h3>
+                    @php
+                        $phone = session()->get('new_user_mobile')
+                    @endphp
+                    <p style="color: #929292;"><span>حساب کاربری با شماره موبایل {{ $phone }} وجود ندارد</span><br><span>برای ساخت حساب جدید، کد تایید ارسال گردید</span></p>
+                    <form action="{{ route('user.postConfirm') }}" method="post">
+                        @csrf
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-block create-account">Confirm</button>
+                        <input @class(['form-control' , 'is-invalid' => $errors->has('code'), 'is-invalid' => $errors->has('invalidCode')]) type="text" name="code" required style="text-align: left; font-family: 'Lato', sans-serif;">
+                        @if ($errors->has('code'))
+                            @error('code')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
+                        @if ($errors->has('invalidCode'))
+                            @error('invalidCode')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn">ادامه</button>
+                            <a class="btn btn-secondary" href="{{ route('user.getAuth') }}">بازگشت</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-        </form>
-        
+        </div>
     </div>
 
+@endsection
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-    <script src="/js/script.js"></script>
-</body>
-</html>

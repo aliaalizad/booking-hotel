@@ -44,7 +44,7 @@
             <!--begin::Col-->
             <div class="col-xl-2">
                 <div class="input-group mb-5">
-                    <input type="text" id="bookable_until" name="bookable_until" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('bookable_until', $hotel->bookable_until) : old('bookable_until') }}"/>
+                    <input type="text" id="bookable_until" name="bookable_until" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('bookable_until', $hotel->bookable_until) : old('bookable_until', 90) }}"/>
                     <span class="input-group-text" id="addon">روز آینده</span>
                 </div>
             </div>
@@ -64,7 +64,7 @@
             <!--begin::Col-->
             <div class="col-xl-2">
                 <div class="input-group mb-5">
-                    <input type="text" id="min_bookable" name="min_bookable" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('min_bookable', $hotel->min_bookable) : old('min_bookable') }}"/>
+                    <input type="text" id="min_bookable" name="min_bookable" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('min_bookable', $hotel->min_bookable) : old('min_bookable', 1) }}"/>
                     <span class="input-group-text" id="addon">شب</span>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <!--begin::Col-->
             <div class="col-xl-2">
                 <div class="input-group mb-5">
-                    <input type="text" id="max_bookable" name="max_bookable" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('max_bookable', $hotel->max_bookable) : old('min_bookable') }}"/>
+                    <input type="text" id="max_bookable" name="max_bookable" class="form-control" aria-describedby="addon" style="text-align:center;" value="{{ isset($hotel) ? old('max_bookable', $hotel->max_bookable) : old('max_bookable', 14) }}"/>
                     <span class="input-group-text" id="addon">شب</span>
                 </div>
             </div>

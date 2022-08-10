@@ -28,6 +28,11 @@ class Admin extends Authenticatable
     protected $table = 'admins';
 
 
+    public function tokens()
+    {
+        return $this->morphMany(Token::class, 'tokenable');
+    }
+
     public function logs()
     {
         return $this->morphMany(Log::class, 'loggable');

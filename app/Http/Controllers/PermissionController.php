@@ -26,8 +26,8 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $validated_data = $request->validate([
-            'name' => ['required'],
-            'label' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'label' => ['bail', 'required', 'string', 'max:200'],
             'guard' => ['required', Rule::in(['admin', 'manager', 'member'])],
         ]);
 
@@ -46,8 +46,8 @@ class PermissionController extends Controller
     public function update(Request $request, Permission $permission)
     {
         $validated_data = $request->validate([
-            'name' => ['required'],
-            'label' => ['required'],
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'label' => ['bail', 'required', 'string', 'max:200'],
             'guard' => ['required', Rule::in(['admin', 'manager', 'member'])],
         ]);
 

@@ -22,6 +22,7 @@
         
         <!--begin::Card body-->
         <div class="card-body">
+            <x-error/>
 
             <div class="row">
                 <x-panels.admin.permissions.info :permission="$permission" />

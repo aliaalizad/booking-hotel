@@ -76,9 +76,9 @@
                                 <div class="separator my-2"></div>
 
                                 <!--begin::Menu item-->
-                                <form action="logout" method="post" id="exit">
+                                <form action="{{ route(get_prefix().'logout') }}" method="post" id="logout">
                                     @csrf
-                                    <div class="menu-item px-1" onclick="document.getElementById('exit').submit()">
+                                    <div class="menu-item px-1" onclick="document.getElementById('logout').submit()">
                                         <label class="menu-link" for="submit">
                                             <span class="menu-icon">
                                                 <i class="bi bi-grid-1x2-fill"></i>

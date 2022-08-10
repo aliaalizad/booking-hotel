@@ -2,139 +2,232 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\Sms\Sms;
-use App\Helpers\Token\UserToken;
+use App\Helpers\Token\Token;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
 
-    public function index()
+    public function profile()
     {
         $bookings = user()->bookings()->where('status', 'paid')->orderBy('created_at', 'desc')->paginate();
 
         return view('user.dashboard', compact('bookings'));
     }
 
-
-    public function showRegisterForm()
+    public function getAuth()
     {
-        return view('user.register');
-    }
+        request()->session()->forget('user_mobile');
+        request()->session()->forget('new_user_mobile');
+        request()->session()->forget('new_user_mobile_confirmed');
+        request()->session()->forget('new_user_register_time');
 
-
-    public function register(Request $request)
-    {
-        // validate inputs
-        $validator = Validator::make($request->all(),[
-            'name'      => ['required'],
-            'phone'     => ['required', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
-            'password'  => ['required'],
-            'cpassword' => ['required', 'same:password'],
-        ]);
-
-        $validator->sometimes('phone', 'unique:users,phone', function($input) {
-            return User::where([['phone', $input->phone],['is_activated', 1]])->first();
-        })->validated();
-
-        if (User::where('phone', $request->phone)->first()) {
-            // update user information
-            $user = User::where('phone', $request->phone)->first();
-            $user->name = $request->name;
-            $user->password = Hash::make($request->password);
-            $user->save();
-
-        } else {
-
-            User::create([
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                'is_activated' => 0,
-            ]);
-        }
-
-        // find the user
-        $user = User::where('phone', $request->phone)->first();
-
-        // checks that there is no token for this user
-        if ( ! UserToken::exists($user->id, 'register') ) {
-            // generate code
-            $code = mt_rand(100000, 999999);
-
-            //make token
-            UserToken::make($user->id, $code, 'register', 5);
-
-            // send sms 
-            Sms::sendCode($request->phone, $code);
-        }
-
-        // create session
-        $request->session()->put('id', $user->id);
-
-        return to_route('user.confirm');
-    }
-
-
-    public function showLoginForm()
-    {
         if (! session()->has('url.intended')) {
             session()->forget('url.intended');
             session()->put('url.intended', url()->previous());
         }
 
+        return view('user.auth');
+    }
+
+    public function postAuth(Request $request)
+    {
+        $request->validate([
+            'mobile' => ['bail', 'required', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
+        ], [
+            'mobile.regex' => 'شماره موبایل وارد شده معتبر نیست',
+            'mobile.digits' => 'شماره موبایل وارد شده معتبر نیست',
+            'mobile.numeric' => 'شماره موبایل وارد شده معتبر نیست',
+        ]);
+
+        User::whereName(0)->wherePassword(0)->whereIsActivated(0)->delete();
+
+        $user = User::wherePhone($request->mobile)->whereIsActivated(1)->get();
+
+        if ($user->isEmpty()) {
+
+            session(['new_user_mobile' => $request->mobile]);
+
+            $new_user = User::create([
+                'phone' => $request->mobile,
+
+                'name' => 0,
+                'is_activated' => 0,
+                'password' => 0,
+            ]);
+
+            $code = rand(100000, 999999);
+
+            Token::make($new_user, $code, 'register', 3);
+
+            // Sms::sendCode($new_user->phone, $code);
+
+            Log::info($code);
+
+            return to_route ('user.getConfirm');
+        }
+
+        session(['user_mobile' => $request->mobile]);
+
+        return to_route('user.getLogin');
+    }
+
+    public function getConfirm()
+    {
+        if (session()->has('new_user_mobile_confirmed')) {
+            return to_route('user.getRegister');
+        }
+
+        $new_user = User::wherePhone(session()->get('new_user_mobile'))->first();
+
+        if ( ! session()->has('new_user_mobile') or ! Token::has($new_user, 'register')) {
+            return to_route('user.getAuth');
+        }
+
+        return view('user.confirm');
+    }
+
+    public function postConfirm(Request $request)
+    {
+        if (session()->has('new_user_mobile_confirmed')) {
+            return to_route('user.getRegister');
+        }
+
+        $new_user = User::wherePhone(session()->get('new_user_mobile'))->first();
+
+        if ( ! session()->has('new_user_mobile') or ! Token::has($new_user, 'register')) {
+            return to_route('user.getAuth');
+        }
+
+
+        $request->validate([
+            'code' => ['required', 'numeric', 'digits:6'],
+        ], [
+            'code.numeric' => 'کد تایید باید یک عدد 6 رقمی باشد',
+            'code.digits' => 'کد تایید باید یک عدد 6 رقمی باشد',
+        ]);
+
+        $new_user = User::wherePhone(session()->get('new_user_mobile'))->firstOrFail();
+
+        $token = Token::get($new_user, 'register');
+
+        if (is_null($token)) {
+            return to_route('user.getAuth');
+        }
+
+        if (Hash::check($request->code, $token->token)) {
+            $token->delete();
+            session(['new_user_mobile_confirmed' => true]);
+            session(['new_user_register_time' => now()->addMinutes(15)]);
+            return to_route('user.getRegister');
+        }
+
+        return back()->withErrors(['invalidCode' => 'کد وارد شده نامعتبر است']);
+    }
+
+    public function getRegister()
+    {
+        $new_user = User::wherePhone(session()->get('new_user_mobile'))->first();
+
+        if (session()->has('new_user_mobile') and Token::has($new_user, 'register')) {
+            return to_route ('user.getConfirm');
+        }
+
+        if ( ! session()->has('new_user_mobile') or ! session()->has('new_user_mobile_confirmed') or ! session()->has('new_user_register_time') or session()->get('new_user_register_time') < now()) {
+            return to_route('user.getAuth');
+        }
+
+        return view('user.register');
+    }
+
+    public function postRegister(Request $request)
+    {
+        $new_user = User::wherePhone(session()->get('new_user_mobile'))->first();
+
+        if (session()->has('new_user_mobile') and Token::has($new_user, 'register')) {
+            return to_route ('user.getConfirm');
+        }
+
+        if ( ! session()->has('new_user_mobile') or ! session()->has('new_user_mobile_confirmed') or ! session()->has('new_user_register_time') or session()->get('new_user_register_time') < now()) {
+            return to_route('user.getAuth');
+        }
+
+
+        $request->validate([
+            'name' => ['bail', 'required', 'string', 'max:40'],
+            'state' => ['required', 'exists:states,id'],
+            'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
+        ]);
+
+        $user = User::wherePhone(session()->get('new_user_mobile'))->firstOrFail();
+
+        $user->update([
+            'name' => $request->name,
+            'password' => Hash::make($request->password),
+            'is_activated' => 1,
+        ]);
+
+        $request->session()->regenerate();
+
+        Auth::guard('admin')->logout();
+        Auth::guard('manager')->logout();
+        Auth::guard('member')->logout();
+
+        Auth::guard('web')->loginUsingId($user->id);
+
+
+        $url = session('url.intended') ?? route('user.profile');
+        $request->session()->forget('url.intended');
+
+        return redirect($url);
+    }
+
+    public function getLogin()
+    {
+        if ( ! session()->has('user_mobile')) {
+            return to_route('user.getAuth');
+        }
+
         return view('user.login');
     }
 
-
-    public function login(Request $request)
+    public function postLogin(Request $request)
     {
-        $validator = Validator::make($request->all(),[
-            'phone'     => ['required'],
-            'password'  => ['required'],
-        ])->validated();
+        if ( ! session()->has('user_mobile')) {
+            return to_route('user.getAuth');
+        }
 
-        if (Auth::guard('web')->attempt($validator)) {
+
+        $request->validate([
+            'password' => ['required'],
+        ]);
+
+        $user = User::wherePhone(session()->get('user_mobile'))->firstOrFail();
+
+        if (Hash::check($request->password, $user->password)) {
+
+            $request->session()->regenerate();
 
             Auth::guard('admin')->logout();
             Auth::guard('manager')->logout();
             Auth::guard('member')->logout();
-
-            if (Auth::guard('web')->user()->is_activated == 0) {
-
-                if ( UserToken::exists(Auth::guard('web')->user()->id, 'register') ){
-
-                    $request->session()->put('id', Auth::guard('web')->user()->id);
-
-                    Auth::guard('web')->logout();
-
-                    return to_route('user.confirm');
-                }
-
-                Auth::guard('web')->logout();
-                return back()->withErrors([
-                    'loginError' => 'شماره موبایل یا رمز عبور صحیح نیست',
-                ]);
-            }
-            $request->session()->forget('id');
-            $request->session()->regenerate();
-
+    
+            Auth::guard('web')->loginUsingId($user->id);
+    
             $url = session('url.intended') ?? route('user.profile');
             $request->session()->forget('url.intended');
 
             return redirect($url);
         }
 
-        return back()->withErrors([
-            'loginError' => 'شماره موبایل یا رمز عبور صحیح نیست',
-        ]);
+        return back()->withErrors(['password' => 'رمز عبور اشتباه است']);
     }
-
 
     public function logout(Request $request)
     {
@@ -146,67 +239,4 @@ class AuthController extends Controller
     
         return redirect('/');
     }
-
-
-    public function showConfirmForm(Request $request)
-    {
-        if ( ! $request->session()->has('id') || ! UserToken::exists($request->session()->get('id'), 'register') ) {
-            return to_route('user.register');
-        }
-        
-        return view('user.confirm');
-    }
-
-
-    public function confirm(Request $request)
-    {
-        // validate user inputs
-        $credentials = $request->validate([
-            'code' => ['required', 'digits:6']
-        ]);
-
-        // redirect
-        if ( ! $request->session()->has('id') || ! UserToken::exists($request->session()->get('id'), 'register') ) {
-            return to_route('panels.user.register');
-        }
-
-
-        $id = $request->session()->get('id');
-
-        if (UserToken::exists($id, 'register')) {
-
-            if (UserToken::isValid($id, $credentials['code'], 'register')) {
-                // confirm registeration
-                $user = User::find($id);
-                $user->is_activated = 1;
-                $user->save();
-                
-                // delete session
-                $request->session()->forget('id');
-
-                // delete token
-                UserToken::delete($id, 'register');
-
-                // logout other guards
-                Auth::guard('admin')->logout();
-                Auth::guard('manager')->logout();
-                Auth::guard('member')->logout();
-                //login user
-                Auth::guard('web')->loginUsingId($id);
-                
-                // redirect
-                $url = session('url.intended') ?? route('user.profile');
-                $request->session()->forget('url.intended');
-    
-                return redirect($url);
-            }
-
-            return back()->withErrors([
-                'invalidError' => 'کد وارد شده معتبر نیست',
-            ]);
-        }
-
-        return to_route('panels.user.register');
-    }
-
 }

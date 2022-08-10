@@ -24,7 +24,7 @@ class ManagerFactory extends Factory
             'phone' => $this->faker->e164PhoneNumber(),
             'email' => $this->faker->email(),
             'city_id' => 1,
-            'bank_account' => 'IR111111111111111111111111',
+            'bank_account' => '111111111111111111111111',
             'commission' => 5,
         ];
     }

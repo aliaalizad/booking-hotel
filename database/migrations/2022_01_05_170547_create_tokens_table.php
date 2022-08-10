@@ -20,8 +20,8 @@ class CreateTokensTable extends Migration
             $table->string('tokenable_type');
             $table->integer('tokenable_id');
             $table->string('type');
-            $table->timestamp('expired_at')->nullable();
-            $table->timestamp('created_at')->nullable();
+            $table->dateTime('expired_at', $precision = 0)->nullable();
+            $table->timestamps();
         });
     }
 

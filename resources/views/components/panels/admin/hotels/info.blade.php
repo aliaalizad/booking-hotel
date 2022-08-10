@@ -15,14 +15,14 @@
         <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4">
-                <label for="name" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">نام:</span>
+                <label for="title" class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3">عنوان:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" name="name" id="name" class="form-control" placeholder="نام را وارد کنید" value="{{ isset($hotel) ? old('name', $hotel->name) : old('name') }}"/>
+                <input type="text" name="title" id="title" class="form-control" placeholder="عنوان را وارد کنید" value="{{ isset($hotel) ? old('title', $hotel->name) : old('title') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -33,7 +33,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="phone" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">شماره تلفن:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">شماره تلفن:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -50,7 +50,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="city" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">شهرستان:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">شهرستان:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -81,7 +81,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="address" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">آدرس:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">آدرس:</span>
                 </label>
             </div>
             <!--end::Col-->

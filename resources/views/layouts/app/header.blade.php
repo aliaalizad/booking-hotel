@@ -96,7 +96,7 @@
                         @endauth
 
                         @guest('web')
-                            <a href="{{ route('user.login') }}" class="btn btn-primary">ورود | ثبت نام</a>
+                            <a href="{{ route('user.getAuth') }}" class="btn btn-primary">ورود | ثبت نام</a>
                         @endguest
                     </div>
                     <!--end::Toolbar-->

@@ -1,54 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <div class="registration-form">
-        <form action="{{ route('user.login') }}" method="post" autocomplete="off">
-            @csrf
+@extends('user.auth-master')
 
-            @if ($errors->has('loginError'))
-                    @error('loginError')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-            @endif
+@section('content')
 
-            <div class="form-icon">
-                <span><i class="icon icon-user"></i></span>
+    <div class="row">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="/media/illustrations/my-password-bro.svg" alt="">
             </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items">
+                    <h3>رمز عبور خود را وارد کنید</h3>
 
-            <div class="form-group">
-                <input type="text" class="form-control item" name="phone" id="phone" placeholder="Phone" value="{{ old('phone') }}">
-                @if ($errors->has('phone'))
-                    @error('phone')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-                @endif
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control item" name="password" id="password" placeholder="Password" ">
-                @if ($errors->has('password'))
-                    @error('password')
-                        <div style="color: red;">{{ $message }}</div>
-                    @enderror
-                @endif
-            </div>
+                    <form action="{{ route('user.postLogin') }}" method="post">
+                        @csrf
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-block create-account">Login</button>
+                        <input @class(['form-control' , 'is-invalid' => $errors->has('password')]) type="password" name="password" required style="text-align: left; font-family: 'Lato', sans-serif;">
+                        @if ($errors->has('password'))
+                            @error('password')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn">تایید</button>
+                            <a class="btn btn-secondary" href="{{ route('user.getAuth') }}">بازگشت</a>
+                        </div>
+                    </form>
+                    <div style="font-size: 12px">
+                        <a href="#">فراموشی رمزعبور</a>
+                    </div>
+                </div>
             </div>
-        </form>
-        
+        </div>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
-    <script src="/js/script.js"></script>
-</body>
-</html>
+
+@endsection

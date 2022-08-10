@@ -2,7 +2,9 @@
 
 @section('title', 'پروفایل')
 
+
 @section('content')
+
     <div class="d-flex flex-column flex-xl-row">
         <!--begin::Content-->
         <div class="flex-lg-row-fluid ms-lg-15">
@@ -283,4 +285,36 @@
         </div>
         <!--end::Content-->
     </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function(){
+            @if(session()->has('payment_status')) 
+                @if(session('payment_status') == 1)
+                    Swal.fire({
+                        title: "پرداخت موفق",
+                        text: "ثبت رزرو با موفقیت انجام شد",
+                        icon: "success",
+                        confirmButtonText: "بستن",
+                        customClass: {
+                            confirmButton: "btn btn-success"
+                        },
+                    });
+                @elseif(session('payment_status') == 0)
+                    Swal.fire({
+                        title: "پرداخت ناموفق",
+                        html: "فرایند ثبت رزرو با خطا مواجه شد </br></br> در صورتی که مبلغی از حساب بانکی شما کسر شده است  </br> حداکثر تا 72 ساعت به حساب شما باز خواهد گشت",
+                        icon: "error",
+                        confirmButtonText: "بستن",
+                        customClass: {
+                            confirmButton: "btn btn-danger"
+                        },
+                    });
+                @endif
+            @endif
+        });
+ 
+    </script>
+@endpush

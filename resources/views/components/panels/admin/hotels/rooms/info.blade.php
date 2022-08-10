@@ -15,14 +15,14 @@
          <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
-                <label for="name" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">عنوان:</span>
+                <label for="title" class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3">عنوان:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" id="name" name="name" class="form-control" placeholder="عنوان اتاق را وارد کنید"  value="{{ isset($room) ? old('name', $room->name) : old('name') }}"/>
+                <input type="text" id="title" name="title" class="form-control" placeholder="عنوان اتاق را وارد کنید"  value="{{ isset($room) ? old('title', $room->name) : old('title') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -33,13 +33,13 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="capacity" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">ظرفیت:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">ظرفیت:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" id="capacity" name="capacity" class="form-control" placeholder="ظرفیت اتاق را وارد کنید"  value="{{ isset($room) ? old('capacity', $room->capacity) : old('capacity') }}"/>
+                <input type= "text" id="capacity" name="capacity" class="form-control" placeholder="ظرفیت اتاق را وارد کنید" value="{{ isset($room) ? old('capacity', $room->capacity) : old('capacity') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -51,13 +51,13 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="rooms" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">اتاق ها:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">اتاق ها:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input name="rooms" class="form-control form-control-lg form-control" placeholder="شماره اتاق ها را وارد کنید" value="{{ isset($room) ? old('', implode(',' ,$room->numbers)) : old('rooms') }}" id="tagify"/>
+                <input name="rooms" class="form-control form-control-lg form-control" placeholder="شماره اتاق ها را وارد کنید" value="@if(isset($room)) {{ old('', implode(',' ,$room->numbers)) }} @elseif(!is_null(old('rooms'))) {{ implode(',' ,old('rooms'))}} @endif" id="tagify"/>
             </div>
             <!--end::Col-->
         </div>
@@ -68,7 +68,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="price" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">قیمت (1 شب):</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">قیمت (1 شب):</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -88,14 +88,14 @@
             <!--begin::Col-->
             <div class="col-xl-4">
                 <label class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 ">وضعیت رزرو:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">وضعیت رزرو:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
                 <div class="form-check form-switch form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="@if(isset($room)) {{ $room->is_bookable ? 1 : 0 }} @endif" id="bookable" name="bookable" @if(isset($room)) @checked($room->is_bookable == 1) @endif>
+                    <input class="form-check-input" type="checkbox" value="@if(isset($room)) {{ $room->is_bookable ? 1 : 0 }} @else {{ 0 }} @endif" id="bookable" name="bookable" @if(isset($room)) @checked($room->is_bookable == 1) @endif>
                     <label class="form-check-label fw-bold text-gray-400 ms-3" for="bookable">قابل رزرو</label>
                 </div>
             </div>

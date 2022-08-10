@@ -67,7 +67,7 @@ class BookingController extends Controller
 
     public function paymentCallback()
     {
-        Booking::verifyPayment();
+        return Booking::verifyPayment();
     }
 
     public function lastConfirmation()

@@ -26,7 +26,7 @@
                 <tr>
                     <th>ردیف</th>
                     <th>نام و نام خانوادگی</th>
-                    <th>کد پرسنلی</th>
+                    <th>نام کاربری</th>
                     <th>هتل</th>
                     <th>وضعیت حساب کاربری</th>
                     <th>اقدامات</th>
@@ -43,7 +43,7 @@
                         <td>{{ $i++ }}</td>
                     
                         <td>{{ $member->name }}</td>
-                        <td>{{ $member->personnel_code }}</td>
+                        <td>{{ $member->username }}</td>
                         <td><a href="#">{{ $member->hotel->name ?? '-' }}</a></td>
                         <td>
                             @if(! $member->is_blocked)

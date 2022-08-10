@@ -12,6 +12,7 @@
 @section('content')
 
 
+<x-error/>
 
 <form class="form row justify-content-center" id="fromTo" action="{{ route('member.hotel.unbookables.store') }}" method="post">
     @csrf
@@ -20,6 +21,12 @@
 
 </form>
 
+<form class="form row justify-content-center" id="reception" action="{{ route('member.hotel.unbookables.store') }}" method="post">
+    @csrf
+
+    <x-panels.admin.hotels.unbookables.reception :hotel="$hotel"/>
+
+</form>
 
 
 <div class="card card-bordered">

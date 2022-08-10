@@ -97,41 +97,24 @@ class BookingService {
 
         $this->room_number = $this->getValidRoomNumbers($room)->first();
 
-        $existing_booking = BookingModel::where([['user_id', $user->id], ['room_id', $room->id], ['checkin', $checkin], ['checkout', $checkout], ['status', 'unpaid']])->whereIn('room_number', $this->getValidRoomNumbers($room))->first();
 
-        if (is_null($existing_booking)) {
-            // create booking
-            $booking = BookingModel::create([
-                'user_id' => $user->id,
-                'room_id' => $room->id,
-                'room_number' => $this->room_number,
-                'checkin' => $checkin,
-                'checkout' => $checkout,
-                'amount' => $amount,
-                'status' => 'unpaid',
-            ]);
-
-            // add passengers
-            $booking->passengers()->create([
-                'detail' => $detail
-            ]);
-
-            return $this->booking = $booking;
-        }
-
-        // update booking
-        $existing_booking->update([
+        // create booking
+        $booking = BookingModel::create([
+            'user_id' => $user->id,
+            'room_id' => $room->id,
+            'room_number' => $this->room_number,
+            'checkin' => $checkin,
+            'checkout' => $checkout,
             'amount' => $amount,
+            'status' => 'unpaid',
         ]);
 
-        // delete existing passengers
-        $existing_booking->passengers()->delete();
-        // create new passengers
-        $existing_booking->passengers()->create([
+        // add passengers
+        $booking->passengers()->create([
             'detail' => $detail
         ]);
 
-        return $this->booking = $existing_booking;
+        return $this->booking = $booking;
     }
 
 
@@ -141,7 +124,7 @@ class BookingService {
         $room_id = $this->booking->room_id;
         $start_date = $this->booking->checkin;
         $end_date = $this->booking->checkout;
-        $expiration = Carbon::now()->addMinutes(15);
+        $expiration = Carbon::now()->addMinutes(10);
 
         $unbookable = Unbookable::where([['user_id', $user_id], ['start_date', $start_date], ['end_date', $end_date], ['expiration', '>=', Carbon::now()]])->first();
 
@@ -189,15 +172,23 @@ class BookingService {
         $self_amount = ($this->booking->amount) * (($commission)/100);
         $payment_amount = $this->booking->amount + $self_amount;
 
+
+
         $invoice = new Invoice;
         $invoice->amount($payment_amount);
 
-        // $invoice->detail([
-        //     'multiplexingInfos' => [
-        //         [ 'id' => 'self', 'amount' => $self_amount],
-        //         ['bankAccount' => $manager_account, 'amount' => $manager_amount ]
-        //     ]
-        // ]);
+    
+        $invoice->detail([
+/*
+            'multiplexingInfos' => [
+                [ 'id' => 'self', 'amount' => $self_amount],
+                ['bankAccount' => $manager_account, 'amount' => $manager_amount ]
+            ],
+*/
+        ]);
+
+
+
 
         return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($payment_amount, $manager_amount) {
             Payment::create([
@@ -212,9 +203,13 @@ class BookingService {
 
     public function verifyPayment()
     {
-        $payment = Payment::where('track_id', request()->trackId)->firstOrFail();
+        $track_id = request()->Authority; // zarinpal
+        // $track_id = request()->track_id; // zibal
 
-        try {
+
+        $payment = Payment::where('track_id', $track_id)->firstOrFail();
+
+        try {   
             $receipt = ShetabitPayment::amount($payment->amount)->transactionId($payment->track_id)->verify();
 
             $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code
@@ -236,11 +231,13 @@ class BookingService {
                 ]);
             }
 
+            return to_route('user.profile')->with('payment_status',1);
+
         } catch (InvalidPaymentException $exception) {
 
             $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code
 
-            echo 'پرداخت با خطا مواجه شد. در صورتی که مبلغ از حساب شما برداشت شده حداکثر تا 72 ساعت به حساب شما باز خواهد گشت';
+            return to_route('user.profile')->with('payment_status',0);
         }
 
     }

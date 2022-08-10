@@ -7,7 +7,7 @@
     <x-panels.header.breadcrumb.menu>
         <x-panels.header.breadcrumb.item name="مراكز اقامتی" route="manager.hotels.index" />
         <x-panels.header.breadcrumb.item name="{{ $hotel->name }}" muted />
-        <x-panels.header.breadcrumb.item name="لیست اتاق ها" route="manager.rooms.index" params="{{$hotel->id}}"/>
+        <x-panels.header.breadcrumb.item name="لیست اتاق ها" route="manager.hotels.rooms.index" params="{{$hotel->id}}"/>
         <x-panels.header.breadcrumb.item name="{{ $room->name }}" muted />
         <x-panels.header.breadcrumb.item name="ویرایش" muted />
     </x-panels.header.breadcrumb.menu>
@@ -15,7 +15,7 @@
 
 @section('content')
 
-<form class="form row justify-content-center" action="{{ route('manager.rooms.update', [$hotel->id, $room->id]) }}" method="post">
+<form class="form row justify-content-center" action="{{ route('manager.hotels.rooms.update', [$hotel->id, $room->id]) }}" method="post">
     @csrf
     @method("PUT")
 
@@ -24,6 +24,7 @@
         
         <!--begin::Card body-->
         <div class="card-body">
+            <x-error/>
 
             <div class="row">
                 <x-panels.admin.hotels.rooms.info :room="$room"/>
@@ -34,7 +35,7 @@
 
         <!--begin::Card footer-->
         <div class="card-footer d-flex justify-content-center py-6">
-            <a href="{{ route('manager.rooms.index', $hotel->id) }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
+            <a href="{{ route('manager.hotels.rooms.index', $hotel->id) }}" class="btn btn-light btn-active-light-primary me-2">لغو</a>
             <button type="submit" class="btn btn-primary">ثبت</button>
         </div>
         <!--end::Card footer-->

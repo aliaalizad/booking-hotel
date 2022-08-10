@@ -14,6 +14,7 @@
 @section('content')
 
 
+<x-error/>
 
 <form class="form row justify-content-center" id="fromTo" action="{{ route('manager.hotels.unbookables.store', $hotel->id) }}" method="post">
     @csrf

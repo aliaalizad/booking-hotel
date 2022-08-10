@@ -10,7 +10,7 @@
 <!--end::Card header-->
 
 <!--begin::Card body-->
-<div class="card-body collapse show" id="permission">
+<div class="card-body collapse" id="permission">
     <!--begin::Row-->
     <div class="row mb-8">
         <!--begin::Col-->

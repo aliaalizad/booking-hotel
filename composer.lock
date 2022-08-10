@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93282d88a1be54068471a628332ebaa7",
+    "content-hash": "4b97918f5577c00d206b5feae6eccc4c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -960,6 +960,66 @@
             "time": "2021-10-06T17:43:30+00:00"
         },
         {
+            "name": "hekmatinasser/jalali",
+            "version": "v8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hekmatinasser/jalali.git",
+                "reference": "0546093f0aa2ebca02834b3666836ef4c21eb3db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hekmatinasser/jalali/zipball/0546093f0aa2ebca02834b3666836ef4c21eb3db",
+                "reference": "0546093f0aa2ebca02834b3666836ef4c21eb3db",
+                "shasum": ""
+            },
+            "require": {
+                "hekmatinasser/notowo": "^1.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.18|^5.20|^6.24|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Hekmatinasser\\Jalali\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nasser Hekmati",
+                    "email": "hekmati.nasser@gmail.com"
+                }
+            ],
+            "description": "This Package helps developers to work with Jalali Datetime class for PHP",
+            "keywords": [
+                "Jalali",
+                "date",
+                "datetime",
+                "php",
+                "shamsi"
+            ],
+            "support": {
+                "issues": "https://github.com/hekmatinasser/jalali/issues",
+                "source": "https://github.com/hekmatinasser/jalali/tree/v8.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/hekmatinasser",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-07-28T17:18:02+00:00"
+        },
+        {
             "name": "hekmatinasser/notowo",
             "version": "v1.0.1",
             "source": {
@@ -1011,23 +1071,23 @@
         },
         {
             "name": "hekmatinasser/verta",
-            "version": "v2.0.2",
+            "version": "v8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hekmatinasser/verta.git",
-                "reference": "e0b56289762bda009ab9e4eec81794a7eb1aa8e3"
+                "reference": "233189b5985a23b69369ab19727f0355d0edfab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hekmatinasser/verta/zipball/e0b56289762bda009ab9e4eec81794a7eb1aa8e3",
-                "reference": "e0b56289762bda009ab9e4eec81794a7eb1aa8e3",
+                "url": "https://api.github.com/repos/hekmatinasser/verta/zipball/233189b5985a23b69369ab19727f0355d0edfab8",
+                "reference": "233189b5985a23b69369ab19727f0355d0edfab8",
                 "shasum": ""
             },
             "require": {
-                "hekmatinasser/notowo": "^1.0",
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
-                "illuminate/validation": "^6.0|^7.0|^8.0|^9.0",
-                "php": "^7.3|^8.0"
+                "hekmatinasser/jalali": "^8.0",
+                "illuminate/support": "^8.0|^9.0",
+                "illuminate/validation": "^8.0|^9.0",
+                "php": "^8.0"
             },
             "require-dev": {
                 "orchestra/testbench": "^4.18|^5.20|^6.24|^7.0"
@@ -1072,7 +1132,7 @@
             ],
             "support": {
                 "issues": "https://github.com/hekmatinasser/verta/issues",
-                "source": "https://github.com/hekmatinasser/verta/tree/v2.0.2"
+                "source": "https://github.com/hekmatinasser/verta/tree/v8.1"
             },
             "funding": [
                 {
@@ -1080,7 +1140,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-16T19:32:39+00:00"
+            "time": "2022-07-21T00:02:18+00:00"
         },
         {
             "name": "laravel/framework",

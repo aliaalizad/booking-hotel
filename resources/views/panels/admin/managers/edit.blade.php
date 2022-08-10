@@ -23,7 +23,9 @@
         
         <!--begin::Card body-->
         <div class="card-body">
-        
+
+            <x-error />
+
             <div class="row">
                 <x-panels.admin.managers.personal-information :manager="$manager" />
             </div>

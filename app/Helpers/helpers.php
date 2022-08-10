@@ -3,9 +3,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Http;
 
-function permission($abilities, $arguments = []){
+function permission($abilities, $arguments = []) {
 
     if (guard('admin')) {
         $user = Auth::guard('admin')->user();
@@ -53,6 +52,19 @@ function guard($guards) {
     }
 
     return Auth::guard($guards)->check() ? true : false ;
+}
+
+function get_prefix() {
+
+    if (Auth::guard('admin')->check()) {
+        return 'admin';
+    } elseif (Auth::guard('manager')->check()) {
+        return 'manager';
+    } elseif (Auth::guard('member')->check()) {
+        return 'member';
+    } elseif (Auth::guard('web')->check()) {
+        return 'user';
+    }
 }
 
 function user($guard = null) {

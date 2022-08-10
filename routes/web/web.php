@@ -2,19 +2,16 @@
 
 use App\Helpers\Logs\Logs;
 use App\Helpers\Sms\Sms;
+use App\Helpers\Token\Token;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
+use App\Models\Admin;
+use App\Models\Booking;
 use App\Models\Manager;
 use App\Models\Room;
-use App\Models\LogEvent;
-use App\Models\Booking;
-use App\Models\Payment;
-use App\Models\Permission;
-use App\Models\Unbookable;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use illuminate\Support\Str;
 
 
@@ -107,8 +104,9 @@ Route::get('test', function() {
 
     // dd($log->last());
 
-    $until = 7;
-    $checkin = Carbon::create("2022/08/05");
+    // session(['last_confirmable_url', url()->current()]);
+
+    dd(Token::isValid(user(), '92047', 'confirm'));
 
 })->name('test');
 

@@ -19,7 +19,7 @@
     <div class="card-header">
         <h3 class="card-title">اتاق ها</h3>
         <div class="card-toolbar ">
-            <a href="{{ route('admin.rooms.create', $hotel->id) }}" class="btn btn-primary btn-sm">افزودن اتاق جدید</a>
+            <a href="{{ route('admin.hotels.rooms.create', $hotel->id) }}" class="btn btn-primary btn-sm">افزودن اتاق جدید</a>
         </div>
     </div>
     <div class="card-body">
@@ -59,7 +59,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.rooms.edit',[$hotel->id, $room->id]) }}" class="btn btn-secondary btn-sm">ویرایش</a>
+                                    <a href="{{ route('admin.hotels.rooms.edit',[$hotel->id, $room->id]) }}" class="btn btn-secondary btn-sm">ویرایش</a>
                                 </td>
                             </tr>
                         @endforeach

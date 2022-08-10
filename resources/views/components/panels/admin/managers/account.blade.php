@@ -17,7 +17,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="username" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 required">نام کاربری:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">نام کاربری:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -69,30 +69,12 @@
 
                 <!--begin::Body-->
                 <div id="change_password" class="fs-6 ps-10 collapse" >
-
-                    <!--begin::Row-->
-                    <div class="row mb-8">
-                        <!--begin::Col-->
-                        <div class="col-xl-4 ">
-                            <label for="current_password" class="form-label d-flex align-items-center">
-                                <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور فعلی:</span>
-                            </label>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xl-8">
-                            <input type="password" id="current_password" name="current_password" class="form-control" placeholder="رمز عبور فعلی را وارد کنید"/>
-                        </div>
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Row-->
-
                     <!--begin::Row-->
                     <div class="row mb-8">
                         <!--begin::Col-->
                         <div class="col-xl-4 ">
                             <label for="password" class="form-label d-flex align-items-center">
-                                <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور جدید:</span>
+                                <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور جدید:</span>
                             </label>
                         </div>
                         <!--end::Col-->
@@ -130,7 +112,7 @@
                 <!--begin::Col-->
                 <div class="col-xl-4 ">
                     <label for="password" class="form-label d-flex align-items-center">
-                        <span class="fs-6 fw-bold mt-2 mb-3 required">رمز عبور:</span>
+                        <span class="fs-6 fw-bold mt-2 mb-3">رمز عبور:</span>
                     </label>
                 </div>
                 <!--end::Col-->
@@ -146,7 +128,7 @@
                 <!--begin::Col-->
                 <div class="col-xl-4 ">
                     <label for="password_confirmation" class="form-label d-flex align-items-center">
-                        <span class="fs-6 fw-bold mt-2 mb-3 required">تکرار رمز عبور:</span>
+                        <span class="fs-6 fw-bold mt-2 mb-3">تکرار رمز عبور:</span>
                     </label>
                 </div>
                 <!--end::Col-->
@@ -164,7 +146,7 @@
             <!--begin::Col-->
             <div class="col-xl-4">
                 <label class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3 ">وضعیت حساب کاربری:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">وضعیت حساب کاربری:</span>
                 </label>
             </div>
             <!--end::Col-->

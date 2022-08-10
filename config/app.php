@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'fa',
 
     /*
     |--------------------------------------------------------------------------
@@ -179,6 +179,7 @@ return [
         App\Helpers\Booking\BookingServiceProvider::class,
         App\Helpers\Logs\LogsServiceProvider::class,
         App\Helpers\Sms\SmsServiceProvider::class,
+        App\Helpers\Token\TokenServiceProvider::class,
     ],
 
     /*
@@ -238,6 +239,7 @@ return [
         'Booking' => App\Helpers\Booking\Booking::class,
         'Log' => App\Helpers\Logs\Logs::class,
         'Sms' => App\Helpers\Sms\Sms::class,
+        'Token' => App\Helpers\Token\Token::class,
     ],
 
 ];

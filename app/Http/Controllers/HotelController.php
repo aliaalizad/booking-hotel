@@ -8,8 +8,6 @@ use App\Http\Controllers\ResourceControllerHelpers;
 use App\Models\City;
 use App\Models\Hotel;
 use App\Models\Manager;
-use App\Models\Member;
-use App\Models\Room;
 use Illuminate\Support\Str;
 
 class HotelController extends Controller{
@@ -36,7 +34,6 @@ class HotelController extends Controller{
         return view('panels.' . $this->panel . '.hotels.add');
     }
 
-
     public function store(Request $request)
     {
         // Set manager_id based on panel
@@ -49,13 +46,13 @@ class HotelController extends Controller{
 
         // First validation
         $request->validate([
-            'name' => ['required', 'string'],
-            'phone' => ['required'],
-            'address' => ['required', 'string'],
-            'manager' => ['exists:managers,id'],
-            'min_bookable' => ['required', 'integer', 'min:1'],
-            'max_bookable' => ['required', 'integer', 'gte:min_bookable'],
-            'bookable_until' => ['required', 'integer', 'min:1'],
+            'title' => ['required', 'string', 'max:60', 'bail'],
+            'phone' => ['required', 'numeric', 'digits_between:7,11' , 'bail'],
+            'address' => ['required', 'string', 'max:200', 'bail'],
+            'min_bookable' => ['required','integer', 'min:1', 'bail'],
+            'max_bookable' => ['required','integer', 'gte:min_bookable', 'bail'],
+            'bookable_until' => ['required','integer', 'min:1', 'bail'],
+            'manager' => ['required', 'exists:managers,id', 'bail'],
         ]);
 
         // set is_bookable value
@@ -78,7 +75,7 @@ class HotelController extends Controller{
         // add hotel
         Hotel::create([
             'code' => Str::random(20),
-            'name' => $request->name,
+            'name' => $request->title,
             'phone' => $request->phone,
             'address' => $request->address,
             'city_id' => $request->city,
@@ -92,23 +89,21 @@ class HotelController extends Controller{
         return to_route( $this->panel . '.hotels.index' );
     }
 
-
     public function edit(Hotel $hotel)
     {
         return view('panels.' . $this->panel . '.hotels.edit', compact('hotel'));
     }
 
-
     public function update(Request $request, Hotel $hotel)
     {
         // First validation
         $request->validate([
-            'name' => ['required', 'string'],
-            'phone' => ['required'],
-            'address' => ['required', 'string'],
-            'min_bookable' => ['required', 'integer', 'min:1'],
-            'max_bookable' => ['required', 'integer', 'gte:min_bookable'],
-            'bookable_until' => ['required', 'integer', 'min:1'],
+            'title' => ['required', 'string', 'max:60', 'bail'],
+            'phone' => ['required', 'numeric', 'digits_between:7,11' , 'bail'],
+            'address' => ['required', 'string', 'max:200', 'bail'],
+            'min_bookable' => ['required','integer', 'min:1', 'bail'],
+            'max_bookable' => ['required','integer', 'gte:min_bookable', 'bail'],
+            'bookable_until' => ['required','integer', 'min:1', 'bail'],
         ]);
 
         // set is_bookable value
@@ -116,7 +111,7 @@ class HotelController extends Controller{
 
         // Update hotel
         $hotel->update([
-            'name' => $request->name,
+            'name' => $request->title,
             'phone' => $request->phone,
             'address' => $request->address,
             'is_bookable' => $is_bookable,
@@ -128,7 +123,6 @@ class HotelController extends Controller{
         // Redirect
         return to_route($this->panel . '.hotels.index');
     }
-
 
     public function destroy(Hotel $hotel)
     {

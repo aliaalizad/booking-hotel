@@ -16,8 +16,7 @@
             <!--begin::Col-->
             <div class="col-xl-4">
                 <label for="name" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">نام و نام خانوادگی:</span>
-                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"  title="نام و نام خانوادگی را وارد کنید ببینیم چی میشود"></i>
+                    <span class="fs-6 fw-bold mt-2 mb-3">نام و نام خانوادگی:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -34,13 +33,13 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="code" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">کد پرسنلی:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">نام کاربری:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" name="personnel_code" id="personnel_code" class="form-control " placeholder="کد پرسنلی را وارد کنید" value="{{ isset($member) ? old('personnel_code', $member->personnel_code) : old('personnel_code') }}"/>
+                <input type="text" name="username" id="username" class="form-control " placeholder="نام کاربری را وارد کنید" value="{{ isset($member) ? old('username', $member->username) : old('username') }}"/>
             </div>
             <!--end::Col-->
         </div>
@@ -50,14 +49,14 @@
         <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
-                <label for="phone" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">شماره موبایل:</span>
+                <label for="mobile" class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3">شماره موبایل:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input type="text" name="phone" id="phone" class="form-control " placeholder="شماره موبایل را وارد کنید" value="{{ isset($member) ? old('phone', $member->phone) : old('phone') }}"/>
+                <input type="text" name="mobile" id="mobile" class="form-control " placeholder="شماره موبایل را وارد کنید" value="{{ isset($member) ? old('phone', $member->phone) : old('phone') }}"/>
             </div>
             <!--end::Col-->
         </div>

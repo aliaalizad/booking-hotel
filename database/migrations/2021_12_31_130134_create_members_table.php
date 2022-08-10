@@ -18,7 +18,7 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('personnel_code', 10)->unique();
+            $table->string('username', 10)->unique();
             $table->string('phone')->unique();
             $table->string('password');
             $table->boolean('is_blocked')->default(0);

@@ -16,7 +16,7 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="bank_account" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">شماره شبا:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">شماره شبا:</span>
                 </label>
             </div>
             <!--end::Col-->
@@ -36,12 +36,12 @@
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="commission" class="form-label d-flex align-items-center">
-                    <span class="fs-6 fw-bold mt-2 mb-3  required">کمیسیون پرداختی:</span>
+                    <span class="fs-6 fw-bold mt-2 mb-3">کارمزد:</span>
                 </label>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
-            <div class="col-xl-2">
+            <div class="col-xl-3">
                 <div class="input-group mb-5">
                     <input type="text" id="commission" name="commission" class="form-control" placeholder="درصد را وارد کنید" aria-describedby="addon" style="text-align:center;" value="{{ isset($manager) ? old('commission', $manager->commission) : old('commission') }}" />
                     <span class="input-group-text" id="addon">%</span>
