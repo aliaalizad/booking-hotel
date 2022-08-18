@@ -36,7 +36,8 @@ class HotelController extends Controller{
 
     public function store(Request $request)
     {
-        // Set manager_id based on panel
+        
+        // set manager_id based on panel
         if ( $this->panel == 'admin' ) {
             $manager_id = $request->manager;
         }
@@ -44,7 +45,7 @@ class HotelController extends Controller{
             $manager_id = $this->getCurrentManager()->id;
         }
 
-        // First validation
+        // first validation
         $request->validate([
             'title' => ['required', 'string', 'max:60', 'bail'],
             'phone' => ['required', 'numeric', 'digits_between:7,11' , 'bail'],
@@ -55,10 +56,32 @@ class HotelController extends Controller{
             'manager' => ['required', 'exists:managers,id', 'bail'],
         ]);
 
+        // notification mobiles validation
+        $request->validate([
+            'notification_mobiles' => ['array', 'max:3'],
+            'notification_mobiles.*' => ['bail', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric', 'distinct'],
+        ],[
+            'notification_mobiles.array' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.size' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.regex' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.digits' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.numeric' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.distinct' => 'شماره موبایل تکراری',
+        ]);
+
+        // rules validation
+        $request->validate([
+            'rules' => ['array'],
+            'rules.*' => ['bail', 'string'],
+        ],[
+            'rules.array' => 'قوانین نامعتبر',
+            'rules.*.string' => 'قوانین نامعتبر',
+        ]);
+
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
 
-        // Check whether the selected city belongs to the manager state or not
+        // check whether the selected city belongs to the manager state or not
         $manager = Manager::find($manager_id);
 
         $state = $manager->city->state;
@@ -70,7 +93,6 @@ class HotelController extends Controller{
         $request->validate([
             'city' => ['required', Rule::in($cities)],
         ]);
-
 
         // add hotel
         Hotel::create([
@@ -84,19 +106,26 @@ class HotelController extends Controller{
             'min_bookable' => $request->min_bookable,
             'max_bookable' => $request->max_bookable,
             'bookable_until' => $request->bookable_until,
+            'notification_mobiles' => $request->notification_mobiles,
+            'rules' => $request->rules,
         ]);
 
+        // redirect
         return to_route( $this->panel . '.hotels.index' );
     }
 
     public function edit(Hotel $hotel)
     {
+        $this->authorize('hotel-update', $hotel);
+
         return view('panels.' . $this->panel . '.hotels.edit', compact('hotel'));
     }
 
     public function update(Request $request, Hotel $hotel)
     {
-        // First validation
+        $this->authorize('hotel-update', $hotel);
+
+        // first validation
         $request->validate([
             'title' => ['required', 'string', 'max:60', 'bail'],
             'phone' => ['required', 'numeric', 'digits_between:7,11' , 'bail'],
@@ -106,10 +135,32 @@ class HotelController extends Controller{
             'bookable_until' => ['required','integer', 'min:1', 'bail'],
         ]);
 
+        // notification mobiles validation
+         $request->validate([
+            'notification_mobiles' => ['array', 'max:3'],
+            'notification_mobiles.*' => ['bail', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric', 'distinct'],
+        ],[
+            'notification_mobiles.array' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.max' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.regex' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.digits' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.numeric' => 'شماره موبایل نامعتبر',
+            'notification_mobiles.*.distinct' => 'شماره موبایل تکراری',
+        ]);
+
+        // rules validation
+        $request->validate([
+            'rules' => ['array'],
+            'rules.*' => ['bail', 'string'],
+        ],[
+            'rules.array' => 'قوانین نامعتبر',
+            'rules.*.string' => 'قوانین نامعتبر',
+        ]);
+
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
 
-        // Update hotel
+        // update hotel
         $hotel->update([
             'name' => $request->title,
             'phone' => $request->phone,
@@ -117,10 +168,12 @@ class HotelController extends Controller{
             'is_bookable' => $is_bookable,
             'min_bookable' => $request->min_bookable,
             'max_bookable' => $request->max_bookable,
-            'bookable_until' => $request->bookable_until,            
+            'bookable_until' => $request->bookable_until,
+            'notification_mobiles' => $request->notification_mobiles,
+            'rules' => $request->rules,
         ]);
 
-        // Redirect
+        // redirect
         return to_route($this->panel . '.hotels.index');
     }
 

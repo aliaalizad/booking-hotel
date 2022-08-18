@@ -10,6 +10,8 @@ class BaseController extends Controller
 {
     public function showBooking(Booking $booking)
     {
+        $this->authorize('booking-view', [$booking->room->hotel, $booking]);
+
         $passengers = $booking->passengers->first()->detail;
         $payments = $booking->payments;
 

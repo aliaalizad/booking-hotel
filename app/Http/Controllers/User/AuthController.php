@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\Sms\Sms;
 use App\Helpers\Token\Token;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -24,6 +25,7 @@ class AuthController extends Controller
     public function getAuth()
     {
         request()->session()->forget('user_mobile');
+        request()->session()->forget('user_login_time');
         request()->session()->forget('new_user_mobile');
         request()->session()->forget('new_user_mobile_confirmed');
         request()->session()->forget('new_user_register_time');
@@ -74,6 +76,7 @@ class AuthController extends Controller
         }
 
         session(['user_mobile' => $request->mobile]);
+        session(['user_login_time' => now()->addMinutes(10)]);
 
         return to_route('user.getLogin');
     }
@@ -113,8 +116,6 @@ class AuthController extends Controller
             'code.digits' => 'کد تایید باید یک عدد 6 رقمی باشد',
         ]);
 
-        $new_user = User::wherePhone(session()->get('new_user_mobile'))->firstOrFail();
-
         $token = Token::get($new_user, 'register');
 
         if (is_null($token)) {
@@ -124,11 +125,11 @@ class AuthController extends Controller
         if (Hash::check($request->code, $token->token)) {
             $token->delete();
             session(['new_user_mobile_confirmed' => true]);
-            session(['new_user_register_time' => now()->addMinutes(15)]);
+            session(['new_user_register_time' => now()->addMinutes(10)]);
             return to_route('user.getRegister');
         }
 
-        return back()->withErrors(['invalidCode' => 'کد وارد شده نامعتبر است']);
+        return back()->withErrors(['code' => 'کد وارد شده نامعتبر است']);
     }
 
     public function getRegister()
@@ -170,6 +171,7 @@ class AuthController extends Controller
         $user->update([
             'name' => $request->name,
             'password' => Hash::make($request->password),
+            'state_id' => $request->state,
             'is_activated' => 1,
         ]);
 
@@ -190,7 +192,7 @@ class AuthController extends Controller
 
     public function getLogin()
     {
-        if ( ! session()->has('user_mobile')) {
+        if ( ! session()->has('user_mobile') or session()->get('user_login_time') < now()) {
             return to_route('user.getAuth');
         }
 
@@ -199,7 +201,7 @@ class AuthController extends Controller
 
     public function postLogin(Request $request)
     {
-        if ( ! session()->has('user_mobile')) {
+        if ( ! session()->has('user_mobile') or session()->get('user_login_time') < now()) {
             return to_route('user.getAuth');
         }
 
@@ -227,6 +229,138 @@ class AuthController extends Controller
         }
 
         return back()->withErrors(['password' => 'رمز عبور اشتباه است']);
+    }
+
+    public function getForgotPassword()
+    {
+        request()->session()->forget('user_forgot_password');
+        request()->session()->forget('forgotten_user_mobile');
+        request()->session()->forget('forgotten_user_mobile_confirmed');
+        request()->session()->forget('reset-password_time');
+
+        return view('user.forgot-password');
+    }
+
+    public function postForgotPassword(Request $request)
+    {
+        $request->validate([
+            'mobile' => ['bail', 'required', 'regex:/(09)[0-9]{9}/', 'digits:11', 'numeric'],
+        ], [
+            'mobile.regex' => 'شماره موبایل وارد شده معتبر نیست',
+            'mobile.digits' => 'شماره موبایل وارد شده معتبر نیست',
+            'mobile.numeric' => 'شماره موبایل وارد شده معتبر نیست',
+        ]);
+
+        $user = User::wherePhone($request->mobile)->whereIsActivated(1)->first();
+
+
+        if (is_null($user)) {
+            return back()->withErrors(['mobile' => 'حساب کاربری با این شماره موبایل وجود ندارد'])->onlyInput('mobile');
+        }
+
+        session(['user_forgot_password' => true]);
+        session(['forgotten_user_mobile' => $request->mobile]);
+
+        $code = rand(100000, 999999);
+
+        Token::make($user, $code, 'reset-password', 3);
+
+        // Sms::sendCode($user->phone, $code);
+
+        Log::info($code);
+
+        return to_route('user.getResetPasswordConfirm');
+
+    }
+
+    public function getResetPasswordConfirm()
+    {
+        if (session()->has('forgotten_user_mobile_confirmed')) {
+            return to_route('user.getResetPassword');
+        }
+
+        $forgotten_user = User::wherePhone(session()->get('forgotten_user_mobile'))->first();
+
+        if ( ! session()->has('forgotten_user_mobile') or ! Token::has($forgotten_user, 'reset-password')) {
+            return to_route('user.getForgotPassword');
+        }
+
+        return view('user.reset-password-confirm');
+    }
+
+    public function postResetPasswordConfirm(Request $request)
+    {
+        if (session()->has('forgotten_user_mobile_confirmed')) {
+            return to_route('user.getResetPassword');
+        }
+
+        $forgotten_user = User::wherePhone(session()->get('forgotten_user_mobile'))->first();
+
+        if ( ! session()->has('forgotten_user_mobile') or ! Token::has($forgotten_user, 'reset-password')) {
+            return to_route('user.getForgotPassword');
+        }
+
+
+        $request->validate([
+            'code' => ['required', 'numeric', 'digits:6'],
+        ], [
+            'code.numeric' => 'کد تایید باید یک عدد 6 رقمی باشد',
+            'code.digits' => 'کد تایید باید یک عدد 6 رقمی باشد',
+        ]);
+
+        $token = Token::get($forgotten_user, 'reset-password');
+
+        if (is_null($token)) {
+            return to_route('user.getForgotPassword');
+        }
+
+        if (Hash::check($request->code, $token->token)) {
+            $token->delete();
+            session(['forgotten_user_mobile_confirmed' => true]);
+            session(['reset_password_time' => now()->addMinutes(10)]);
+            return to_route('user.getResetPassword');
+        }
+
+        return back()->withErrors(['invalidCode' => 'کد وارد شده نامعتبر است']);
+    }
+
+    public function getResetPassword()
+    {
+        if (! session()->has('user_forgot_password')) {
+            return to_route('user.getForgotPassword');
+        }
+
+        $forgotten_user = User::wherePhone(session()->get('forgotten_user_mobile'))->first();
+
+        if (session()->has('forgotten_user_mobile') and Token::has($forgotten_user, 'reset-password')) {
+            return to_route ('user.getResetPasswordConfirm');
+        }
+
+        if ( ! session()->has('forgotten_user_mobile') or ! session()->has('forgotten_user_mobile_confirmed') or ! session()->has('reset_password_time') or session()->get('reset_password_time') < now()) {
+            return to_route('user.getForgotPassword');
+        }
+
+        return view('user.reset-password');
+    }
+
+    public function postResetPassword(Request $request)
+    {
+        if (! session()->has('user_forgot_password') or ! session()->has('forgotten_user_mobile')) {
+            return to_route('user.getForgotPassword');
+        }
+
+        $request->validate([
+            'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
+        ]);
+
+        $user = User::wherePhone(session()->get('forgotten_user_mobile'))->firstOrFail();
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return to_route('user.getAuth');
+
     }
 
     public function logout(Request $request)

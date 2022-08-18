@@ -255,19 +255,19 @@ class ReportController extends Controller
 
 
 
-        $data = [
-            'total_income' => $total_income,
-            'this_month_income' => $this_month_income,
-            'this_week_income' => $this_week_income,
-            'today_income' => $today_income,
-            'monthly_income_change_percentage' => $monthly_income_change_percentage,
-            'weekly_income_change_percentage' => $weekly_income_change_percentage,
-            'daily_income_change_percentage' => $daily_income_change_percentage,
-            'avg_daily_income' => $avg_daily_income,
-            'max_daily_income' => $max_daily_income,
-            'avg_monthly_income' => $avg_monthly_income,
-            'max_monthly_income' => $max_monthly_income,
-        ];
+        $data = compact([
+            'total_income',
+            'this_month_income',
+            'this_week_income',
+            'today_income',
+            'monthly_income_change_percentage',
+            'weekly_income_change_percentage',
+            'daily_income_change_percentage',
+            'avg_daily_income',
+            'max_daily_income',
+            'avg_monthly_income',
+            'max_monthly_income',
+        ]);
 
         return view('panels.' . $this->panel . '.reports.incomeAnalysis', compact('data'));
     }

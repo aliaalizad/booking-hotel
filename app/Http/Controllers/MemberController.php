@@ -45,7 +45,6 @@ class MemberController  extends Controller {
         return view('panels.' . $this->panel . '.members.add', compact('hotels'));
     }
 
-
     public function store(Request $request)
     {
         // validation
@@ -119,9 +118,10 @@ class MemberController  extends Controller {
         return to_route($this->panel . '.members.index');
     }
 
-
     public function edit(Member $member, Request $request)
     {
+        $this->authorize('member-update', $member);
+
         if ( $this->panel == 'admin' ) {
 
             $hotels = $this->getHotels();
@@ -137,9 +137,10 @@ class MemberController  extends Controller {
 
     }
 
-
     public function update(Request $request, Member $member)
     {
+        $this->authorize('member-update', $member);
+
         // validation
         $request->validate([
             'name' => ['bail', 'required', 'string', 'max:40'],

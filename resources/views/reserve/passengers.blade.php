@@ -230,7 +230,7 @@
                         <!--end::Row-->
                     </div>
 
-                    <div class="card">
+                    <div class="card mb-10">
                         <div class="card-header">
                             <h3 class="card-title">مشخصات مسافران</h3>
                         </div>
@@ -294,6 +294,49 @@
                         @endforeach
                     </div>
 
+                    @if (!empty($room->conditions))
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">اطلاعات تکمیلی</h3>
+                                <span class="text-danger" style="display:block; width:100%; word-wrap:break-word;">اطلاعات این بخش قیمت نهایی را تحت تاثیر قرار می دهد. هرگونه مغایرت هنگام پذیرش حضوری بررسی و مابه التفاوت دریافت می شود</span>
+                            </div>
+
+                            <div class="card-body">
+                                @foreach($room->conditions as $condition)
+                                    <div class="row mb-8 border align-items-center">
+                                        <!--begin::Col-->
+                                        <div class="col-xl-4">
+                                            <label for="title" class="form-label d-flex align-items-center; ">
+                                                <span class="fs-6 fw-bold mt-2 mb-3" style="display:block; width:100%; word-wrap:break-word;">
+                                                    {{ $condition['title'] }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-xl-1">
+                                            <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                                <input name="answers[{{ $loop->iteration }}]" class="form-check-input" type="radio" value="1" id="yesRadio-{{ $loop->iteration }}"  />
+                                                <label class="form-check-label" for="yesRadio-{{ $loop->iteration }}">بله</label>
+                                            </div>
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-xl-1">
+                                            <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                                <input name="answers[{{ $loop->iteration }}]" class="form-check-input" type="radio" value="0" id="noRadio-{{ $loop->iteration }}"  />
+                                                <label class="form-check-label" for="noRadio-{{ $loop->iteration }}">خیر</label>
+                                            </div>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+
+                    <!-- submit -->
                     <div class="row justify-content-center text-center my-10 p-0">
                         <div class="col">
                             <a onclick="document.getElementById('reserve.passengers').submit()" class="btn btn-primary">تایید و ادامه خرید

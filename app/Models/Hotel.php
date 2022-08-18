@@ -20,9 +20,16 @@ class Hotel extends Model
         'min_bookable',
         'max_bookable',
         'bookable_until',
+        'rules',
+        'notification_mobiles',
     ];
 
     protected $table = 'hotels';
+
+    protected $casts = [
+        'rules' => 'array',
+        'notification_mobiles' => 'array',
+    ];
 
     // relationships
     public function manager()

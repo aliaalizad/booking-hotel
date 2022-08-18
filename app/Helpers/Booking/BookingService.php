@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Room;
 use App\Models\Unbookable;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log as FacadesLog;
 use illuminate\Support\Str;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment as ShetabitPayment;
@@ -21,7 +22,8 @@ class BookingService {
     {
         $id = Str::random(40);
 
-        session()->push('bookings', collect([
+        session()->push('bookings', 
+            collect([
                 'id' => $id,
                 'user' => user('web'),
                 'room' => Booking::getRoom(),
@@ -33,6 +35,7 @@ class BookingService {
                 'adults' => Booking::getAdults(),
                 'teacher' => Booking::getTeacher(),
                 'passengers' => Booking::getPassengers(),
+                'answers' => Booking::getAnswers(),
             ])
         );
 
@@ -63,10 +66,8 @@ class BookingService {
         $room = $booking->get('room');
         $checkin = $booking->get('checkin');
         $checkout = $booking->get('checkout');
-        $amount = $booking->get('length') * $room->price;
         $teacher = $booking->get('teacher');
         $passengers = $booking->get('passengers');
-
 
         $teacher = [
             'teacher' => [
@@ -90,13 +91,13 @@ class BookingService {
             ];
             $i++;
         }
-
-
         $detail = array_merge($teacher, $head, $_passengers);
 
 
         $this->room_number = $this->getValidRoomNumbers($room)->first();
 
+
+        $amount = $this->calculateAmount($booking);
 
         // create booking
         $booking = BookingModel::create([
@@ -117,6 +118,51 @@ class BookingService {
         return $this->booking = $booking;
     }
 
+    public function calculateAmount($booking)
+    {
+        $room = $booking->get('room');
+        $length = $booking->get('length');
+        $answers = $booking->get('answers');
+        $conditions = $room->conditions;
+
+
+        $room_price = $room->price * $length;
+        $changes = 0;
+
+        for ($i=0; $i < count($conditions) ; $i++) { 
+            if ( $conditions[$i]['answer'] == $answers[$i+1] ) {
+                switch ($conditions[$i]['change']) {
+                    case '==':
+                        $room_price = $conditions[$i]['value'];
+                        $changes = 0;
+                        break;
+                    
+                    case '++':
+                        $changes += $conditions[$i]['value'];
+                        break;
+                    
+                    case '--':
+                        $changes -= $conditions[$i]['value'];
+                        break;
+
+                    case '+%':
+                        $changes += $room_price * $conditions[$i]['value'] / 100 ;
+                        break;
+
+                    case '-%':
+                        $changes -= $room_price * $conditions[$i]['value'] / 100 ;
+                        break;
+                    
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        $final_price = $room_price + $changes;
+        
+        return $final_price;
+    }
 
     public function freezeRoom()
     {
@@ -178,14 +224,14 @@ class BookingService {
         $invoice->amount($payment_amount);
 
     
-        $invoice->detail([
-/*
-            'multiplexingInfos' => [
-                [ 'id' => 'self', 'amount' => $self_amount],
-                ['bankAccount' => $manager_account, 'amount' => $manager_amount ]
-            ],
-*/
-        ]);
+        // $invoice->detail([
+
+        //     'multiplexingInfos' => [
+        //         [ 'id' => 'self', 'amount' => $self_amount],
+        //         ['bankAccount' => $manager_account, 'amount' => $manager_amount ]
+        //     ],
+
+        // ]);
 
 
 
@@ -214,24 +260,7 @@ class BookingService {
 
             $this->defreezeRoom($payment->booking_id); // it is important to be at the top of the code
 
-            $payment->update([
-                'status' => 1,
-            ]);
-
-            if (is_null($payment->booking->voucher)) {
-                while(1) {
-                    $voucher = rand(11111111, 99999999);
-                    if (! BookingModel::where('voucher', $voucher)->exists()){
-                        break;
-                    }
-                }
-                $payment->booking()->update([
-                    'voucher' => $voucher,
-                    'status' => 'paid',
-                ]);
-            }
-
-            return to_route('user.profile')->with('payment_status',1);
+            return $this->finalize($payment);
 
         } catch (InvalidPaymentException $exception) {
 
@@ -242,4 +271,30 @@ class BookingService {
 
     }
 
+    public function finalize($payment)
+    {
+        $payment->update([
+            'status' => 1,
+        ]);
+
+        if (is_null($payment->booking->voucher)) {
+            while(1) {
+                $voucher = rand(11111111, 99999999);
+                if (! BookingModel::where('voucher', $voucher)->exists()){
+                    break;
+                }
+            }
+            $payment->booking()->update([
+                'voucher' => $voucher,
+                'status' => 'paid',
+            ]);
+        }
+
+        foreach ($payment->booking->room->hotel->notification_mobiles as $mobile) {
+            // Sms::notify();
+            FacadesLog::info($mobile);
+        }
+
+        return to_route('user.profile')->with('payment_status',1);
+    }
 }

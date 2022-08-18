@@ -243,5 +243,6 @@ return [
         "passengers.*.first_name" => "نام مسافر",
         "passengers.*.last_name" => "نام خانوادگی مسافر",
         "passengers.*.national_code" => "کد ملی مسافر",
+
     ],
 ];

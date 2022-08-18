@@ -23,7 +23,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'is_activated',
-        'city_id'
+        'state_id'
     ];
 
     /**
@@ -66,5 +66,10 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
     }
 }

@@ -14,6 +14,8 @@ class UnbookableController extends Controller
 
     public function index(Request $request, Hotel $hotel)
     {
+        $this->authorize('unbookable-viewAny', $hotel);
+
         $path = 'panels.' . $this->panel . '.hotels.unbookables.all';
 
         if ($this->panel == "member") {
@@ -79,6 +81,8 @@ class UnbookableController extends Controller
 
     public function delete(Request $request, Hotel $hotel, Unbookable $unbookable)
     {
+        $this->authorize('unbookable-delete', [$hotel, $unbookable]);
+
         $unbookable->delete();
 
         $path = $this->panel . '.hotels.unbookables.index';

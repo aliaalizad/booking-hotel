@@ -11,8 +11,8 @@
 
     <!--begin::Card body-->
     <div class="card-body collapse show" id="info">
-         <!--begin::Row-->
-         <div class="row mb-8">
+        <!--begin::Row-->
+        <div class="row mb-8">
             <!--begin::Col-->
             <div class="col-xl-4 ">
                 <label for="title" class="form-label d-flex align-items-center">

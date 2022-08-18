@@ -22,6 +22,8 @@ class BookingController extends BaseBookingController
 
     public function show(BookingModel $booking)
     {
+        $this->authorize('booking-view', [$booking->room->hotel, $booking]);
+
         $passengers = $booking->passengers->first()->detail;
         $payments = $booking->payments;
 

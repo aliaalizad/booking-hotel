@@ -13,6 +13,8 @@ class HotelController extends BaseHotelController {
 
     public function indexBookings(Hotel $hotel)
     {
+        $this->authorize('booking-viewAny', $hotel);
+
         $bookings = Booking::getHotelBookings($hotel);
 
         return view('panels.manager.hotels.bookings.all', compact('hotel', 'bookings'));
@@ -20,6 +22,8 @@ class HotelController extends BaseHotelController {
 
     public function showBookings(Hotel $hotel, BookingModel $booking)
     {
+        $this->authorize('booking-view', [$hotel, $booking]);
+
         $passengers = $booking->passengers->first()->detail;
         $payments = $booking->payments;
 

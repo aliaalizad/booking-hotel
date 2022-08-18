@@ -24,7 +24,7 @@
             <!--begin::Col-->
             <div class="col-xl-8">
                 <div class="form-check form-switch form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="@if(isset($hotel)) {{ $hotel->is_bookable ? 1 : 0 }} @endif" id="bookable" name="bookable" @if(isset($hotel)) @checked($hotel->is_bookable == 1) @endif>
+                    <input class="form-check-input" type="checkbox" value="@if(isset($hotel)) {{ $hotel->is_bookable ? 1 : 0 }} @else {{ 0 }} @endif" id="bookable" name="bookable" @if(isset($hotel)) @checked($hotel->is_bookable == 1) @endif>
                     <label class="form-check-label fw-bold text-gray-400 ms-3" for="bookable">قابل رزرو</label>
                 </div>
             </div>
@@ -52,6 +52,8 @@
         </div>
         <!--end::Row-->
 
+        <div class="separator my-10"></div>
+
         <!--begin::Row-->
         <div class="row mb-8">
             <!--begin::Col-->
@@ -71,6 +73,7 @@
             <!--end::Col-->
         </div>
         <!--end::Row-->
+
         <!--begin::Row-->
         <div class="row mb-8">
             <!--begin::Col-->
@@ -88,6 +91,37 @@
                 </div>
             </div>
             <!--end::Col-->
+        </div>
+        <!--end::Row-->
+
+        <div class="separator my-10"></div>
+
+        <!--begin::Row-->
+        <div id="notificationMobiles" class="row mb-8">
+            <!--begin::Col-->
+            <div class="col-xl-4 mb-10">
+                <label class="form-label d-flex align-items-center">
+                    <span class="fs-6 fw-bold mt-2 mb-3">شماره موبایل های اطلاع رسانی:</span>
+                    <a id="notificationMobilesAddRow" class="btn btn-sm btn-primary mx-5">افزودن</a>
+                </label>
+            </div>
+            <!--end::Col-->
+
+            @if(isset($hotel) && isset($hotel->notification_mobiles))
+                @foreach($hotel->notification_mobiles as $mobile)
+                    <div class="row mt-2">
+                        <div class="col-xl-3">
+                            <div class="input-group mb-5">
+                                <input type="text" name="notification_mobiles[]" class="form-control" style="text-align:left;" value="{{ $mobile }}"/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-sm btn-danger notificationMobilesRemoveRow">حذف</a>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
         </div>
         <!--end::Row-->
     </div>

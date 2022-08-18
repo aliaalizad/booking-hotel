@@ -34,6 +34,10 @@
             </div>
 
             <div class="row">
+                <x-panels.admin.hotels.rules :hotel="$hotel" />
+            </div>
+
+            <div class="row">
                 <x-panels.admin.hotels.manager :hotel="$hotel" />
             </div>
 

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->boolean('is_bookable')->default(0);
             $table->foreignIdFor(Hotel::class);
             $table->foreign('hotel_id')->references('id')->on('hotels');
+            $table->json('conditions')->nullable();
+            $table->json('properties')->nullable();
             $table->timestamps();
         });
     }

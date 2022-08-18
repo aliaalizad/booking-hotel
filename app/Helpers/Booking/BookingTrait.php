@@ -27,6 +27,7 @@ trait BookingTrait {
     private $teacher;
     private $passengers;
     private $booking;
+    private $answers;
 
 
 
@@ -185,6 +186,31 @@ trait BookingTrait {
         return abort(404);
     }
 
+    private function answersValidator()
+    {
+        if ($this->room->conditions) {
+            request()->validate([
+                'answers' => ['required', 'array'],
+            ],[
+                'answers.required' => 'اطلاعات تکمیلی را به دقت بررسی کنید'
+            ]);
+    
+            for ($i=1; $i <= count($this->room->conditions) ; $i++) { 
+                request()->validate([
+                    'answers.'.$i => ['required', 'boolean'],
+                ],[
+                    'answers.'.$i.'.required' => 'اطلاعات تکمیلی را به دقت بررسی کنید'
+                ]);
+            }
+
+            session(['answers' => request()->answers]);
+
+            return $this->answers = request()->answers;
+        }
+
+        return $this->answers = null;
+    }
+
     private function roomEngine_0()
     {
         $this->dateValidator();
@@ -277,7 +303,8 @@ trait BookingTrait {
         $this->rooms = $rooms;
     }
 
-    private function getValidRoomNumbers($room){
+    private function getValidRoomNumbers($room)
+    {
 
         $bookedRoomNumbers  = Booking::where('room_id', $room->id)->where(function($query){
             $query->where([['checkin', '>=', $this->checkin], ['checkin', '<', $this->checkout], ['status', 'paid']])
@@ -419,6 +446,12 @@ trait BookingTrait {
     public function getBooking()
     {
         return $this->booking;
+    }
+
+    public function getAnswers()
+    {
+        $this->answersValidator();
+        return $this->answers;
     }
 
     public function getHotelBookings(Hotel $hotel)

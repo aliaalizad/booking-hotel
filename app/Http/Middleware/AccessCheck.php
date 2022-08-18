@@ -27,26 +27,26 @@ class AccessCheck
 
             if ($request->routeIs('manager.*')) { // manager
 
-                $is_blocked = Manager::find(Auth::guard('manager')->user()->id)->is_blocked;
+                $is_blocked = Manager::find(user()->id)->is_blocked;
 
                 if ($is_blocked) {
                     Auth::guard('manager')->logout();
 
-                    return to_route('manager.login')->withErrors([
-                        'loginError' => 'حساب کاربری شما مسدود شده است',
+                    return to_route('panel.getAuth')->withErrors([
+                        'login' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }
 
 
             } elseif ($request->routeIs('member.*')) { // member
 
-                $is_blocked = Member::find(Auth::guard('member')->user()->id)->is_blocked;
+                $is_blocked = Member::find(user()->id)->is_blocked;
 
                 if ($is_blocked) {
                     Auth::guard('member')->logout();
 
-                    return to_route('member.login')->withErrors([
-                        'loginError' => 'حساب کاربری شما مسدود شده است',
+                    return to_route('panel.getAuth')->withErrors([
+                        'login' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }
 
@@ -54,13 +54,13 @@ class AccessCheck
 
             } else { // user
 
-                $is_blocked = User::find(Auth::guard('web')->user()->id)->is_blocked;
+                $is_blocked = User::find(user()->id)->is_blocked;
 
                 if ($is_blocked) {
                     Auth::guard('web')->logout();
     
-                    return to_route('user.login')->withErrors([
-                        'loginError' => 'حساب کاربری شما مسدود شده است',
+                    return to_route('user.getAuth')->withErrors([
+                        'login' => 'حساب کاربری شما مسدود شده است',
                     ]);
                 }
             }

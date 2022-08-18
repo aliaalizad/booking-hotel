@@ -33,6 +33,11 @@
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row">
+                <x-panels.admin.hotels.rules />
+            </div>
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row">
                 <x-panels.admin.hotels.manager />
             </div>
             <!--end::Row-->
@@ -52,3 +57,4 @@
 <!--end:Form-->
 
 @endsection
+

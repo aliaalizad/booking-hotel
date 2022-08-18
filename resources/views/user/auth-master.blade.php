@@ -19,7 +19,7 @@
         <div class="website-logo">
             <a href="{{ route('home') }}">
                 <div class="logo">
-                    <img class="logo-size" src="/media/auth/images/logo-light.svg" alt="">
+                    <img class="logo-size" src="/media/auth/images/logo.svg" alt="">
                 </div>
             </a>
         </div>

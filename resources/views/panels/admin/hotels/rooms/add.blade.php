@@ -26,6 +26,11 @@
                 <x-panels.admin.hotels.rooms.info />
             </div>
             <!--end::Row-->
+
+            <div class="row">
+                <x-panels.admin.hotels.rooms.conditions />
+            </div>
+
         </div>
         <!--end::Card body-->
 

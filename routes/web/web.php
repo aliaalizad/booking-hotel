@@ -1,18 +1,10 @@
 <?php
 
-use App\Helpers\Logs\Logs;
-use App\Helpers\Sms\Sms;
 use App\Helpers\Token\Token;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
-use App\Models\Admin;
-use App\Models\Booking;
-use App\Models\Manager;
-use App\Models\Room;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
-use illuminate\Support\Str;
 
 
 /*
@@ -25,58 +17,6 @@ use illuminate\Support\Str;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/add-rooms', function(){
-
-    $capacity = 3;
-    $price = 1500000;
-    $type = 'A';
-    $hotel_id = 1;
-
-    foreach (range(1,3) as $item) {
-        Room::create([
-            'code' => Str::random(40),
-            'name' => ' اتاق ' . $capacity . ' تخته ',
-            'type' => $type,
-            'capacity' => $capacity,
-            'price' => $price,
-            'hotel_id' => $hotel_id,
-        ]);
-    }
-
-    $capacity = 4;
-    $price = 2000000;
-    $type = 'B';
-    $hotel_id = 1;
-
-    foreach (range(1,2) as $item) {
-        Room::create([
-            'code' => Str::random(40),
-            'name' => ' اتاق ' . $capacity . ' تخته ',
-            'type' => $type,
-            'capacity' => $capacity,
-            'price' => $price,
-            'hotel_id' => $hotel_id,
-        ]);
-    }
-
-    $capacity = 2;
-    $price = 1000000;
-    $type = 'C';
-    $hotel_id = 1;
-
-    foreach (range(1,1) as $item) {
-        Room::create([
-            'code' => Str::random(40),
-            'name' => ' اتاق ' . $capacity . ' تخته ',
-            'type' => $type,
-            'capacity' => $capacity,
-            'price' => $price,
-            'hotel_id' => $hotel_id,
-        ]);
-    }
-});
-
 
 
 Route::get('test', function() {
@@ -134,4 +74,10 @@ Route::prefix('reserve')->name('reserve.')->middleware(['auth:web', 'access_chec
     Route::get('payment/callback', [BookingController::class, 'paymentCallback'])->name('payment.callback');
 
     Route::post('/ajaxCheck', [BookingController::class, 'lastConfirmation'])->name('lastConfirmation');
+});
+
+
+Route::prefix('/panel')->name('panel.')->middleware(['guest:manager', 'guest:member'])->group(function(){
+        Route::get('/', [AuthController::class, 'getAuth'])->name('getAuth');
+        Route::post('/', [AuthController::class, 'postAuth'])->name('postAuth');
 });

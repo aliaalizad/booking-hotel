@@ -21,13 +21,15 @@ class CreateHotelsTable extends Migration
             $table->string('code')->unique();
             $table->string('phone');
             $table->string('address');
+            $table->foreignIdFor(Manager::class);
+            $table->foreign('manager_id')->references('id')->on('managers');
+            $table->foreignIdFor(City::class);
             $table->boolean('is_bookable')->default(0);
             $table->integer('min_bookable')->default(1);
             $table->integer('max_bookable')->default(14); // 2 weeks
             $table->integer('bookable_until')->default(90); // 3 months
-            $table->foreignIdFor(City::class);
-            $table->foreignIdFor(Manager::class);
-            $table->foreign('manager_id')->references('id')->on('managers');
+            $table->json('rules')->nullable();
+            $table->json('notification_mobiles')->nullable();
             $table->timestamps();
         });
     }

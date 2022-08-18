@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Booking\Booking;
-use App\Models\Booking as BookingModel;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -13,7 +12,6 @@ class BookingController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->all());
         $bookings = $this->getBookings();
         return view('panels.'. $this->panel . '.bookings.all', compact('bookings'));
     }
@@ -52,7 +50,7 @@ class BookingController extends Controller
         return view('reserve.confirm', compact('booking'));
     }
 
-    public function payment() 
+    public function payment()
     {
         if ( ! $this->lastConfirmation() ){
             return to_route('home');

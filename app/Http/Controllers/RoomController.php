@@ -13,11 +13,13 @@ class RoomController extends Controller
 
     public function __construct()
     {
-        $this->middleware('confirm')->only(['create', 'edit']);
+        // $this->middleware('confirm')->only(['create', 'edit']);
     }
 
     public function index(Hotel $hotel)
     {
+        $this->authorize('room-viewAny', $hotel);
+
         if ($this->panel == 'member') {
             $hotel = user('member')->hotel;
             $path = 'panels.member.hotel.rooms.all';
@@ -65,6 +67,33 @@ class RoomController extends Controller
             'price' => ['bail', 'required', 'integer', 'min:100000', 'max:100000000'],
         ]);
 
+        // conditions validation
+        $request->validate([
+            'conditions' => ['array'],
+            'conditions.*' => ['array'],
+            'conditions.titles.*' => ['string'],
+            'conditions.answers.*' => ['boolean'],
+            'conditions.values.*' => ['integer', 'max:100000000'],
+            'conditions.changes.*' => ['in:==,+%,-%,++,--'],
+        ],[
+            'conditions.titles.*.string' => 'شروط قیمتی نامعتبر',
+            'conditions.answers.*.boolean' => 'شروط قیمتی نامعتبر',
+            'conditions.values.*.integer' => 'شروط قیمتی نامعتبر',
+            'conditions.changes.*.in' => 'شروط قیمتی نامعتبر',
+        ]);
+
+        // conditions settings
+        $conditions = [];
+        if (isset($request->conditions['titles'])) {
+            for ($i=0; $i < count($request->conditions['titles']) ; $i++) { 
+                $conditions[$i] = [
+                    'title' => $request->conditions['titles'][$i],
+                    'answer' => $request->conditions['answers'][$i],
+                    'value' => $request->conditions['values'][$i],
+                    'change' => $request->conditions['changes'][$i],
+                ];
+            }
+        }
 
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
@@ -87,6 +116,7 @@ class RoomController extends Controller
             'numbers' => $rooms,
             'price' => $request->price,
             'is_bookable' => $is_bookable,
+            'conditions' => $conditions,
         ]);
 
         return to_route($path, $hotel->id);
@@ -94,6 +124,8 @@ class RoomController extends Controller
 
     public function edit(Hotel $hotel, Room $room)
     {
+        $this->authorize('room-update', [$hotel, $room]);
+
         if ($this->panel == 'member') {
             $hotel = user('member')->hotel;
             $path = 'panels.member.hotel.rooms.edit';
@@ -106,6 +138,8 @@ class RoomController extends Controller
 
     public function update(Request $request, Hotel $hotel, Room $room)
     {
+        $this->authorize('room-update', [$hotel, $room]);
+
         $rooms = collect(json_decode($request->rooms, true))->pluck('value')->toArray();
 
         $request->merge([
@@ -127,6 +161,37 @@ class RoomController extends Controller
             'price' => ['bail', 'required', 'integer', 'min:100000', 'max:100000000'],
         ]);
 
+
+        // conditions validation
+        $request->validate([
+            'conditions' => ['array'],
+            'conditions.*' => ['array'],
+            'conditions.titles.*' => ['string'],
+            'conditions.answers.*' => ['boolean'],
+            'conditions.values.*' => ['integer', 'max:100000000'],
+            'conditions.changes.*' => ['in:==,+%,-%,++,--'],
+        ],[
+            'conditions.titles.*.string' => 'شروط قیمتی نامعتبر',
+            'conditions.answers.*.boolean' => 'شروط قیمتی نامعتبر',
+            'conditions.values.*.integer' => 'شروط قیمتی نامعتبر',
+            'conditions.changes.*.in' => 'شروط قیمتی نامعتبر',
+        ]);
+
+        // conditions settings
+        $conditions = [];
+        if (isset($request->conditions['titles'])) {
+            for ($i=0; $i < count($request->conditions['titles']) ; $i++) { 
+                $conditions[$i] = [
+                    'title' => $request->conditions['titles'][$i],
+                    'answer' => $request->conditions['answers'][$i],
+                    'value' => $request->conditions['values'][$i],
+                    'change' => $request->conditions['changes'][$i],
+                ];
+            }
+        }
+
+
+
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
 
@@ -142,12 +207,12 @@ class RoomController extends Controller
         }
 
         $room->update([
-            'code' => Str::random(40),
             'name' => $request->title,
             'capacity' => $request->capacity,
             'numbers' => $rooms,
             'price' => $request->price,
             'is_bookable' => $is_bookable,
+            'conditions' => $conditions,
         ]);
 
         return to_route($path, $hotel->id);

@@ -53,11 +53,13 @@
         <!--begin::Global Javascript Bundle(used by all pages)-->
             <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
             <script src="/js/scripts.bundle.js"></script>
+            <script src="/js/panels.js"></script>
             <script src="/plugins/global/plugins.bundle.js"></script>
             <script src="/plugins/global/persianumber.js"></script>
             <script src="/plugins/global/persian-date.js"></script>
             <script src="/plugins/global/persian-datepicker.js"></script>
             <script src="/plugins/global/jquery-functions.js"></script>
+            
 
         <!--end::Global Javascript Bundle-->
     

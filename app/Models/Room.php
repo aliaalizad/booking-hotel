@@ -18,10 +18,14 @@ class Room extends Model
     'numbers',
     'hotel_id',
     'is_bookable',
+    'conditions',
+    'properties',
   ];
 
   protected $casts = [
     'numbers' => 'array',
+    'conditions' => 'array',
+    'properties' => 'array',
   ];
   
   public function bookings()

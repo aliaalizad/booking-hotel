@@ -14,13 +14,17 @@ use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest:admin'])->group(function(){
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::prefix('/auth')->name('auth.')->group(function(){
+        Route::get('/', [AuthController::class, 'getAuth'])->name('getAuth');
+        Route::post('/', [AuthController::class, 'postAuth'])->name('postAuth');
+        Route::get('/confirm', [AuthController::class, 'getConfirm'])->name('getConfirm');
+        Route::post('/confirm', [AuthController::class, 'postConfirm'])->name('postConfirm');
+    });
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::middleware(['auth:admin'])->group(function(){
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
     Route::get('/', [AuthController::class, 'index']);
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
@@ -30,7 +34,7 @@ Route::middleware(['auth:admin'])->group(function(){
     Route::resource('/members', MemberController::class);
     Route::resource('/hotels', HotelController::class);
 
-    Route::prefix('/hotels')->name('hotels.')->group(function(){
+    Route::prefix('/hotels')->name('hotels.')->scopeBindings()->group(function(){
         Route::resource('/{hotel}/rooms', RoomController::class);
         Route::get('/{hotel}/bookings', [HotelController::class, 'indexBookings'])->name('bookings.index');
         Route::get('/{hotel}/bookings/{booking}', [HotelController::class, 'showBookings'])->name('bookings.show');
