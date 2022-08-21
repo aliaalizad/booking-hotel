@@ -22,6 +22,7 @@ class Hotel extends Model
         'bookable_until',
         'rules',
         'notification_mobiles',
+        'coordinates',
     ];
 
     protected $table = 'hotels';
@@ -29,6 +30,7 @@ class Hotel extends Model
     protected $casts = [
         'rules' => 'array',
         'notification_mobiles' => 'array',
+        'coordinates' => 'array',
     ];
 
     // relationships

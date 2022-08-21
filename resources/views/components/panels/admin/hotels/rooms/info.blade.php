@@ -38,13 +38,35 @@
             </div>
             <!--end::Col-->
             <!--begin::Col-->
-            <div class="col-xl-8">
-                <input type= "text" id="capacity" name="capacity" class="form-control" placeholder="ظرفیت اتاق را وارد کنید" value="{{ isset($room) ? old('capacity', $room->capacity) : old('capacity') }}"/>
+            <div class="col-xl-2">
+                <!--begin::Dialer-->
+                <div class="input-group"
+                    data-kt-dialer="true"
+                    data-kt-dialer-min="1"
+                    data-kt-dialer-max="100"
+                    data-kt-dialer-step="1">
+
+                    <!--begin::Decrease control-->
+                    <button class="btn btn-icon btn-outline btn-outline-secondary" type="button" data-kt-dialer-control="decrease">
+                        <i class="bi bi-dash fs-1"></i>
+                    </button>
+                    <!--end::Decrease control-->
+
+                    <!--begin::Input control-->
+                    <input type="text" id="capacity" name="capacity" class="form-control text-center p-0" readonly placeholder="ظرفیت"  value="{{ isset($room) ? old('capacity', $room->capacity) : old('capacity', 1) }}" data-kt-dialer-control="input"/>
+                    <!--end::Input control-->
+
+                    <!--begin::Increase control-->
+                    <button class="btn btn-icon btn-outline btn-outline-secondary" type="button" data-kt-dialer-control="increase">
+                        <i class="bi bi-plus fs-1"></i>
+                    </button>
+                    <!--end::Increase control-->
+                </div>
+                <!--end::Dialer-->
             </div>
             <!--end::Col-->
         </div>
         <!--end::Row-->
-
 
         <!--begin::Row-->
         <div class="row mb-8">
@@ -57,7 +79,7 @@
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-xl-8">
-                <input name="rooms" class="form-control form-control-lg form-control" placeholder="شماره اتاق ها را وارد کنید" value="@if(isset($room)) {{ old('', implode(',' ,$room->numbers)) }} @elseif(!is_null(old('rooms'))) {{ implode(',' ,old('rooms'))}} @endif" id="tagify"/>
+                <input name="rooms" class="form-control form-control-lg form-control" placeholder="شماره اتاق ها را وارد کنید (با زدن دکمه Enter مورد جدید اضافه کنید)" value="@if(isset($room)) {{ old('', implode(',' ,$room->numbers)) }} @elseif(!is_null(old('rooms'))) {{ implode(',' ,old('rooms'))}} @endif" id="tagify"/>
             </div>
             <!--end::Col-->
         </div>

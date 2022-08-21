@@ -234,8 +234,6 @@ class BookingService {
         // ]);
 
 
-
-
         return ShetabitPayment::callbackUrl(route('reserve.payment.callback'))->purchase($invoice, function($driver, $transactionId) use ($payment_amount, $manager_amount) {
             Payment::create([
                 'booking_id' => $this->booking->id,
@@ -289,6 +287,8 @@ class BookingService {
                 'status' => 'paid',
             ]);
         }
+
+        FacadesLog::info($payment->booking->user->phone);
 
         foreach ($payment->booking->room->hotel->notification_mobiles as $mobile) {
             // Sms::notify();

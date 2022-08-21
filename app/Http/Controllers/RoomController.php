@@ -95,6 +95,16 @@ class RoomController extends Controller
             }
         }
 
+        // properties validation
+        $request->validate([
+            'properties' => ['array'],
+            'properties.*' => ['string', 'max:400'],
+        ],[
+            'properties.array' => 'امکانات و ویژگی نامعتبر',
+            'properties.*.string' => 'امکانات و ویژگی نامعتبر',
+        ]);
+
+    
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
 
@@ -117,6 +127,7 @@ class RoomController extends Controller
             'price' => $request->price,
             'is_bookable' => $is_bookable,
             'conditions' => $conditions,
+            'properties' => $request->properties,
         ]);
 
         return to_route($path, $hotel->id);
@@ -190,7 +201,14 @@ class RoomController extends Controller
             }
         }
 
-
+        // properties validation
+        $request->validate([
+            'properties' => ['array'],
+            'properties.*' => ['string', 'max:400'],
+        ],[
+            'properties.array' => 'امکانات و ویژگی نامعتبر',
+            'properties.*.string' => 'امکانات و ویژگی نامعتبر',
+        ]);
 
         // set is_bookable value
         $is_bookable = is_null($request->bookable) ? 0 : 1;
@@ -213,6 +231,7 @@ class RoomController extends Controller
             'price' => $request->price,
             'is_bookable' => $is_bookable,
             'conditions' => $conditions,
+            'properties' => $request->properties,
         ]);
 
         return to_route($path, $hotel->id);

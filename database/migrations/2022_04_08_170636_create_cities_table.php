@@ -19,10 +19,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(State::class);
+            $table->float('longitude', 8, 4)->nullable();
+            $table->float('latitude', 8, 4)->nullable();
         });
 
         foreach(config('predefined.cities') as $city) {
-            DB::insert("insert into cities (id, name, state_id) values (?, ?, ?)", $city);
+            DB::insert("insert into cities (id, name, state_id, longitude, latitude) values (?, ?, ?, ?, ?)", $city);
         }
     }
 

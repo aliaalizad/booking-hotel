@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('is_activated')->default(0);
             $table->boolean('is_blocked')->default(0);
-            $table->string('national_code', 10);
-            $table->foreignIdFor(State::class);
+            $table->string('national_code', 10)->unique()->nullable();
+            $table->foreignIdFor(State::class)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

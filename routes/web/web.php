@@ -4,6 +4,7 @@ use App\Helpers\Token\Token;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
+use App\Models\City;
 use Illuminate\Support\Facades\Route;
 
 
@@ -46,7 +47,7 @@ Route::get('test', function() {
 
     // session(['last_confirmable_url', url()->current()]);
 
-    dd(Token::isValid(user(), '92047', 'confirm'));
+    return view('test');
 
 })->name('test');
 
@@ -80,4 +81,24 @@ Route::prefix('reserve')->name('reserve.')->middleware(['auth:web', 'access_chec
 Route::prefix('/panel')->name('panel.')->middleware(['guest:manager', 'guest:member'])->group(function(){
         Route::get('/', [AuthController::class, 'getAuth'])->name('getAuth');
         Route::post('/', [AuthController::class, 'postAuth'])->name('postAuth');
+});
+
+
+
+Route::prefix('/ajax')->name('ajax.')->group(function(){
+
+    Route::prefix('/hotel')->name('hotel.')->group(function(){
+        Route::post('/coordindates', function(){
+
+            $city = City::find(request()->city);
+
+            $coordinates = [
+                'longitude' => $city->longitude,
+                'latitude' => $city->latitude,
+            ];
+
+            return json_encode($coordinates);
+        
+        })->name('coordinates');
+    });
 });

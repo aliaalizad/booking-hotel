@@ -73,8 +73,8 @@ trait BookingTrait {
         }
 
         $this->length = Carbon::parse($checkout)->diffInDays(Carbon::parse($checkin));
-        $this->checkinJalali = verta(Carbon::parse($checkin))->addMinutes(270)->format('Y/m/d');
-        $this->checkoutJalali = verta(Carbon::parse($checkout))->addMinutes(270)->format('Y/m/d');
+        $this->checkinJalali = verta(Carbon::parse($checkin))->format('Y/m/d');
+        $this->checkoutJalali = verta(Carbon::parse($checkout))->format('Y/m/d');
     }
    
     private function adultsValidator()

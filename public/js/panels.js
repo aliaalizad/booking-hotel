@@ -47,7 +47,7 @@ $("#rulesAddRow").click(function () {
     html += '<div class="row mt-2">';
     html += '<div class="col-xl-11">';
     html += '<div class="input-group mb-5">';
-    html += '<textarea type="text" name="rules[]" class="form-control"></textarea>';
+    html += '<input type="text" name="rules[]" class="form-control"/>';
     html += '</div>';
     html += '</div>';
     html += '<div class="col-xl-1">';
@@ -95,5 +95,34 @@ $(document).on('click', '.conditionsRemoveRow', function () {
       })
 });
 
+$("#propertiesAddRow").click(function () {
+    var html = '';
+    html += '<div class="row mt-2">';
+    html += '<div class="col-xl-11">';
+    html += '<div class="input-group mb-5">';
+    html += '<input type="text" name="properties[]" class="form-control"/>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="col-xl-1">';
+    html += '<a class="btn btn-sm btn-danger propertiesRemoveRow">حذف</a>';
+    html += '</div>';
+    html += '</div>';
 
+    $('#properties').append(html);
 
+});
+
+$(document).on('click', '.propertiesRemoveRow', function () {
+    Swal.fire({
+        title: 'آیا از حذف مطمئن هستید؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'بله',
+        cancelButtonText: 'بستن',
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+            $(this).closest('.row').remove();
+        }
+      })
+});

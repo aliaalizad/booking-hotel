@@ -36,7 +36,6 @@ class HotelController extends Controller{
 
     public function store(Request $request)
     {
-        
         // set manager_id based on panel
         if ( $this->panel == 'admin' ) {
             $manager_id = $request->manager;
@@ -54,6 +53,8 @@ class HotelController extends Controller{
             'max_bookable' => ['required','integer', 'gte:min_bookable', 'bail'],
             'bookable_until' => ['required','integer', 'min:1', 'bail'],
             'manager' => ['required', 'exists:managers,id', 'bail'],
+            'longitude' => ['required', 'numeric'],
+            'latitude' => ['required', 'numeric'],
         ]);
 
         // notification mobiles validation
@@ -72,7 +73,7 @@ class HotelController extends Controller{
         // rules validation
         $request->validate([
             'rules' => ['array'],
-            'rules.*' => ['bail', 'string'],
+            'rules.*' => ['string', 'max:400'],
         ],[
             'rules.array' => 'قوانین نامعتبر',
             'rules.*.string' => 'قوانین نامعتبر',
@@ -108,6 +109,7 @@ class HotelController extends Controller{
             'bookable_until' => $request->bookable_until,
             'notification_mobiles' => $request->notification_mobiles,
             'rules' => $request->rules,
+            'coordinates' => [number_format($request->longitude,4), number_format($request->latitude, 4)],
         ]);
 
         // redirect
@@ -151,7 +153,7 @@ class HotelController extends Controller{
         // rules validation
         $request->validate([
             'rules' => ['array'],
-            'rules.*' => ['bail', 'string'],
+            'rules.*' => ['string', 'max:400'],
         ],[
             'rules.array' => 'قوانین نامعتبر',
             'rules.*.string' => 'قوانین نامعتبر',

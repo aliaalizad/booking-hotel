@@ -209,6 +209,7 @@ return [
         "role" => "نقش",
         "roles" => "نقش ها",
         "today" => "امروز",
+        "national_code" => "کد ملی",
         "passenger" => "مسافر",
         "passengers" => "مسافران",
         "checkin" => "پذیرش",

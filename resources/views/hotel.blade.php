@@ -177,8 +177,11 @@
                                 <div class="col-md-6 ">
                                     <div class="card-body pb-0">
                                         <h3 class="card-title">{{ $room->name }}</h3>
-                                        <p class="card-text">سرویس بهداشتی بیرون اتاق</p>
-                                        <p class="card-text"> آشپزخانه بیرون اتاق</p>
+                                        @foreach($room->properties as $property)
+                                            <ul class="mt-5">
+                                                <li>{{ $property }}</li>
+                                            </ul> 
+                                        @endforeach
                                     </div>
                                 </div>
                                 

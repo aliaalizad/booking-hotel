@@ -31,6 +31,12 @@
                 <x-panels.admin.hotels.rooms.conditions />
             </div>
 
+            <!--begin::Row-->
+            <div class="row">
+                <x-panels.admin.hotels.rooms.properties />
+            </div>
+            <!--end::Row-->
+
         </div>
         <!--end::Card body-->
 

@@ -23,6 +23,12 @@
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         @endif
+                        <input @class(['form-control' , 'is-invalid' => $errors->has('national_code')]) type="text" name="national_code" required placeholder="کد ملی" value="{{ old('national_code') }}">
+                        @if ($errors->has('national_code'))
+                            @error('national_code')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
                         <select name="state" id="state" @class(['form-control', 'mb-3' , 'is-invalid' => $errors->has('state')]) dir="rtl">
                             <option disabled selected>استان</option>
                             @foreach(App\Models\State::all() as $state)

@@ -17,9 +17,10 @@ class AuthController extends Controller
 
     public function profile()
     {
+        $user = user();
         $bookings = user()->bookings()->where('status', 'paid')->orderBy('created_at', 'desc')->paginate();
 
-        return view('user.dashboard', compact('bookings'));
+        return view('user.dashboard', compact('user', 'bookings'));
     }
 
     public function getAuth()
@@ -58,7 +59,6 @@ class AuthController extends Controller
 
             $new_user = User::create([
                 'phone' => $request->mobile,
-
                 'name' => 0,
                 'is_activated' => 0,
                 'password' => 0,
@@ -162,9 +162,14 @@ class AuthController extends Controller
 
         $request->validate([
             'name' => ['bail', 'required', 'string', 'max:40'],
+            'national_code' => ['bail', 'required', 'numeric', 'digits:10', 'unique:users,national_code'],
             'state' => ['required', 'exists:states,id'],
             'password' => ['bail', 'required', Password::min(8)->letters()->numbers(), 'confirmed'],
         ]);
+
+        if (! is_valid_national_code($request->national_code)) {
+            return back()->withErrors(['national_code' => 'کد ملی وارد شده نامعتبر است']);
+        }
 
         $user = User::wherePhone(session()->get('new_user_mobile'))->firstOrFail();
 
@@ -172,6 +177,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'password' => Hash::make($request->password),
             'state_id' => $request->state,
+            'national_code' => $request->national_code,
             'is_activated' => 1,
         ]);
 

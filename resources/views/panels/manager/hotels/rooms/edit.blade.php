@@ -30,6 +30,15 @@
                 <x-panels.admin.hotels.rooms.info :room="$room"/>
             </div>
 
+            <div class="row">
+                <x-panels.admin.hotels.rooms.conditions :room="$room"/>
+            </div>
+
+            <div class="row">
+                <x-panels.admin.hotels.rooms.properties :room="$room"/>
+            </div>
+
+
         </div>
         <!--end::Card body-->
 

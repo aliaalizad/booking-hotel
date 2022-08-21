@@ -43,7 +43,7 @@
                     <tr class="text-center fw-bold fs-6 border-bottom border-gray-200">
                         <td>{{ $i++ }}</td>
                     
-                        <td>{{ verta($booking->created_at)->addMinutes(270)->format('H:i:s Y-m-d ') }}</td>
+                        <td>{{ verta($booking->created_at)->format('H:i:s Y-m-d ') }}</td>
                         <td>{{ $booking->voucher }}</td>
                         <td>{{ number_format($booking->payments->last()->booking_amount) . ' ریال '}}</td>
                         <td>{{ verta($booking->checkin)->format('Y/m/d') }}</td>

@@ -100,7 +100,7 @@
                                                 <td class="fw-bolder text-end">{{ verta($booking->checkin)->diffDays(verta($booking->checkout)) }} شب</td>
                                             </tr>
                                             <!--end::Length--> 
-                                            @if(guard(['admin', 'manager']))
+                                            @if(guard(['admin', 'manager', 'member']))
                                             <!--begin::Length-->
                                             <tr>
                                                 <td class="text-muted">
@@ -439,7 +439,7 @@
                                                     <span class="badge badge-danger">ناموفق</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ verta($payment->created_at)->addMinutes(270)->format('H:i:s Y-m-d ')	 }}</td>
+                                                <td>{{ verta($payment->created_at)->format('H:i:s Y-m-d ')	 }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

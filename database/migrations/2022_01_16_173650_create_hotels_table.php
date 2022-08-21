@@ -30,6 +30,7 @@ class CreateHotelsTable extends Migration
             $table->integer('bookable_until')->default(90); // 3 months
             $table->json('rules')->nullable();
             $table->json('notification_mobiles')->nullable();
+            $table->json('coordinates')->nullable();
             $table->timestamps();
         });
     }

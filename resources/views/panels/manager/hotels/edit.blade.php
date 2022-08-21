@@ -31,6 +31,10 @@
             <div class="row">
                 <x-panels.admin.hotels.config :hotel="$hotel" />
             </div>
+
+            <div class="row">
+                <x-panels.admin.hotels.rules :hotel="$hotel"/>
+            </div>
         </div>
         <!--end::Card body-->
 

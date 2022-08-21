@@ -23,7 +23,8 @@ class User extends Authenticatable
         'phone',
         'password',
         'is_activated',
-        'state_id'
+        'state_id',
+        'national_code',
     ];
 
     /**

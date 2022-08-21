@@ -4,31 +4,31 @@
     <!--begin::Card header-->
     <div class="card-header">
         <div class="card-title fs-3 fw-bolder">
-            <a id="rules_link" class="btn btn-link" data-bs-toggle="collapse" href="#rules_collapse" aria-expanded="true">شرایط و قوانین</a>
+            <a id="properties_link" class="btn btn-link" data-bs-toggle="collapse" href="#properties_collapse" aria-expanded="true">امکانات و ویژگی ها</a>
         </div>
 
         <div class="card-toolbar">
-            <a id="rulesAddRow" class="btn btn-sm btn-primary">افزودن</a>
+            <a id="propertiesAddRow" class="btn btn-sm btn-primary">افزودن</a>
         </div>
     </div>
     <!--end::Card header-->
 
     <!--begin::Card body-->
-    <div class="card-body collapse show" id="rules_collapse">
+    <div class="card-body collapse show" id="properties_collapse">
         
         <!--begin::Row-->
-        <div id="rules" class="mb-8">
+        <div id="properties" class="mb-8">
 
-            @if(isset($hotel) && isset($hotel->rules))
-                @foreach($hotel->rules as $rule)
+            @if(isset($room) && isset($room->properties))
+                @foreach($room->properties as $property)
                     <div class="row mt-2">
                         <div class="col-xl-11">
                             <div class="input-group mb-5">
-                                <input type="text" name="rules[]" class="form-control" value="{{ $rule }}"/>
+                                <input type="text" name="properties[]" class="form-control" value="{{ $property }}" />
                             </div>
                         </div>
                         <div class="col-xl-1">
-                            <a class="btn btn-sm btn-danger rulesRemoveRow">حذف</a>
+                            <a class="btn btn-sm btn-danger propertiesRemoveRow">حذف</a>
                         </div>
                     </div>
                 @endforeach
