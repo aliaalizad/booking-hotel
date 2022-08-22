@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\Token\Token;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
@@ -18,42 +17,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-Route::get('test', function() {
-
-    // LogEvent::create([
-    //     'name' => 'booking',
-    //     'description' => 'رزرو',
-    //     'parameters' => [
-    //         'room',
-    //     ],
-    // ]);
-
-    // $payment = Payment::where('track_id', 2962757848)->firstOrFail();
-
-    // dd($payment->booking->room->numbers);
-
-    // Logs::putBooking(2, [
-    //     'room' => [
-    //         'numbers' => $payment->booking->room->numbers,
-    //         'price' => $payment->booking->room->price,
-    //     ]
-    // ]);
-
-    // $log = Logs::getBooking(2);
-
-    // dd($log->last());
-
-    // session(['last_confirmable_url', url()->current()]);
-
-    return view('test');
-
-})->name('test');
-
-
-
-
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -79,8 +42,8 @@ Route::prefix('reserve')->name('reserve.')->middleware(['auth:web', 'access_chec
 
 
 Route::prefix('/panel')->name('panel.')->middleware(['guest:manager', 'guest:member'])->group(function(){
-        Route::get('/', [AuthController::class, 'getAuth'])->name('getAuth');
-        Route::post('/', [AuthController::class, 'postAuth'])->name('postAuth');
+    Route::get('/', [AuthController::class, 'getAuth'])->name('getAuth');
+    Route::post('/', [AuthController::class, 'postAuth'])->name('postAuth');
 });
 
 

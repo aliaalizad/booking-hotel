@@ -30,8 +30,8 @@
                 <x-panels.admin.hotels.info />
             </div>
             <!--end::Row-->
-             <!--begin::Row-->
-             <div class="row">
+            <!--begin::Row-->
+            <div class="row">
                 <x-panels.admin.hotels.map />
             </div>
             <!--end::Row-->
@@ -70,63 +70,60 @@
 @push('scripts')
     <script src="/plugins/global/leaflet/leaflet.js"></script>
 
+    <script>
+        $("#city").change(function() {
+            
+            var city = this.value;
+            $('#map').empty();
 
-    
-<script>
-    $("#city").change(function() {
-        
-        var city = this.value;
-        $('#map').empty();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+                type:'POST',
+                url:"{{ route('ajax.hotel.coordinates') }}",
+                data:{
+                    "_token": "{{ csrf_token() }}",
+                    "city": city,
+                },
+                success:function(coordinates){
+                    var coordinates = JSON.parse(coordinates);
+                    var longitude = coordinates.longitude ?? 0;
+                    var latitude = coordinates.latitude ?? 0;
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+                    map_container = '<div id="map_container" style="height: 600px;"></div>';
+                    $('#map').append(map_container);
+
+                    map = L.map('map_container').setView([longitude, latitude], 12);
+
+                    var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                    }).addTo(map);
+
+
+                    var theMarker = {};
+                    map.on('click',function(e){
+                        lat = e.latlng.lat;
+                        lon = e.latlng.lng;
+
+                        //Clear existing marker, 
+                        if (theMarker != undefined) {
+                            map.removeLayer(theMarker);
+                        };
+                        //Add a marker to show where you clicked.
+                        theMarker = L.marker([lat,lon]).addTo(map);
+                        
+                        $('#longitude').val(lon);
+                        $('#latitude').val(lat);
+                    });
+                }
+            });
+            
         });
-       $.ajax({
-            type:'POST',
-            url:"{{ route('ajax.hotel.coordinates') }}",
-            data:{
-                "_token": "{{ csrf_token() }}",
-                "city": city,
-            },
-            success:function(coordinates){
-                var coordinates = JSON.parse(coordinates);
-                var longitude = coordinates.longitude ?? 0;
-                var latitude = coordinates.latitude ?? 0;
 
-                map_container = '<div id="map_container" style="height: 600px;"></div>';
-                $('#map').append(map_container);
-
-                map = L.map('map_container').setView([longitude, latitude], 12);
-
-                var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                }).addTo(map);
-
-
-                var theMarker = {};
-                map.on('click',function(e){
-                    lat = e.latlng.lat;
-                    lon = e.latlng.lng;
-
-                    //Clear existing marker, 
-                    if (theMarker != undefined) {
-                        map.removeLayer(theMarker);
-                    };
-                    //Add a marker to show where you clicked.
-                    theMarker = L.marker([lat,lon]).addTo(map);
-                    
-                    $('#longitude').val(lon);
-                    $('#latitude').val(lat);
-                });
-            }
-        });
         
-    });
 
-    
-
-</script>
-
+    </script>
 @endpush
